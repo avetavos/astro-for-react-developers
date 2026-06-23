@@ -9,9 +9,9 @@ function CopyBtn({ text }: { text: string }) {
   );
 }
 
-export default function ReactSvelte(
-  { react, svelte, reactTitle = 'React', svelteTitle = 'Svelte' }:
-  { react: string; svelte: string; reactTitle?: string; svelteTitle?: string },
+export default function ReactAstro(
+  { react, astro, reactTitle = 'React', astroTitle = 'Astro' }:
+  { react: string; astro: string; reactTitle?: string; astroTitle?: string },
 ) {
   return (
     <div class="tsgo">
@@ -20,8 +20,8 @@ export default function ReactSvelte(
         <pre><code>{react}</code></pre>
       </div>
       <div class="tsgo__col">
-        <header>{svelteTitle}<CopyBtn text={svelte} /></header>
-        <pre><code>{svelte}</code></pre>
+        <header>{astroTitle}<CopyBtn text={astro} /></header>
+        <pre><code>{astro}</code></pre>
       </div>
     </div>
   );
