@@ -66,7 +66,7 @@ The pattern is called **partial hydration** because only a *part* of the page is
 2. Ships its own JS bundle to the browser
 3. Hydrates **independently** — islands do not share a React root
 
-That last point matters: islands are isolated. There is no single React tree connecting them, which means no shared React context across islands by default. You will learn how to work with that in [When to Use an Island](/en/islands/when-to-island/).
+That last point matters: islands are isolated. There is no single React tree connecting them, which means no shared React context across islands by default. You will learn how to work with that in [When to Use an Island](/astro-for-react-developers/en/islands/when-to-island/).
 
 export const islandConceptReact = `// React: ONE root, one reconciler, shared context
 import ReactDOM from 'react-dom/client';
