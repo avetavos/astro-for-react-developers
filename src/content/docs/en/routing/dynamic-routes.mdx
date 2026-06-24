@@ -7,6 +7,7 @@ import ReactAstro from '../../../../components/ReactAstro.tsx';
 import Diff from '../../../../components/Diff.astro';
 import Quiz from '../../../../components/Quiz.tsx';
 import ProgressTracker from '../../../../components/ProgressTracker.tsx';
+import Mermaid from '../../../../components/Mermaid.astro';
 
 In Next.js App Router you use `[slug]/page.tsx` + `generateStaticParams()` to pre-render dynamic pages at build time. Astro uses the same bracket-filename convention — `[slug].astro` — paired with a **required** `getStaticPaths()` export inside the frontmatter.
 
@@ -97,12 +98,14 @@ const { post } = Astro.props;
 
 ## File tree for a blog
 
-```
-src/pages/
-└── blog/
-    ├── index.astro          → /blog       (list all posts)
-    └── [slug].astro         → /blog/:slug (individual post)
-```
+export const blogTreeDiagram = `flowchart TD
+  pages["src/pages/"] --> blog["blog/"]
+  blog --> index["index.astro"]
+  blog --> slug["[slug].astro"]
+  index --> indexURL["/blog (list all posts)"]
+  slug --> slugURL["/blog/:slug (individual post)"]`;
+
+<Mermaid code={blogTreeDiagram} title="Blog file tree mapping files to routes" />
 
 ## Catch-all routes
 

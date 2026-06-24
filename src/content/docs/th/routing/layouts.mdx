@@ -7,6 +7,7 @@ import ReactAstro from '../../../../components/ReactAstro.tsx';
 import Diff from '../../../../components/Diff.astro';
 import Quiz from '../../../../components/Quiz.tsx';
 import ProgressTracker from '../../../../components/ProgressTracker.tsx';
+import Mermaid from '../../../../components/Mermaid.astro';
 
 ใน Next.js App Router คุณสร้าง `layout.tsx` ไว้ข้างๆ หน้าและ React จะครอบ children ผ่านมันโดยอัตโนมัติ ใน Astro ไม่มีการครอบ layout อัตโนมัติ — คุณสร้าง layout component ใน `src/layouts/` และ **import ใช้อย่างชัดเจน** ภายในแต่ละหน้า layout รับเนื้อหาของหน้าผ่าน `<slot />` ซึ่งเทียบเท่ากับ `children` prop ของ React
 
@@ -134,17 +135,17 @@ import TwoColumn from '../layouts/TwoColumn.astro';
 
 ## File tree ของ project
 
-```
-src/
-├── layouts/
-│   ├── Layout.astro      ← HTML shell หลัก (head, nav, footer)
-│   └── BlogLayout.astro  ← ขยายจาก Layout เพิ่ม sidebar
-└── pages/
-    ├── index.astro        ← import Layout from '../layouts/Layout.astro'
-    ├── about.astro        ← import Layout from '../layouts/Layout.astro'
-    └── blog/
-        └── [slug].astro   ← import BlogLayout from '../../layouts/BlogLayout.astro'
-```
+export const layoutTreeDiagram = `flowchart TD
+  src["src/"] --> layouts["layouts/"]
+  src --> pages["pages/"]
+  layouts --> layout["Layout.astro (base HTML shell: head, nav, footer)"]
+  layouts --> blogLayout["BlogLayout.astro (extends Layout, adds sidebar)"]
+  pages --> index["index.astro imports Layout from '../layouts/Layout.astro'"]
+  pages --> about["about.astro imports Layout from '../layouts/Layout.astro'"]
+  pages --> blog["blog/"]
+  blog --> slug["[slug].astro imports BlogLayout from '../../layouts/BlogLayout.astro'"]`;
+
+<Mermaid code={layoutTreeDiagram} title="Layouts and pages file tree" />
 
 <Diff title="Next.js layout vs Astro layout">
 - Next.js App Router: `layout.tsx` ในไดเรกทอรี **ครอบทุกหน้าในนั้นโดยอัตโนมัติ** — ไม่ต้อง import ในหน้า

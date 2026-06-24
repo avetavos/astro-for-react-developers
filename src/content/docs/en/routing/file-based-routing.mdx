@@ -7,6 +7,7 @@ import ReactAstro from '../../../../components/ReactAstro.tsx';
 import Diff from '../../../../components/Diff.astro';
 import Quiz from '../../../../components/Quiz.tsx';
 import ProgressTracker from '../../../../components/ProgressTracker.tsx';
+import Mermaid from '../../../../components/Mermaid.astro';
 
 In Next.js App Router, every `page.tsx` inside `app/` becomes a route. In Astro the same idea applies but the convention is simpler: **any `.astro` file inside `src/pages/` maps directly to a URL**. The filename is the path segment.
 
@@ -88,17 +89,21 @@ import Layout from '../layouts/Layout.astro';
 
 Here is what a typical Astro project looks like after adding a few routes:
 
-```
-src/
-├── layouts/
-│   └── Layout.astro          ← shared wrapper (covered in Layouts lesson)
-└── pages/
-    ├── index.astro            → /
-    ├── about.astro            → /about
-    └── blog/
-        ├── index.astro        → /blog
-        └── first-post.astro   → /blog/first-post
-```
+export const projectTreeDiagram = `flowchart TD
+  src["src/"] --> layouts["layouts/"]
+  src --> pages["pages/"]
+  layouts --> layoutFile["Layout.astro (shared wrapper)"]
+  pages --> indexFile["index.astro"]
+  pages --> aboutFile["about.astro"]
+  pages --> blog["blog/"]
+  blog --> blogIndex["index.astro"]
+  blog --> firstPost["first-post.astro"]
+  indexFile --> indexURL["/"]
+  aboutFile --> aboutURL["/about"]
+  blogIndex --> blogURL["/blog"]
+  firstPost --> firstPostURL["/blog/first-post"]`;
+
+<Mermaid code={projectTreeDiagram} title="Astro project file tree mapped to URLs" />
 
 <Diff title="Next.js pages vs Astro pages">
 - Next.js App Router: every directory needs a `page.tsx` file to become a route.

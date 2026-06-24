@@ -7,6 +7,7 @@ import ReactAstro from '../../../../components/ReactAstro.tsx';
 import Diff from '../../../../components/Diff.astro';
 import Quiz from '../../../../components/Quiz.tsx';
 import ProgressTracker from '../../../../components/ProgressTracker.tsx';
+import Mermaid from '../../../../components/Mermaid.astro';
 
 ใน Next.js App Router คุณใช้ `[slug]/page.tsx` + `generateStaticParams()` เพื่อ pre-render หน้าแบบ dynamic ณ build time Astro ใช้ convention ชื่อไฟล์แบบ bracket เดียวกัน — `[slug].astro` — คู่กับ `getStaticPaths()` export ที่ **จำเป็น** ภายใน frontmatter
 
@@ -97,12 +98,14 @@ const { post } = Astro.props;
 
 ## File tree สำหรับ blog
 
-```
-src/pages/
-└── blog/
-    ├── index.astro          → /blog       (แสดงรายการ post ทั้งหมด)
-    └── [slug].astro         → /blog/:slug (post แต่ละรายการ)
-```
+export const blogTreeDiagram = `flowchart TD
+  pages["src/pages/"] --> blog["blog/"]
+  blog --> index["index.astro"]
+  blog --> slug["[slug].astro"]
+  index --> indexURL["/blog (list all posts)"]
+  slug --> slugURL["/blog/:slug (individual post)"]`;
+
+<Mermaid code={blogTreeDiagram} title="Blog file tree mapping files to routes" />
 
 ## Catch-all routes
 
