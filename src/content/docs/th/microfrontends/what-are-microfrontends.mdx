@@ -1,0 +1,101 @@
+---
+title: 'Micro-Frontends คืออะไร?'
+description: 'ทีมที่เป็นอิสระต่อกันเป็นเจ้าของ vertical slice พร้อมการ build และ deploy ที่เป็นอิสระ — ประโยชน์, ต้นทุน และเมื่อไหร่ที่ไม่ควรใช้'
+---
+
+import Mermaid from '../../../../components/Mermaid.astro';
+import Diff from '../../../../components/Diff.astro';
+import Quiz from '../../../../components/Quiz.tsx';
+import ProgressTracker from '../../../../components/ProgressTracker.tsx';
+
+แนวคิด micro-frontend ยืมมาจาก micro-services โดยตรง micro-service แยก backend ออกเพื่อให้ **ทีมหนึ่งเป็นเจ้าของหนึ่ง service ตั้งแต่ต้นจนจบ** — โค้ดของมัน, ฐานข้อมูลของมัน, deploy pipeline ของมัน micro-frontend ทำแบบเดียวกันกับ UI: ทีมหนึ่งเป็นเจ้าของ **vertical slice** ของผลิตภัณฑ์ ตั้งแต่ pixel ที่เรนเดอร์ออกมาลงไปจนถึง API ที่ป้อนข้อมูลให้มัน
+
+คำสำคัญคือ **vertical** การแยกแบบ horizontal (ทีมหนึ่งทำ "CSS ทั้งหมด" อีกทีมทำ "การ fetch ข้อมูลทั้งหมด") ยังคงบังคับให้ทุกคนต้องผ่าน release เดียวกัน ส่วนการแยกแบบ vertical ให้ฟีเจอร์ที่เบ็ดเสร็จในตัวเองแก่ทีม — เช่น *Checkout* — ที่ทีมสามารถ build, test และ ship ได้โดยไม่ต้องรอใคร
+
+## การ build และ deploy ที่เป็นอิสระ
+
+สิ่งที่ทำให้ MFE เป็น MFE จริงๆ มากกว่าจะเป็นแค่ folder หนึ่งใน monorepo คือ **การ build และ deploy ที่เป็นอิสระ** แต่ละ slice ผลิต artifact ของตัวเองและขึ้น production ตามตารางเวลาของตัวเอง shell โหลด slice แต่ละชิ้นในเวอร์ชันที่กำลัง live อยู่ในขณะนั้น
+
+export const teamDiagram = `flowchart LR
+  subgraph CatalogTeam["Catalog team"]
+    CR["Repo"] --> CB["Build"] --> CD["Deploy v3.2"]
+  end
+  subgraph CartTeam["Cart team"]
+    KR["Repo"] --> KB["Build"] --> KD["Deploy v1.9"]
+  end
+  CD --> Shell["Astro shell"]
+  KD --> Shell
+  Shell --> User["User's page"]`;
+
+<Mermaid code={teamDiagram} title="แต่ละทีม build และ deploy slice ของตัวเองตามจังหวะของตัวเอง" />
+
+สังเกตว่า shell ดึง *เวอร์ชันใดก็ตามที่กำลัง live* เข้ามา — Catalog สามารถ ship ห้าครั้งต่อวันในขณะที่ Cart ship สัปดาห์ละครั้ง และไม่มีฝ่ายไหน block อีกฝ่าย
+
+## Build-time vs run-time integration
+
+มีสองช่วงเวลาที่แตกต่างกันโดยพื้นฐานซึ่ง slice สามารถถูกนำมารวมกันได้:
+
+- **Build-time integration:** slice ถูกเผยแพร่เป็น **versioned packages** (เช่น ไปยัง private npm registry) และ shell import มันเข้ามา การประกอบเกิดขึ้นตอนที่ shell build คุณจะได้ type safety และ bundle เดียวที่ถูก optimize แล้ว แต่การเปลี่ยนแปลงของทีมจะไปถึงผู้ใช้ก็ต่อเมื่อ shell **rebuild และ redeploy** เท่านั้น
+- **Run-time integration:** slice ถูก deploy เป็น **artifact ที่รันแยกกัน** (สคริปต์, remote HTML fragment, federated module, iframe) shell ดึงมันเข้ามาเมื่อหน้าเพจถูกร้องขอหรือเรนเดอร์ในเบราว์เซอร์ ทีมต่างๆ ship อย่างเป็นอิสระอย่างแท้จริง โดยแลกมาด้วยส่วนประกอบที่ขยับเคลื่อนไหวมากขึ้นและการรับประกัน ณ เวลา compile ที่อ่อนแอลง
+
+บทเรียนถัดไปจะลงลึกทั้งสองแบบ สำหรับตอนนี้ ภาพในใจคือ: build-time แลกความเป็นอิสระเพื่อความปลอดภัย ส่วน run-time แลกความปลอดภัยเพื่อความเป็นอิสระ
+
+## ประโยชน์และต้นทุน
+
+<Diff title="SPA ก้อนใหญ่ก้อนเดียว vs micro-frontends หลายชิ้น">
+- **ความเป็นอิสระของทีม:** แต่ละทีมเลือกตารางการ release ของตัวเอง และอาจเลือก framework ของตัวเองได้ด้วย โดยไม่มีคอขวดจากการ merge
+- **การ scale คน:** องค์กรที่มีวิศวกร 60 คนสามารถทำงานในทีมเล็กที่โฟกัสได้ แทนที่จะแย่งกันใช้ repo ยักษ์ตัวเดียวและ CI queue เดียว
+- **การแยกตัวเมื่อเกิดข้อผิดพลาด (Fault isolation):** การ release ของ Reviews ที่พังจะกระทบเฉพาะ Reviews ไม่ใช่ Checkout
+- **ต้นทุน — ความซับซ้อน:** ตอนนี้คุณต้องดูแลหลาย pipeline, หลาย deploy และ composition layer ที่ไม่เคยมีมาก่อน
+- **ต้นทุน — ความซ้ำซ้อน:** หากไม่มีวินัย แต่ละ slice จะ ship สำเนา React ของตัวเอง, date library ของตัวเอง, ปุ่มของตัวเอง
+- **ต้นทุน — ความสอดคล้อง:** design tokens ที่แชร์กัน, accessibility และรูปแบบ UX ต้องถูกบังคับใช้ข้าม repo ไม่ใช่สันนิษฐานเอาว่ามีอยู่ภายใน repo เดียว
+</Diff>
+
+## เมื่อไหร่ที่ไม่ควรใช้
+
+micro-frontends เป็นวิธีแก้แบบ **เชิงองค์กร** สำหรับปัญหา **เชิงองค์กร** — คนมากเกินไปแย่งกันทำ frontend ตัวเดียว หากคุณไม่มีปัญหานั้น คุณส่วนใหญ่จะรับเอาแต่ต้นทุนมาโดยไม่ได้ประโยชน์
+
+ข้าม MFE ไปเมื่อ:
+
+- คุณเป็น **ทีมเล็ก** (วิศวกรไม่กี่คน) modular monolith สร้างได้เร็วกว่าและรันได้ถูกกว่ามาก
+- slice ของคุณ **coupling กันแน่น** และแชร์ state กันมาก — แอปแชต, design canvas, form wizard ที่ซับซ้อน รอยต่อต่างๆ ก่อความเจ็บปวดมากกว่าคุณค่าของความเป็นอิสระที่ได้รับ
+- **ประสิทธิภาพคือสิ่งสำคัญที่สุดและ budget เล็กมาก** หลาย framework และ dependency ที่ซ้ำซ้อนสามารถลบล้างผลที่ได้ เว้นแต่คุณจะเข้มงวด (islands ของ Astro ช่วยได้มากตรงนี้ แต่ก็ไม่ใช่เวทมนตร์)
+
+เลือกใช้ MFE เมื่อหลายทีมจำเป็นต้อง ship ไปยังพื้นผิวเดียวกันอย่างเป็นอิสระ — แล้วปล่อยให้ Astro ทำให้หน้าเพจที่ได้ออกมายังเร็วอยู่
+
+export const quizWhat = [
+  {
+    q: "'vertical slice' ที่ทีม MFE เป็นเจ้าของหมายถึง:",
+    options: [
+      "CSS ทั้งหมดของทั้งแอป",
+      "ฟีเจอร์ที่เบ็ดเสร็จในตัวเองตั้งแต่ UI ลงไปจนถึง data source ของมัน",
+      "shared component library ตัวเดียว",
+      "เฉพาะ build pipeline เท่านั้น",
+    ],
+    answer: 1,
+  },
+  {
+    q: "อะไรที่ทำให้ run-time integration ต่างจาก build-time integration?",
+    options: [
+      "slice แบบ run-time ถูกนำมารวมกันตอนที่ shell build",
+      "slice แบบ run-time เป็น artifact ที่ deploy แยกกันและถูกดึงมาตอนร้องขอหรือในเบราว์เซอร์",
+      "run-time integration ต้องใช้ monorepo",
+      "ไม่มีความแตกต่างกันจริง",
+    ],
+    answer: 1,
+  },
+  {
+    q: "สถานการณ์ใดเป็นเหตุผลที่อ่อนที่สุดในการนำ micro-frontends มาใช้?",
+    options: [
+      "หลายทีมที่เป็นอิสระต่อกัน ship ไปยังพื้นผิวขนาดใหญ่เดียวกัน",
+      "ทีมเล็กที่สร้างแอปแบบโต้ตอบที่ coupling กันแน่น",
+      "องค์กรที่ต้องการจังหวะการ deploy ที่เป็นอิสระ",
+      "ผลิตภัณฑ์ที่ fault isolation ระหว่าง region มีความสำคัญ",
+    ],
+    answer: 1,
+  },
+];
+
+<Quiz client:visible id="microfrontends/what-are-microfrontends" questions={quizWhat} />
+
+<ProgressTracker client:visible id="microfrontends/what-are-microfrontends" />

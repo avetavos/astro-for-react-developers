@@ -1,0 +1,134 @@
+---
+title: 'รูปแบบการประกอบ (Composition Patterns)'
+description: 'Astro ในฐานะ composition shell — build-time integration ด้วย shared packages vs run-time integration พร้อมทั้ง server islands ที่ถูกเลื่อนแยกตามทีม'
+---
+
+import AstroPlayground from '../../../../components/AstroPlayground.tsx';
+import Mermaid from '../../../../components/Mermaid.astro';
+import Diff from '../../../../components/Diff.astro';
+import Quiz from '../../../../components/Quiz.tsx';
+import ProgressTracker from '../../../../components/ProgressTracker.tsx';
+
+เมื่อคุณมอง Astro เป็น **shell** แล้ว คำถามการออกแบบสำคัญคือ *เมื่อไหร่* ที่ slice ต่างๆ จะถูกนำมารวมกัน มีสองคำตอบ และสถาปัตยกรรมที่สุกงอมมักใช้ทั้งสองอย่าง: **build-time integration** และ **run-time integration**
+
+## Build-time integration: shared packages ใน workspace
+
+ใน build-time integration แต่ละทีมเผยแพร่ slice ของตัวเองเป็น **versioned package** monorepo ที่มี workspaces (npm, pnpm, หรือ Yarn) เป็นบ้านที่พบบ่อยที่สุดสำหรับสิ่งนี้ shell ขึ้นอยู่กับ `@store/catalog`, `@store/cart` และอื่นๆ ปักหมุดเวอร์ชัน แล้ว import มันเข้ามาเหมือน component อื่นๆ:
+
+```astro
+---
+// The shell imports versioned team packages.
+import Catalog from '@store/catalog';
+import Cart from '@store/cart';
+---
+<Catalog client:visible />
+<Cart client:load />
+```
+
+เนื่องจากการประกอบเกิดขึ้นระหว่างการ build ของ shell คุณจึงได้สิ่งที่ compiler ทำได้ดี: **การ type check ข้ามขอบเขต slice**, tree-shaking และ output เดียวที่ถูก optimize แล้ว ข้อติดขัดคือความเป็นอิสระ — การเปลี่ยนแปลงของ Catalog จะไปถึงผู้ใช้ก็ต่อเมื่อ shell **เลื่อนเวอร์ชัน, rebuild และ redeploy** เท่านั้น build-time integration เอนเอียงไปทางความปลอดภัยและความสอดคล้องมากกว่าการ ship แบบทันทีและเป็นอิสระ
+
+## Run-time integration: ประกอบเมื่อมีการร้องขอ
+
+ใน run-time integration แต่ละ slice เป็น **artifact ที่ deploy แยกกัน** shell ไม่ได้ import มันตอน build แต่ดึงมันเข้ามาเมื่อหน้าเพจถูกเรนเดอร์ (บนเซิร์ฟเวอร์) หรือหลังจากที่มันโหลดแล้ว (ในเบราว์เซอร์) ทีมต่างๆ ship ตามนาฬิกาของตัวเอง และ shell หยิบเวอร์ชันใหม่ขึ้นมาในการร้องขอครั้งถัดไป — ไม่ต้อง redeploy shell ราคาที่จ่ายคือการรับประกัน ณ เวลา compile ที่อ่อนแอลงและพื้นผิวการดำเนินงานที่มากขึ้น ซึ่งจะกล่าวถึงโดยละเอียดในบทเรียนถัดไป
+
+export const integrationDiagram = `flowchart TD
+  subgraph BuildTime["Build-time integration"]
+    BT1["Team pkg @store/cart v1.4"] --> BT2["Shell build imports it"]
+    BT2 --> BT3["One optimized bundle"]
+  end
+  subgraph RunTime["Run-time integration"]
+    RT1["Team deploys cart service"] --> RT2["Shell fetches at request / in browser"]
+    RT2 --> RT3["Composed live, no shell rebuild"]
+  end`;
+
+<Mermaid code={integrationDiagram} title="Build-time integration vs run-time integration" />
+
+## Server islands: fragment ที่ถูกเลื่อนแยกตามทีม
+
+**server islands** ของ Astro ให้ทางสายกลางที่ทรงพลังแก่คุณ ด้วยการเพิ่ม `server:defer` ให้กับ component คุณบอก Astro ให้เรนเดอร์ส่วนที่เหลือของหน้าเพจทันทีและ stream island นั้นเข้ามาทีหลังจากเซิร์ฟเวอร์ แต่ละ island สามารถมี `fallback` slot ของตัวเองที่แสดงในขณะที่กำลังโหลด:
+
+```astro
+---
+import Recommendations from '../islands/Recommendations.astro';
+---
+<Recommendations server:defer>
+  <p slot="fallback">Loading recommendations…</p>
+</Recommendations>
+```
+
+สำหรับ micro-frontends นี่คือสิ่งที่เหมาะอย่างยิ่ง: team fragment ที่ช้าหรือถูกปรับให้เฉพาะบุคคล — recommendations, cart badge, ราคาแบบ live — จะไม่ block ส่วนที่เหลือของหน้าเพจอีกต่อไป shell ที่เร็วและ cache ได้จะ ship ออกไปก่อน และ island ที่ถูกเลื่อนของแต่ละทีมจะมาถึงด้วยตัวของมันเอง นี่คือความขี้เกียจแยกตามทีมโดยไม่มีต้นทุน client-side framework สำหรับ fallback เลย
+
+## ลองเลย: shell ที่ import component ของทีม
+
+หน้าเพจที่รันได้ด้านล่างเป็น composition shell ขั้นต่ำ มัน import component "ทีม" หนึ่งตัวและเรนเดอร์มันเป็น section — รูปร่างเดียวกับที่คุณจะใช้ไม่ว่าการ import จะ resolve ไปเป็น workspace package หรือ slice ในเครื่อง
+
+export const compositionCode = `---
+// src/pages/index.astro — composition shell
+// In a real setup, ProductCard would come
+// from a versioned package like @store/catalog.
+import ProductCard from '../components/ProductCard.astro';
+---
+<html lang="en">
+  <head><title>Composition shell</title></head>
+  <body>
+    <header><h1>Acme Store</h1></header>
+
+    <main>
+      <h2>Catalog team's slice</h2>
+      <ProductCard
+        name="Astro Mug"
+        price="12.00"
+      />
+    </main>
+
+    <footer>Composed by the Astro shell.</footer>
+  </body>
+</html>`;
+
+<AstroPlayground client:visible code={compositionCode} />
+
+เพื่อให้สิ่งนี้รันได้ คุณจะต้องเพิ่ม `src/components/ProductCard.astro` ที่อ่าน `Astro.props` (`name`, `price`) และเรนเดอร์การ์ดออกมา shell ไม่สนใจว่า slice ถูก build ภายในอย่างไร — สนใจแค่ว่ามันรับ props อะไรบ้างเท่านั้น
+
+<Diff title="Build-time packages vs run-time fragments">
+- **Build-time:** versioned packages ที่ประกอบกันระหว่างการ build ของ shell typing แข็งแรง, bundle เดียวที่ถูก optimize, ความสอดคล้องทำได้ง่าย — แต่การเปลี่ยนแปลง slice ต้อง rebuild และ redeploy shell
+- **Run-time:** fragment ที่ deploy แยกกันและถูกดึงมาตอนร้องขอหรือในเบราว์เซอร์ deploy อิสระอย่างแท้จริง — แต่ความปลอดภัย ณ เวลา compile อ่อนแอลงและ infrastructure มากขึ้น
+- **Server islands (`server:defer`):** คง static shell ที่เร็วไว้ แล้ว stream fragment ที่ถูกเลื่อนของแต่ละทีมเข้ามาทีหลังพร้อม fallback โดยไม่ต้องใช้ client framework สำหรับ placeholder
+- **กฎคร่าวๆ:** เริ่มที่ build-time เพื่อความปลอดภัย ย้าย slice ไปยัง run-time ก็ต่อเมื่อทีมของมันจำเป็นต้องมีจังหวะการ deploy ที่เป็นอิสระอย่างแท้จริงเท่านั้น
+</Diff>
+
+export const quizComposition = [
+  {
+    q: "ใน build-time integration slice ของทีมไปถึง shell ได้อย่างไร?",
+    options: [
+      "ในฐานะ remote fragment ที่ถูกดึงมาในเบราว์เซอร์",
+      "ในฐานะ versioned package ที่ shell import และ build ด้วย",
+      "ผ่าน iframe ที่โหลดตอน runtime",
+      "ผ่าน Module Federation เท่านั้น",
+    ],
+    answer: 1,
+  },
+  {
+    q: "การเพิ่ม `server:defer` ให้กับ component ทำอะไร?",
+    options: [
+      "เรนเดอร์มันบน client เท่านั้น",
+      "เรนเดอร์ส่วนที่เหลือของหน้าเพจก่อนแล้ว stream island นั้นเข้ามาจากเซิร์ฟเวอร์ พร้อม fallback ที่เลือกได้",
+      "ปิดการใช้งาน component",
+      "บังคับให้มัน hydrate ทันที",
+    ],
+    answer: 1,
+  },
+  {
+    q: "ข้อแลกเปลี่ยนสำคัญของ build-time integration คือ:",
+    options: [
+      "ไม่มี type safety ข้าม slice",
+      "การเปลี่ยนแปลง slice จะไปถึงผู้ใช้ก็ต่อเมื่อ shell rebuild และ redeploy เท่านั้น",
+      "มันใช้ framework ไม่ได้",
+      "มันต้องการ iframe",
+    ],
+    answer: 1,
+  },
+];
+
+<Quiz client:visible id="microfrontends/composition-patterns" questions={quizComposition} />
+
+<ProgressTracker client:visible id="microfrontends/composition-patterns" />

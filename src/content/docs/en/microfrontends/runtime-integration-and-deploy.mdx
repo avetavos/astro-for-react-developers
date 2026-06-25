@@ -1,0 +1,152 @@
+---
+title: 'Run-time Integration & Deploy'
+description: 'Stitch independently-deployed micro-frontends at run time with Web Components, iframes, remote fragments and Module Federation — plus cross-MFE communication and versioning.'
+---
+
+import Mermaid from '../../../../components/Mermaid.astro';
+import Diff from '../../../../components/Diff.astro';
+import Quiz from '../../../../components/Quiz.tsx';
+import ProgressTracker from '../../../../components/ProgressTracker.tsx';
+
+This is where micro-frontends earn their name: each slice is **independently deployed**, living at its own URL on its own pipeline, and the Astro shell stitches them together **at run time**. No shell rebuild is needed when a team ships — the shell simply loads whatever is currently live. Here are the four main techniques, from softest to hardest isolation.
+
+## Web Components — framework-agnostic custom elements
+
+A team can compile its slice into a **custom element** and publish a single script. The shell loads that script and uses the element like any HTML tag — no framework lock-in, because the browser owns the element registry:
+
+```astro
+---
+// The shell loads a team's element bundle.
+---
+<script src="https://cart.acme.dev/cart-widget.js" type="module"></script>
+<cart-widget user-id="42"></cart-widget>
+```
+
+Web Components are the most natural run-time boundary in Astro: they are just HTML, they encapsulate their own styles via shadow DOM, and any framework (Lit, Stencil, Svelte, even React via a wrapper) can emit them.
+
+## iframes — the hardest isolation
+
+When a slice must be **completely sealed off** — third-party code, a legacy app, strict security boundaries — an iframe gives you a separate document, separate CSS, and separate JavaScript globals:
+
+```astro
+<iframe src="https://legacy.acme.dev/reviews" title="Reviews"></iframe>
+```
+
+The isolation is total, which is also the downside: communication is limited to `postMessage`, sizing is awkward, and you pay for a second document. Reach for iframes only when you truly need that wall.
+
+## Remote fragments — fetch and inline on the server
+
+The Astro shell can fetch a team's rendered HTML **on the server** — in a server island or an endpoint — and inline it into the page. This keeps the client lean: the user receives one HTML document, already composed.
+
+```astro
+---
+// Server-side: fetch a team's rendered fragment.
+const res = await fetch('https://reviews.acme.dev/fragment');
+const html = await res.text();
+---
+<section set:html={html}></section>
+```
+
+You can also expose this from an Astro **endpoint** (`src/pages/api/reviews.ts`) so other shells reuse it. Pair it with `server:defer` (from the previous lesson) so a slow fragment never blocks the page.
+
+## Module Federation via Vite
+
+**Module Federation** lets one app consume modules from another at run time, fetched over the network. Because Astro builds on Vite, you can use the **`@module-federation/vite`** plugin to expose modules from team apps and consume them in the shell:
+
+```bash
+npm install @module-federation/vite
+```
+
+This is the most "SPA-native" run-time option — teams expose components that the shell imports dynamically without bundling them in. It is powerful but the heaviest to operate: shared-dependency versioning (so React is not loaded twice) and build-config coordination become real work.
+
+## Stitching it together
+
+export const deployDiagram = `flowchart TD
+  subgraph Teams["Independently deployed MFEs"]
+    A["cart.acme.dev\\n(Web Component)"]
+    B["reviews.acme.dev\\n(remote fragment)"]
+    C["catalog.acme.dev\\n(federated module)"]
+    D["legacy.acme.dev\\n(iframe)"]
+  end
+  Shell["Astro shell — composes at run time"]
+  A --> Shell
+  B --> Shell
+  C --> Shell
+  D --> Shell
+  Shell --> Page["One stitched page"]`;
+
+<Mermaid code={deployDiagram} title="Independently-deployed micro-frontends stitched by an Astro shell" />
+
+## Cross-MFE communication and shared routing
+
+Independent slices still sometimes need to talk — "item added to cart" must reach the cart badge. Keep the contract small and decoupled:
+
+- **Custom events** on the `window`: one slice does `window.dispatchEvent(new CustomEvent('cart:add', { detail }))` and another listens. No shared bundle required.
+- **A tiny shared store** like **nanostores**: a single small atom both slices import to read and write shared state reactively, framework-agnostic and a few hundred bytes.
+
+For **shared routing**, let the Astro shell own the URL and the layout. Each slice handles its own internal view state but defers top-level navigation to the shell, so the back button and deep links behave consistently across teams.
+
+## Independent deployment, versioning and pitfalls
+
+Independent deploys are the prize and the hazard. A few rules keep it sane:
+
+- **Version your contracts**, not just your code. The props an element accepts, the event names, the fragment's HTML shape — treat these as a public API and version them.
+- **Pin or negotiate shared dependencies.** Without care, three slices ship three copies of React. Module Federation's shared config, or simply standardizing on Astro islands, avoids the duplication tax.
+- **Guard consistency.** Design tokens, fonts, and accessibility must be enforced across repos (a shared CSS/token package), or the page drifts into looking like four different products.
+- **Fail gracefully.** A run-time slice can be down. Wrap remote fetches and federated imports so one dead team degrades to a fallback instead of a blank page.
+
+<Diff title="Run-time integration options at a glance">
+- **Web Components:** framework-agnostic, style-encapsulated, just HTML tags — the most natural Astro run-time boundary. Communication via attributes and events.
+- **iframes:** hardest isolation (separate document and globals). Use for third-party or legacy slices; communication is `postMessage` only.
+- **Remote fragments:** fetched and inlined on the server (endpoint or `server:defer`) — leanest client, one composed HTML document.
+- **Module Federation (`@module-federation/vite`):** SPA-native dynamic imports across apps. Most powerful, heaviest to operate; watch shared-dependency versions.
+</Diff>
+
+Run-time integration is what makes the org chart visible in the architecture: every team owns a URL, ships when it wants, and the Astro shell — static, fast, framework-agnostic — quietly composes them into one page.
+
+export const quizRuntime = [
+  {
+    q: "Which run-time technique gives the HARDEST isolation between a slice and the shell?",
+    options: [
+      "Web Components",
+      "iframes (separate document and globals)",
+      "Remote fragments",
+      "Custom events",
+    ],
+    answer: 1,
+  },
+  {
+    q: "Which Vite plugin lets the shell consume modules from independently-deployed team apps at run time?",
+    options: [
+      "@astrojs/federation",
+      "@module-federation/vite",
+      "vite-plugin-remote",
+      "@vite/microfrontend",
+    ],
+    answer: 1,
+  },
+  {
+    q: "A lightweight way for two independent slices to share state without a shared bundle is:",
+    options: [
+      "Importing each other's components directly",
+      "Custom window events or a tiny store like nanostores",
+      "A global mutable variable on document",
+      "Rebuilding the shell on every change",
+    ],
+    answer: 1,
+  },
+  {
+    q: "A real pitfall of independent deployment to guard against is:",
+    options: [
+      "The shell becoming too fast",
+      "Shipping duplicated dependencies and drifting design consistency across repos",
+      "Being unable to use TypeScript",
+      "Losing the ability to fetch on the server",
+    ],
+    answer: 1,
+  },
+];
+
+<Quiz client:visible id="microfrontends/runtime-integration-and-deploy" questions={quizRuntime} />
+
+<ProgressTracker client:visible id="microfrontends/runtime-integration-and-deploy" />

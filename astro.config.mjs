@@ -31,6 +31,7 @@ export default defineConfig({
         { label: 'Content & Data', items: [{ autogenerate: { directory: 'content' } }] },
         { label: 'Styling', items: [{ autogenerate: { directory: 'styling' } }] },
         { label: 'Tooling, Testing & Deployment', items: [{ autogenerate: { directory: 'tooling' } }] },
+        { label: 'Micro-Frontends with Astro', items: [{ autogenerate: { directory: 'microfrontends' } }] },
       ],
       }), preact()],
 });

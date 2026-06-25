@@ -1,0 +1,152 @@
+---
+title: 'Islands ข้าม Frameworks'
+description: 'Astro islands คือขอบเขต micro-frontend ที่ง่ายที่สุด: หน้าเพจเดียวที่ host React, Vue และ Svelte islands — แต่ละตัวคือทีมที่เป็นไปได้'
+---
+
+import AstroPlayground from '../../../../components/AstroPlayground.tsx';
+import ReactAstro from '../../../../components/ReactAstro.tsx';
+import Mermaid from '../../../../components/Mermaid.astro';
+import Diff from '../../../../components/Diff.astro';
+import Quiz from '../../../../components/Quiz.tsx';
+import ProgressTracker from '../../../../components/ProgressTracker.tsx';
+
+ขอบเขต micro-frontend ที่ถูกที่สุดที่คุณจะเคยวาดได้คือ **Astro island** island คือ component แบบโต้ตอบที่เบ็ดเสร็จในตัวเอง ที่ hydrate ด้วยตัวเอง ส่ง JavaScript ของตัวเอง และไม่รู้อะไรเลยเกี่ยวกับ component รอบๆ มัน เปลี่ยน "component" เป็น "team" แล้วคุณก็ได้ micro-frontend: region ที่แยกตัวออกมาซึ่งกลุ่มหนึ่งเป็นเจ้าของ และ shell เพียงแค่วางมันลงบนหน้าเพจ
+
+ส่วนที่น่าทึ่งคือ Astro ปล่อยให้ islands มาจาก **framework ต่างกันบนหน้าเพจเดียวกัน** ได้ ทีม Catalog สามารถเขียน Vue ทีม Reviews สามารถเขียน Svelte และทีม Cart สามารถอยู่กับ React ต่อไป — ทั้งหมดถูกเรนเดอร์ลงในเอกสาร HTML แบบ static เดียวกัน
+
+## การเพิ่ม framework integrations
+
+แต่ละ framework ที่คุณต้องการ host อยู่ห่างจาก `astro add` เพียงคำสั่งเดียว คำสั่งนี้จะติดตั้ง renderer และจัดการ config ให้คุณ:
+
+```bash
+npx astro add react vue svelte
+```
+
+หลังจากนั้น การ import component `.jsx`, `.vue`, หรือ `.svelte` เข้าไปในไฟล์ `.astro` ก็ทำงานได้เลย คุณเลือกให้แต่ละตัวเข้าสู่ hydration ด้วย `client:*` directive — `client:load`, `client:idle`, หรือ `client:visible` — และ Astro จะส่งเฉพาะ runtime ของ island นั้น เฉพาะตอนที่จำเป็นเท่านั้น
+
+export const boundaryDiagram = `flowchart TD
+  Page["Astro page (static HTML shell)"]
+  Page --> RI["React island — Cart\\n(client:load)"]
+  Page --> VI["Vue island — Catalog\\n(client:visible)"]
+  Page --> SI["Svelte island — Reviews\\n(client:idle)"]
+  RI -.->|isolated| VI
+  VI -.->|isolated| SI`;
+
+<Mermaid code={boundaryDiagram} title="หนึ่งหน้าเพจ, สาม framework islands, สามขอบเขตที่เป็นอิสระต่อกัน" />
+
+แต่ละ island คือขอบเขตของตัวเอง การ crash ภายใน Vue island ไม่ทำให้ React island ล้มตามไปด้วย แต่ละตัว hydrate อย่างเป็นอิสระและเป็นเจ้าของเฉพาะ subtree ของตัวเองเท่านั้น
+
+## React ใน tree vs islands บนหน้าเพจ
+
+ใน React SPA ทุก region ที่โต้ตอบได้อยู่ภายใน component tree เดียวและ bundle เดียว ใน Astro นั้น *หน้าเพจ* คือ shell และแต่ละ region คือ island ที่ shell วางลงไป — โดยอาจมาจาก framework ที่ต่างกัน
+
+export const treeReact = `// React SPA: one tree, one bundle.
+// Every region is a React component,
+// all hydrated together at startup.
+
+export default function StorePage() {
+  return (
+    <Shell>
+      <Cart />      {/* React */}
+      <Catalog />   {/* React */}
+      <Reviews />   {/* React */}
+    </Shell>
+  );
+}`;
+
+export const treeAstro = `---
+// Astro page: the shell is static HTML.
+// Each region is an island — and each may
+// be a different framework owned by a
+// different team.
+import Cart from '../islands/Cart.jsx';      // React
+import Catalog from '../islands/Catalog.vue';  // Vue
+import Reviews from '../islands/Reviews.svelte'; // Svelte
+---
+<main>
+  <Cart client:load />
+  <Catalog client:visible />
+  <Reviews client:idle />
+</main>`;
+
+<ReactAstro client:visible react={treeReact} astro={treeAstro} />
+
+## ลองเลย: React island และ Vue island เคียงข้างกัน
+
+playground ด้านล่างเป็นหน้า Astro ที่สมบูรณ์และรันได้จริง มันใช้ host **React counter** และ **Vue counter** ในเอกสารเดียวกัน — สอง framework, สอง islands ที่เป็นอิสระต่อกัน, หนึ่ง static shell เปิดมันใน StackBlitz แล้วดูแต่ละ island hydrate และเก็บ state ของตัวเอง
+
+export const playgroundCode = `---
+// src/pages/index.astro
+// Each island below could be owned by a
+// different team. The page is the shell.
+import ReactCounter from '../components/ReactCounter.jsx';
+import VueCounter from '../components/VueCounter.vue';
+---
+<html lang="en">
+  <head><title>MFE islands demo</title></head>
+  <body>
+    <h1>One page, two frameworks</h1>
+
+    <section>
+      <h2>Cart team (React)</h2>
+      <ReactCounter client:load />
+    </section>
+
+    <section>
+      <h2>Catalog team (Vue)</h2>
+      <VueCounter client:visible />
+    </section>
+
+    <p>Each counter keeps its own state, isolated.</p>
+  </body>
+</html>`;
+
+<AstroPlayground client:visible code={playgroundCode} />
+
+หากต้องการรันจริงๆ คุณจะต้อง `npx astro add react vue` จากนั้นเพิ่ม `src/components/ReactCounter.jsx` (React component ปกติที่ใช้ `useState`) และ `src/components/VueCounter.vue` (Vue component ปกติที่ใช้ `ref`) component ทั้งสองไม่รับรู้ถึงกันและกัน — การแยกตัวนั้นแหละคือประเด็นทั้งหมด
+
+<Diff title="React SPA tree vs cross-framework islands">
+- **React SPA:** หนึ่ง framework, หนึ่ง bundle, หนึ่งรอบ hydration สำหรับทั้ง tree การผสม Vue หรือ Svelte เข้าไปแทบเป็นไปไม่ได้
+- **Astro islands:** แต่ละ region hydrate อย่างเป็นอิสระและส่งเฉพาะ runtime ของ framework ตัวเอง — และเฉพาะเมื่อมี `client:*` directive เท่านั้น
+- **การจับคู่กับทีม:** หนึ่ง island ≈ หนึ่งทีม contract ระหว่างทีมก็เป็นเพียง props ที่ shell ส่งเข้ามาและ slot ที่มันเรนเดอร์ลงไป
+- **การแยกตัว (Isolation):** error หรือการเรนเดอร์ที่หนักใน island หนึ่งจะอยู่ใน island นั้น static shell และเพื่อนบ้านของมันไม่ได้รับผลกระทบ
+</Diff>
+
+islands คือทางเข้าสู่ micro-frontends ที่นุ่มนวลที่สุด: ไม่มี infrastructure เพิ่มเติม, ไม่มี remote loading, ไม่มี Module Federation — เป็นเพียง component จากทีม (และ framework) ต่างๆ ที่ประกอบกันโดย Astro shell ที่รวดเร็ว บทเรียนถัดไปจะขยายเรื่องนี้ขึ้นไปสู่ระดับ package ทั้งก้อนและ server fragment ที่ถูกเลื่อน (deferred)
+
+export const quizIslands = [
+  {
+    q: "คำสั่งใดเพิ่ม renderer ของ React, Vue และ Svelte เข้าไปในโปรเจกต์ Astro?",
+    options: [
+      "npm run add-frameworks",
+      "npx astro add react vue svelte",
+      "astro install react vue svelte",
+      "npx create-astro --multi",
+    ],
+    answer: 1,
+  },
+  {
+    q: "ทำไม Astro islands จึงเป็นขอบเขต micro-frontend ตามธรรมชาติ?",
+    options: [
+      "มันบังคับให้ทุกทีมอยู่บน framework เดียวกัน",
+      "แต่ละ island hydrate อย่างเป็นอิสระและสามารถมาจาก framework ที่ต่างกันได้",
+      "มันปิด JavaScript ทั้งหมด",
+      "มันต้องการเซิร์ฟเวอร์แยกต่อหนึ่ง island",
+    ],
+    answer: 1,
+  },
+  {
+    q: "`client:*` directive ควบคุมอะไรสำหรับ island?",
+    options: [
+      "ว่ามันโหลดไฟล์ CSS ไหน",
+      "ว่ามันจะ hydrate และส่ง JavaScript หรือไม่และเมื่อไหร่",
+      "ว่าทีมไหนเป็นเจ้าของมัน",
+      "ตำแหน่งของมันใน layout",
+    ],
+    answer: 1,
+  },
+];
+
+<Quiz client:visible id="microfrontends/islands-across-frameworks" questions={quizIslands} />
+
+<ProgressTracker client:visible id="microfrontends/islands-across-frameworks" />

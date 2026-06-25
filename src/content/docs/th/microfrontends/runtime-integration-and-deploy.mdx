@@ -1,0 +1,152 @@
+---
+title: 'Run-time Integration และ Deploy'
+description: 'เย็บ micro-frontends ที่ deploy อิสระเข้าด้วยกันตอน run time ด้วย Web Components, iframes, remote fragments และ Module Federation — พร้อมการสื่อสารข้าม MFE และ versioning'
+---
+
+import Mermaid from '../../../../components/Mermaid.astro';
+import Diff from '../../../../components/Diff.astro';
+import Quiz from '../../../../components/Quiz.tsx';
+import ProgressTracker from '../../../../components/ProgressTracker.tsx';
+
+นี่คือจุดที่ micro-frontends สมกับชื่อของมัน: แต่ละ slice ถูก **deploy อย่างเป็นอิสระ** อยู่ที่ URL ของตัวเองบน pipeline ของตัวเอง และ Astro shell เย็บมันเข้าด้วยกัน **ตอน run time** ไม่ต้อง rebuild shell เมื่อทีม ship — shell เพียงโหลดสิ่งที่กำลัง live อยู่ในขณะนั้น นี่คือสี่เทคนิคหลัก เรียงจากการแยกตัวที่อ่อนที่สุดไปแข็งที่สุด
+
+## Web Components — custom elements ที่ไม่ผูกกับ framework
+
+ทีมสามารถ compile slice ของตัวเองให้เป็น **custom element** และเผยแพร่สคริปต์เพียงตัวเดียว shell โหลดสคริปต์นั้นและใช้ element เหมือน HTML tag ใดๆ — ไม่มีการล็อกอินกับ framework เพราะเบราว์เซอร์เป็นเจ้าของ registry ของ element:
+
+```astro
+---
+// The shell loads a team's element bundle.
+---
+<script src="https://cart.acme.dev/cart-widget.js" type="module"></script>
+<cart-widget user-id="42"></cart-widget>
+```
+
+Web Components คือขอบเขต run-time ที่เป็นธรรมชาติที่สุดใน Astro: มันเป็นเพียง HTML, มันห่อหุ้มสไตล์ของตัวเองผ่าน shadow DOM และ framework ใดๆ (Lit, Stencil, Svelte, หรือแม้แต่ React ผ่าน wrapper) ก็สามารถสร้างมันออกมาได้
+
+## iframes — การแยกตัวที่แข็งที่สุด
+
+เมื่อ slice ต้องถูก **ปิดผนึกแยกออกอย่างสมบูรณ์** — โค้ดของบุคคลที่สาม, แอป legacy, ขอบเขตความปลอดภัยที่เข้มงวด — iframe ให้เอกสารแยก, CSS แยก และ JavaScript globals แยกแก่คุณ:
+
+```astro
+<iframe src="https://legacy.acme.dev/reviews" title="Reviews"></iframe>
+```
+
+การแยกตัวเป็นไปอย่างสมบูรณ์ ซึ่งก็เป็นข้อเสียด้วยเช่นกัน: การสื่อสารถูกจำกัดอยู่ที่ `postMessage`, การกำหนดขนาดทำได้ยาก และคุณต้องจ่ายค่าเอกสารชุดที่สอง เลือกใช้ iframe เฉพาะเมื่อคุณต้องการกำแพงนั้นจริงๆ เท่านั้น
+
+## Remote fragments — fetch และ inline บนเซิร์ฟเวอร์
+
+Astro shell สามารถ fetch HTML ที่ทีมเรนเดอร์ไว้แล้ว **บนเซิร์ฟเวอร์** — ใน server island หรือ endpoint — และ inline มันเข้าไปในหน้าเพจ วิธีนี้ทำให้ฝั่ง client เบา: ผู้ใช้ได้รับเอกสาร HTML หนึ่งชุดที่ประกอบเสร็จแล้ว
+
+```astro
+---
+// Server-side: fetch a team's rendered fragment.
+const res = await fetch('https://reviews.acme.dev/fragment');
+const html = await res.text();
+---
+<section set:html={html}></section>
+```
+
+คุณยังสามารถเปิดเผยสิ่งนี้จาก **endpoint** ของ Astro (`src/pages/api/reviews.ts`) เพื่อให้ shell อื่นนำกลับมาใช้ซ้ำได้ จับคู่มันกับ `server:defer` (จากบทเรียนก่อนหน้า) เพื่อให้ fragment ที่ช้าไม่เคย block หน้าเพจ
+
+## Module Federation ผ่าน Vite
+
+**Module Federation** ปล่อยให้แอปหนึ่งบริโภค module จากอีกแอปหนึ่งตอน run time โดย fetch ผ่านเครือข่าย เนื่องจาก Astro สร้างบน Vite คุณจึงสามารถใช้ปลั๊กอิน **`@module-federation/vite`** เพื่อเปิดเผย module จากแอปของทีมต่างๆ และบริโภคมันใน shell ได้:
+
+```bash
+npm install @module-federation/vite
+```
+
+นี่คือตัวเลือก run-time ที่ "เป็นธรรมชาติแบบ SPA" ที่สุด — ทีมต่างๆ เปิดเผย component ที่ shell import แบบ dynamic เข้ามาโดยไม่ต้อง bundle มันไว้ มันทรงพลังแต่ก็หนักที่สุดในการดำเนินงาน: การทำ versioning ของ shared dependency (เพื่อไม่ให้ React ถูกโหลดสองครั้ง) และการประสานงาน build config กลายเป็นงานจริงจัง
+
+## เย็บทุกอย่างเข้าด้วยกัน
+
+export const deployDiagram = `flowchart TD
+  subgraph Teams["Independently deployed MFEs"]
+    A["cart.acme.dev\\n(Web Component)"]
+    B["reviews.acme.dev\\n(remote fragment)"]
+    C["catalog.acme.dev\\n(federated module)"]
+    D["legacy.acme.dev\\n(iframe)"]
+  end
+  Shell["Astro shell — composes at run time"]
+  A --> Shell
+  B --> Shell
+  C --> Shell
+  D --> Shell
+  Shell --> Page["One stitched page"]`;
+
+<Mermaid code={deployDiagram} title="micro-frontends ที่ deploy อิสระถูกเย็บเข้าด้วยกันโดย Astro shell" />
+
+## การสื่อสารข้าม MFE และ shared routing
+
+slice ที่เป็นอิสระต่อกันบางครั้งก็ยังต้องคุยกัน — "เพิ่มสินค้าลงตะกร้าแล้ว" ต้องไปถึง cart badge ทำให้ contract เล็กและ decouple ออกจากกัน:
+
+- **Custom events** บน `window`: slice หนึ่งทำ `window.dispatchEvent(new CustomEvent('cart:add', { detail }))` และอีก slice รับฟัง ไม่ต้องมี shared bundle
+- **shared store เล็กๆ** อย่าง **nanostores**: atom เล็กตัวเดียวที่ทั้งสอง slice import เข้ามาเพื่ออ่านและเขียน shared state แบบ reactive ไม่ผูกกับ framework และมีขนาดเพียงไม่กี่ร้อยไบต์
+
+สำหรับ **shared routing** ให้ Astro shell เป็นเจ้าของ URL และ layout แต่ละ slice จัดการ view state ภายในของตัวเอง แต่ยกการ navigation ระดับบนสุดให้ shell เพื่อให้ปุ่ม back และ deep link ทำงานสอดคล้องกันข้ามทีม
+
+## การ deploy อิสระ, versioning และหลุมพราง
+
+การ deploy อิสระคือทั้งรางวัลและภัยอันตราย กฎไม่กี่ข้อช่วยให้มันยังควบคุมได้:
+
+- **ทำ version ให้ contract ของคุณ** ไม่ใช่แค่โค้ด props ที่ element รับเข้ามา, ชื่อ event, รูปร่าง HTML ของ fragment — ปฏิบัติกับสิ่งเหล่านี้เหมือน public API และทำ version ให้มัน
+- **ปักหมุดหรือเจรจา shared dependencies** หากไม่ระมัดระวัง สาม slice จะ ship สำเนา React สามชุด การตั้งค่า shared ของ Module Federation หรือเพียงแค่ทำให้เป็นมาตรฐานบน Astro islands จะหลีกเลี่ยงภาษีความซ้ำซ้อนได้
+- **ปกป้องความสอดคล้อง** design tokens, fonts และ accessibility ต้องถูกบังคับใช้ข้าม repo (shared CSS/token package) ไม่งั้นหน้าเพจจะค่อยๆ เพี้ยนไปจนดูเหมือนสี่ผลิตภัณฑ์ที่ต่างกัน
+- **ล้มเหลวอย่างสง่างาม** run-time slice อาจล่มได้ ห่อ remote fetch และ federated import ไว้เพื่อให้ทีมที่ตายไปหนึ่งทีมลดระดับลงเป็น fallback แทนที่จะเป็นหน้าเปล่า
+
+<Diff title="ตัวเลือก run-time integration แบบมองรวดเดียว">
+- **Web Components:** ไม่ผูกกับ framework, ห่อหุ้มสไตล์, เป็นเพียง HTML tag — ขอบเขต run-time ที่เป็นธรรมชาติที่สุดของ Astro สื่อสารผ่าน attribute และ event
+- **iframes:** การแยกตัวแข็งที่สุด (เอกสารและ globals แยกกัน) ใช้กับ slice ของบุคคลที่สามหรือ legacy การสื่อสารทำได้ผ่าน `postMessage` เท่านั้น
+- **Remote fragments:** fetch และ inline บนเซิร์ฟเวอร์ (endpoint หรือ `server:defer`) — client เบาที่สุด, เอกสาร HTML ที่ประกอบเสร็จแล้วหนึ่งชุด
+- **Module Federation (`@module-federation/vite`):** dynamic import แบบ SPA-native ข้ามแอป ทรงพลังที่สุด หนักที่สุดในการดำเนินงาน ระวังเวอร์ชันของ shared dependency
+</Diff>
+
+run-time integration คือสิ่งที่ทำให้ผังองค์กรปรากฏชัดในสถาปัตยกรรม: ทุกทีมเป็นเจ้าของ URL, ship เมื่อต้องการ และ Astro shell — static, รวดเร็ว, ไม่ผูกกับ framework — ก็ประกอบมันเข้าด้วยกันเป็นหน้าเพจเดียวอย่างเงียบๆ
+
+export const quizRuntime = [
+  {
+    q: "เทคนิค run-time ใดให้การแยกตัวที่แข็งที่สุดระหว่าง slice กับ shell?",
+    options: [
+      "Web Components",
+      "iframes (เอกสารและ globals แยกกัน)",
+      "Remote fragments",
+      "Custom events",
+    ],
+    answer: 1,
+  },
+  {
+    q: "ปลั๊กอิน Vite ตัวใดที่ปล่อยให้ shell บริโภค module จากแอปของทีมที่ deploy อิสระตอน run time?",
+    options: [
+      "@astrojs/federation",
+      "@module-federation/vite",
+      "vite-plugin-remote",
+      "@vite/microfrontend",
+    ],
+    answer: 1,
+  },
+  {
+    q: "วิธีที่เบาในการให้สอง slice อิสระแชร์ state กันโดยไม่ต้องมี shared bundle คือ:",
+    options: [
+      "import component ของกันและกันโดยตรง",
+      "Custom window events หรือ store เล็กๆ อย่าง nanostores",
+      "ตัวแปร global ที่เปลี่ยนค่าได้บน document",
+      "rebuild shell ทุกครั้งที่มีการเปลี่ยนแปลง",
+    ],
+    answer: 1,
+  },
+  {
+    q: "หลุมพรางที่แท้จริงของการ deploy อิสระที่ต้องระวังคือ:",
+    options: [
+      "shell เร็วเกินไป",
+      "การ ship dependency ที่ซ้ำซ้อนและความสอดคล้องของดีไซน์ที่เพี้ยนไปข้าม repo",
+      "การไม่สามารถใช้ TypeScript ได้",
+      "การสูญเสียความสามารถในการ fetch บนเซิร์ฟเวอร์",
+    ],
+    answer: 1,
+  },
+];
+
+<Quiz client:visible id="microfrontends/runtime-integration-and-deploy" questions={quizRuntime} />
+
+<ProgressTracker client:visible id="microfrontends/runtime-integration-and-deploy" />

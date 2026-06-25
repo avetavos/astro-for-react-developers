@@ -1,0 +1,89 @@
+---
+title: 'Micro-Frontends with Astro'
+description: 'Why Astro — server-first, multi-framework, zero-JS-by-default — is a natural shell for composing micro-frontends from independent teams.'
+---
+
+import Mermaid from '../../../../components/Mermaid.astro';
+import Diff from '../../../../components/Diff.astro';
+import Quiz from '../../../../components/Quiz.tsx';
+import ProgressTracker from '../../../../components/ProgressTracker.tsx';
+
+A **micro-frontend** (MFE) applies the micro-services philosophy to the browser: instead of one large single-page app owned by one team, a page is **composed from several independently-owned slices**. The header comes from one team, the product grid from another, the cart from a third — each with its own codebase, build pipeline, and deployment cadence.
+
+The hard part of MFEs has always been the **shell**: the thing that stitches the slices together, decides what ships JavaScript, and keeps the page fast despite multiple frameworks fighting over the main thread. This is exactly where Astro shines. Astro renders to **static HTML by default**, hydrates only the interactive parts (islands), and can host **React, Vue, Svelte, Solid and more on the same page**. That makes it an unusually good composition layer for micro-frontends.
+
+## What this module covers
+
+| Lesson | What you will learn |
+|---|---|
+| [What Are Micro-Frontends?](/astro-for-react-developers/en/microfrontends/what-are-microfrontends/) | Independent teams, vertical slices, build-time vs run-time integration, and the real costs |
+| [Islands Across Frameworks](/astro-for-react-developers/en/microfrontends/islands-across-frameworks/) | One Astro page hosting React, Vue and Svelte islands — the simplest MFE boundary |
+| [Composition Patterns](/astro-for-react-developers/en/microfrontends/composition-patterns/) | Astro as the shell: build-time packages vs run-time fragments and server islands |
+| [Run-time Integration & Deploy](/astro-for-react-developers/en/microfrontends/runtime-integration-and-deploy/) | Web Components, iframes, remote fragments, Module Federation, and independent deployment |
+
+## A page built by many teams
+
+In a micro-frontend architecture, a single page the user sees is assembled from regions that different teams build and ship on their own schedule. The Astro shell is responsible only for the layout and for deciding how each region is integrated.
+
+export const overviewDiagram = `flowchart TD
+  subgraph Shell["Astro shell (zero-JS layout)"]
+    H["Header region"]
+    C["Catalog region"]
+    R["Reviews region"]
+    K["Cart region"]
+  end
+  TeamA["Team A — Identity"] --> H
+  TeamB["Team B — Catalog"] --> C
+  TeamC["Team C — Social"] --> R
+  TeamD["Team D — Checkout"] --> K
+  Shell --> Page["One fast HTML page"]`;
+
+<Mermaid code={overviewDiagram} title="A single page composed from four teams' micro-frontends" />
+
+Each team owns a vertical slice end to end — UI, the logic behind it, and often its own data source. The shell never reaches inside a slice; it only knows where to place it and how to load it.
+
+<Diff title="Monolith SPA vs micro-frontend composition">
+- **Monolith SPA:** one repo, one build, one deploy. Every team merges into the same bundle, so a single slow component or a bad release affects the whole app.
+- **MFE composition:** each slice has its own repo, build and deploy. Teams ship independently, and a problem in one slice is contained.
+- **Astro as shell:** the layout is static HTML with **zero JavaScript** unless a slice opts in via a `client:*` directive — the framework cost is paid per-island, not per-page.
+- The trade-off is **coordination cost**: shared design tokens, routing and contracts now live between teams instead of inside one codebase.
+</Diff>
+
+Throughout this module we treat Astro as the **integration layer**. You will see two big families of integration — composing slices **at build time** (shared packages in a workspace) and composing them **at run time** (remote fragments, Web Components, Module Federation, iframes) — and learn when each one is the right tool.
+
+export const quizMfeIndex = [
+  {
+    q: "What is the defining idea of a micro-frontend architecture?",
+    options: [
+      "Splitting CSS into multiple files",
+      "A page composed from several independently-owned, independently-deployed slices",
+      "Rendering everything on the server",
+      "Using only Web Components",
+    ],
+    answer: 1,
+  },
+  {
+    q: "Why is Astro a natural fit as a micro-frontend shell?",
+    options: [
+      "It forces every team to use React",
+      "It ships a large runtime to coordinate slices",
+      "It is static HTML by default and can host islands from many frameworks on one page",
+      "It only works at build time",
+    ],
+    answer: 2,
+  },
+  {
+    q: "Compared with a monolith SPA, the main new cost of MFEs is:",
+    options: [
+      "Slower initial HTML",
+      "Coordination across teams — shared tokens, routing and contracts",
+      "Inability to use TypeScript",
+      "Losing server-side rendering",
+    ],
+    answer: 1,
+  },
+];
+
+<Quiz client:visible id="microfrontends/index" questions={quizMfeIndex} />
+
+<ProgressTracker client:visible id="microfrontends/index" />
