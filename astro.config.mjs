@@ -15,6 +15,15 @@ export default defineConfig({
       title: 'Astro for React Developers',
       head: [
         { tag: 'script', attrs: { type: 'module', src: '/astro-for-react-developers/enhance.js' } },
+        { tag: 'link', attrs: { rel: 'manifest', href: '/astro-for-react-developers/manifest.webmanifest' } },
+        { tag: 'link', attrs: { rel: 'apple-touch-icon', href: '/astro-for-react-developers/apple-touch-icon.png' } },
+        { tag: 'link', attrs: { rel: 'icon', type: 'image/png', sizes: '192x192', href: '/astro-for-react-developers/icon-192.png' } },
+        { tag: 'meta', attrs: { name: 'theme-color', content: '#BC52EE' } },
+        { tag: 'meta', attrs: { name: 'mobile-web-app-capable', content: 'yes' } },
+        { tag: 'meta', attrs: { name: 'apple-mobile-web-app-capable', content: 'yes' } },
+        { tag: 'meta', attrs: { name: 'apple-mobile-web-app-status-bar-style', content: 'black-translucent' } },
+        { tag: 'meta', attrs: { name: 'apple-mobile-web-app-title', content: "Astro for React Developers" } },
+        { tag: 'script', content: "if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('/astro-for-react-developers/sw.js',{scope:'/astro-for-react-developers/'}).catch(function(){})})}" },
       ],
       defaultLocale: 'en',
       locales: {
