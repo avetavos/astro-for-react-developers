@@ -3,7 +3,7 @@ title: Importing Components
 description: import .astro component ใน frontmatter แล้วประกอบมันใน template เหมือนกับการ import ใน React เลย
 ---
 
-import ReactAstro from '../../../../components/ReactAstro.tsx';
+import ReactAstro from '../../../../components/ReactAstro.astro';
 import AstroPlayground from '../../../../components/AstroPlayground.tsx';
 import Diff from '../../../../components/Diff.astro';
 import Quiz from '../../../../components/Quiz.tsx';
@@ -40,7 +40,7 @@ import Footer from '../components/Footer.astro';
 </main>
 <Footer />`;
 
-<ReactAstro client:visible react={importReact} astro={importAstro} />
+<ReactAstro react={importReact} astro={importAstro} />
 
 ความแตกต่างที่สำคัญ:
 
@@ -93,7 +93,7 @@ const { posts } = Astro.props;
   </div>
 </div>`;
 
-<ReactAstro client:visible react={compositionReact} astro={compositionAstro} />
+<ReactAstro react={compositionReact} astro={compositionAstro} />
 
 > **หมายเหตุเกี่ยวกับ snippet ที่รันได้:** playground ของ StackBlitz รันไฟล์ `src/pages/index.astro` เพียงไฟล์เดียว ตัวอย่างด้านล่างจึงเขียน markup ของ "sub-component" แบบ inline ลงไปตรง ๆ เพื่อให้อยู่ในไฟล์เดียวได้ครบ ในโปรเจกต์จริงคุณจะแยกมันออกเป็นไฟล์ `.astro` ต่างหากแล้ว import เข้ามา
 

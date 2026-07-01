@@ -3,7 +3,7 @@ title: 'Global Styles'
 description: 'ใช้ <style is:global> หรือ import CSS file ที่ระดับ layout เพื่อใช้ style กับทั้งไซต์ — เทียบเท่ากับการ import ใน _app.tsx'
 ---
 
-import ReactAstro from '../../../../components/ReactAstro.tsx';
+import ReactAstro from '../../../../components/ReactAstro.astro';
 import AstroPlayground from '../../../../components/AstroPlayground.tsx';
 import Diff from '../../../../components/Diff.astro';
 import Quiz from '../../../../components/Quiz.tsx';
@@ -42,7 +42,7 @@ export const globalIsGlobalAstro = `---
   :root { --color-primary: #6366f1; }
 </style>`;
 
-<ReactAstro client:visible react={globalIsGlobalReact} astro={globalIsGlobalAstro} />
+<ReactAstro react={globalIsGlobalReact} astro={globalIsGlobalAstro} />
 
 `is:global` มีประโยชน์สำหรับ CSS พื้นฐานจำนวนน้อยที่อยู่ใกล้กับ layout markup สำหรับ stylesheet ขนาดใหญ่กว่านั้น ควรใช้ไฟล์ `.css` แยกและ import แทน
 
@@ -70,7 +70,7 @@ const { title } = Astro.props;
   </body>
 </html>`;
 
-<ReactAstro client:visible react={globalImportReact} astro={globalImportAstro} />
+<ReactAstro react={globalImportReact} astro={globalImportAstro} />
 
 Vite ประมวลผลไฟล์ CSS ที่ import มา — PostCSS, `@import` chains และ custom properties ทำงานได้โดยไม่ต้องตั้งค่าพิเศษ
 

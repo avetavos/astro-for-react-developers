@@ -3,7 +3,7 @@ title: 'Global Styles'
 description: 'Use <style is:global> or import a CSS file at the layout level to apply styles across the whole site — equivalent to importing in _app.tsx.'
 ---
 
-import ReactAstro from '../../../../components/ReactAstro.tsx';
+import ReactAstro from '../../../../components/ReactAstro.astro';
 import AstroPlayground from '../../../../components/AstroPlayground.tsx';
 import Diff from '../../../../components/Diff.astro';
 import Quiz from '../../../../components/Quiz.tsx';
@@ -42,7 +42,7 @@ export const globalIsGlobalAstro = `---
   :root { --color-primary: #6366f1; }
 </style>`;
 
-<ReactAstro client:visible react={globalIsGlobalReact} astro={globalIsGlobalAstro} />
+<ReactAstro react={globalIsGlobalReact} astro={globalIsGlobalAstro} />
 
 `is:global` is useful for small amounts of base CSS that live next to your layout markup. For larger style sheets, prefer a standalone `.css` import.
 
@@ -70,7 +70,7 @@ const { title } = Astro.props;
   </body>
 </html>`;
 
-<ReactAstro client:visible react={globalImportReact} astro={globalImportAstro} />
+<ReactAstro react={globalImportReact} astro={globalImportAstro} />
 
 Vite processes the imported CSS file — PostCSS, `@import` chains, and custom properties all work without extra configuration.
 

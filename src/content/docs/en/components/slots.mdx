@@ -3,7 +3,7 @@ title: Slots
 description: "Use <slot /> to accept children in .astro components. Named slots replace React's render props and named children patterns."
 ---
 
-import ReactAstro from '../../../../components/ReactAstro.tsx';
+import ReactAstro from '../../../../components/ReactAstro.astro';
 import AstroPlayground from '../../../../components/AstroPlayground.tsx';
 import Diff from '../../../../components/Diff.astro';
 import Quiz from '../../../../components/Quiz.tsx';
@@ -42,7 +42,7 @@ export const slotsAstro = `---
 </Card>
 -->`;
 
-<ReactAstro client:visible react={slotsReact} astro={slotsAstro} />
+<ReactAstro react={slotsReact} astro={slotsAstro} />
 
 No prop declaration needed — `<slot />` automatically receives any children passed to the component. If no children are passed, the slot renders nothing (you can provide fallback content between the slot tags: `<slot>Default content</slot>`).
 
@@ -90,7 +90,7 @@ export const namedSlotsAstro = `---
 </Layout>
 -->`;
 
-<ReactAstro client:visible react={namedSlotsReact} astro={namedSlotsAstro} />
+<ReactAstro react={namedSlotsReact} astro={namedSlotsAstro} />
 
 ## Runnable example
 

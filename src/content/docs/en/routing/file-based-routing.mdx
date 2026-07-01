@@ -3,7 +3,7 @@ title: 'File-based Routing'
 description: 'How src/pages/*.astro maps to URLs, including index files and nested folders.'
 ---
 
-import ReactAstro from '../../../../components/ReactAstro.tsx';
+import ReactAstro from '../../../../components/ReactAstro.astro';
 import Diff from '../../../../components/Diff.astro';
 import Quiz from '../../../../components/Quiz.tsx';
 import ProgressTracker from '../../../../components/ProgressTracker.tsx';
@@ -56,7 +56,7 @@ src/pages/
 // No page.tsx wrapper needed.
 // The .astro file IS the page.`;
 
-<ReactAstro client:visible react={fileRoutingReact} astro={fileRoutingAstro} reactTitle="Next.js" />
+<ReactAstro react={fileRoutingReact} astro={fileRoutingAstro} reactTitle="Next.js" />
 
 ## What a page file looks like
 
@@ -83,7 +83,7 @@ import Layout from '../layouts/Layout.astro';
   </main>
 </Layout>`;
 
-<ReactAstro client:visible react={pageFileReact} astro={pageFileAstro} reactTitle="Next.js" />
+<ReactAstro react={pageFileReact} astro={pageFileAstro} reactTitle="Next.js" />
 
 ## Project file tree
 

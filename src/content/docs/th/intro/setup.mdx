@@ -3,7 +3,7 @@ title: การตั้งค่า
 description: "สร้างโปรเจกต์ Astro ใหม่ด้วย npm create astro และเริ่ม dev server — เทียบกับ CRA และ create-next-app"
 ---
 
-import ReactAstro from '../../../../components/ReactAstro.tsx';
+import ReactAstro from '../../../../components/ReactAstro.astro';
 import Diff from '../../../../components/Diff.astro';
 import Quiz from '../../../../components/Quiz.tsx';
 import ProgressTracker from '../../../../components/ProgressTracker.tsx';
@@ -35,7 +35,7 @@ npm create astro@latest my-app
 #   Initialize a new git repository? Yes
 cd my-app && npm run dev`;
 
-<ReactAstro client:visible react={setupReact} astro={setupAstro} />
+<ReactAstro react={setupReact} astro={setupAstro} />
 
 คำสั่ง `npm create astro@latest` ดึง Astro scaffolding CLI ล่าสุด (`create-astro`) จาก npm — ไม่ต้องติดตั้ง global wizard เป็นแบบสนทนาและถามเฉพาะสิ่งที่จำเป็น
 

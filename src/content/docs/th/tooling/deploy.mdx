@@ -3,7 +3,7 @@ title: Deploy
 description: 'Build และ deploy Astro site ครอบคลุม static hosts (GitHub Pages, Netlify, Vercel), SSR adapters และตัวอย่าง GitHub Actions CI สำหรับ React developers'
 ---
 
-import ReactAstro from '../../../../components/ReactAstro.tsx';
+import ReactAstro from '../../../../components/ReactAstro.astro';
 import Diff from '../../../../components/Diff.astro';
 import Quiz from '../../../../components/Quiz.tsx';
 import ProgressTracker from '../../../../components/ProgressTracker.tsx';
@@ -178,7 +178,7 @@ export const deployAstro = `// Astro deployment options
 // COPY dist ./dist
 // CMD ["node", "./dist/server/entry.mjs"]`;
 
-<ReactAstro client:visible react={deployNext} astro={deployAstro} reactTitle="Next.js deploy" astroTitle="Astro deploy" />
+<ReactAstro react={deployNext} astro={deployAstro} reactTitle="Next.js deploy" astroTitle="Astro deploy" />
 
 ## CI pipeline — type-check + build + deploy
 

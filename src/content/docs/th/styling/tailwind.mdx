@@ -3,7 +3,7 @@ title: Tailwind
 description: 'เพิ่ม Tailwind CSS ใน Astro ด้วย npx astro add tailwind และใช้ utility classes เหมือนกับใน Next.js — ต่างกันแค่ class= แทน className='
 ---
 
-import ReactAstro from '../../../../components/ReactAstro.tsx';
+import ReactAstro from '../../../../components/ReactAstro.astro';
 import Diff from '../../../../components/Diff.astro';
 import Quiz from '../../../../components/Quiz.tsx';
 import ProgressTracker from '../../../../components/ProgressTracker.tsx';
@@ -78,7 +78,7 @@ const { title, description, featured = false } = Astro.props;
   <p class="text-sm text-slate-600">{description}</p>
 </div>`;
 
-<ReactAstro client:visible react={tailwindReact} astro={tailwindAstro} />
+<ReactAstro react={tailwindReact} astro={tailwindAstro} />
 
 การเปลี่ยนแปลงที่จำเป็นเพียงอย่างเดียว: `className` กลายเป็น `class` ทุกอย่างอื่น — utility classes, responsive prefixes, dark-mode variants, arbitrary values — ทำงานเหมือนกันทุกประการ
 

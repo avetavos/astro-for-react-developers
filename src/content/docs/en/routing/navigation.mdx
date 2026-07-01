@@ -3,7 +3,7 @@ title: Navigation
 description: 'Plain <a href> MPA navigation, Astro.url for active links, and ViewTransitions for SPA-like animations — compared to <Link> and useRouter.'
 ---
 
-import ReactAstro from '../../../../components/ReactAstro.tsx';
+import ReactAstro from '../../../../components/ReactAstro.astro';
 import AstroPlayground from '../../../../components/AstroPlayground.tsx';
 import Diff from '../../../../components/Diff.astro';
 import Quiz from '../../../../components/Quiz.tsx';
@@ -53,7 +53,7 @@ const links = ['/', '/about', '/blog'];
   ))}
 </nav>`;
 
-<ReactAstro client:visible react={navReact} astro={navAstro} reactTitle="Next.js" />
+<ReactAstro react={navReact} astro={navAstro} reactTitle="Next.js" />
 
 Key points:
 
@@ -135,7 +135,7 @@ import { ViewTransitions } from 'astro:transitions';
   </body>
 </html>`;
 
-<ReactAstro client:visible react={vtReact} astro={vtAstro} reactTitle="Next.js" />
+<ReactAstro react={vtReact} astro={vtAstro} reactTitle="Next.js" />
 
 With `<ViewTransitions />` Astro intercepts link clicks and uses the native browser View Transitions API to animate between pages. You keep the MPA mental model — no client-side router, no JavaScript bundle for routing logic.
 

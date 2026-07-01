@@ -3,7 +3,7 @@ title: 'Content & Data'
 description: 'How Astro handles data: frontmatter runs at build/server time, content collections for MD/MDX, versus the React data-fetching landscape.'
 ---
 
-import ReactAstro from '../../../../components/ReactAstro.tsx';
+import ReactAstro from '../../../../components/ReactAstro.astro';
 import AstroPlayground from '../../../../components/AstroPlayground.tsx';
 import Diff from '../../../../components/Diff.astro';
 import Quiz from '../../../../components/Quiz.tsx';
@@ -54,7 +54,7 @@ const posts = await res.json();
   ))}
 </ul>`;
 
-<ReactAstro client:visible react={fetchReact} astro={fetchAstro} />
+<ReactAstro react={fetchReact} astro={fetchAstro} />
 
 Notice: in Astro, `await fetch()` sits directly in the frontmatter. It runs at build time (static) or per-request (SSR). No `useEffect`, no loading state, no client-side JavaScript shipped for the fetch itself.
 

@@ -3,7 +3,7 @@ title: Islands Architecture และ MPA Model
 description: Astro ส่ง HTML ที่ render จาก server ตามค่าเริ่มต้นได้อย่างไร และ hydrate เฉพาะ island ที่โต้ตอบได้ เพื่อประหยัด JavaScript ในระดับใหญ่
 ---
 
-import ReactAstro from '../../../../components/ReactAstro.tsx';
+import ReactAstro from '../../../../components/ReactAstro.astro';
 import AstroPlayground from '../../../../components/AstroPlayground.tsx';
 import Diff from '../../../../components/Diff.astro';
 import Quiz from '../../../../components/Quiz.tsx';
@@ -59,7 +59,7 @@ import Counter from '../components/Counter.tsx'; // React island
 </html>
 <!-- Bundle: only Counter's JS — not Header or ArticleBody -->`;
 
-<ReactAstro client:visible react={islandsReact} astro={islandsAstro} />
+<ReactAstro react={islandsReact} astro={islandsAstro} />
 
 สังเกต `client:visible` บน `Counter` นั่นคือ **hydration directive** ถ้าไม่มีมัน `Counter` จะ render เป็น HTML ขณะ build (markup เริ่มต้น) และไม่มีทางโต้ตอบในเบราว์เซอร์
 

@@ -3,7 +3,7 @@ title: 'Islands & Using React in Astro'
 description: 'Hydrate only the interactive parts of your page — and bring your existing React components along.'
 ---
 
-import ReactAstro from '../../../../components/ReactAstro.tsx';
+import ReactAstro from '../../../../components/ReactAstro.astro';
 import Diff from '../../../../components/Diff.astro';
 import Quiz from '../../../../components/Quiz.tsx';
 import ProgressTracker from '../../../../components/ProgressTracker.tsx';
@@ -52,7 +52,7 @@ import Counter from '../components/Counter.jsx';
 <Counter client:load />  <!-- ONE hydrated island -->
 <footer>...</footer>     <!-- static HTML -->`;
 
-<ReactAstro client:visible react={indexReact} astro={indexAstro} />
+<ReactAstro react={indexReact} astro={indexAstro} />
 
 <Diff title="Full-app hydration vs Islands">
 - React/Next.js: **one JS bundle**, the whole tree is hydrated, every component runs in the browser.

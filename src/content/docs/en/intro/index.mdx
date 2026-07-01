@@ -3,7 +3,7 @@ title: 'Introduction: Astro for React Developers'
 description: Why Astro, what the islands architecture means for React developers, and what this course covers.
 ---
 
-import ReactAstro from '../../../../components/ReactAstro.tsx';
+import ReactAstro from '../../../../components/ReactAstro.astro';
 import AstroPlayground from '../../../../components/AstroPlayground.tsx';
 import Diff from '../../../../components/Diff.astro';
 import Quiz from '../../../../components/Quiz.tsx';
@@ -85,7 +85,7 @@ const title = "My Site";
   </body>
 </html>`;
 
-<ReactAstro client:visible react={indexReact} astro={indexAstro} />
+<ReactAstro react={indexReact} astro={indexAstro} />
 
 The Astro page above ships **no JavaScript to the browser** — the `title` variable is evaluated once at build time and baked into the HTML. There is no React runtime, no hydration, no virtual DOM.
 

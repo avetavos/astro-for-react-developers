@@ -3,7 +3,7 @@ title: 'Routing & Layouts'
 description: 'ระบบ routing แบบ file-based และ layout ใน Astro เทียบกับ react-router และ Next.js App Router'
 ---
 
-import ReactAstro from '../../../../components/ReactAstro.tsx';
+import ReactAstro from '../../../../components/ReactAstro.astro';
 import Diff from '../../../../components/Diff.astro';
 import Quiz from '../../../../components/Quiz.tsx';
 import ProgressTracker from '../../../../components/ProgressTracker.tsx';
@@ -58,7 +58,7 @@ import Layout from '../layouts/Layout.astro';
 
 <!-- src/pages/about.astro  →  /about -->`;
 
-<ReactAstro client:visible react={mpaReact} astro={mpaAstro} />
+<ReactAstro react={mpaReact} astro={mpaAstro} />
 
 <Diff title="React SPA router vs Astro MPA routing">
 - React SPA: routing เกิดขึ้น **ฝั่ง browser** — `BrowserRouter` สกัด click และสลับ component โดยไม่โหลดหน้าใหม่

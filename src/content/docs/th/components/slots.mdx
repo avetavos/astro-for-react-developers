@@ -3,7 +3,7 @@ title: Slots
 description: "ใช้ <slot /> เพื่อรับ children ใน .astro component named slot มาแทน pattern อย่าง render props และ named children ของ React"
 ---
 
-import ReactAstro from '../../../../components/ReactAstro.tsx';
+import ReactAstro from '../../../../components/ReactAstro.astro';
 import AstroPlayground from '../../../../components/AstroPlayground.tsx';
 import Diff from '../../../../components/Diff.astro';
 import Quiz from '../../../../components/Quiz.tsx';
@@ -42,7 +42,7 @@ export const slotsAstro = `---
 </Card>
 -->`;
 
-<ReactAstro client:visible react={slotsReact} astro={slotsAstro} />
+<ReactAstro react={slotsReact} astro={slotsAstro} />
 
 ไม่ต้องประกาศ prop ใด ๆ — `<slot />` จะรับ children ที่ส่งเข้ามาให้ component โดยอัตโนมัติ ถ้าไม่มี children ถูกส่งเข้ามา slot จะไม่ render อะไรเลย (คุณสามารถใส่ fallback content ไว้ระหว่าง tag ของ slot ได้: `<slot>Default content</slot>`)
 
@@ -90,7 +90,7 @@ export const namedSlotsAstro = `---
 </Layout>
 -->`;
 
-<ReactAstro client:visible react={namedSlotsReact} astro={namedSlotsAstro} />
+<ReactAstro react={namedSlotsReact} astro={namedSlotsAstro} />
 
 ## ตัวอย่างที่รันได้จริง
 

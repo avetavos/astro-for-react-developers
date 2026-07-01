@@ -3,7 +3,7 @@ title: Passing Props to Islands
 description: 'Pass serializable props to React islands; use slots to compose children across the Astro/React boundary.'
 ---
 
-import ReactAstro from '../../../../components/ReactAstro.tsx';
+import ReactAstro from '../../../../components/ReactAstro.astro';
 import Diff from '../../../../components/Diff.astro';
 import Quiz from '../../../../components/Quiz.tsx';
 import ProgressTracker from '../../../../components/ProgressTracker.tsx';
@@ -45,7 +45,7 @@ const iso = new Date().toISOString(); // Date → string ✓
 />
 {/* onReset={() => ...} would throw a build error */}`;
 
-<ReactAstro client:visible react={propsSerializableReact} astro={propsSerializableAstro} />
+<ReactAstro react={propsSerializableReact} astro={propsSerializableAstro} />
 
 > **Functions as props:** You cannot pass a callback from `.astro` to a React island. If your island needs a callback (e.g., a modal that calls `onClose`), handle that interaction entirely inside the island — fetch data, manage state, and navigate using the browser's native APIs from within React.
 
@@ -135,7 +135,7 @@ const user = await fetch('/api/user').then(r => r.json());
   Function props ✗ — handle inside the island
 */}`;
 
-<ReactAstro client:visible react={propsPassing} astro={propsPassingAstro} />
+<ReactAstro react={propsPassing} astro={propsPassingAstro} />
 
 <Diff title="React props vs Astro island props">
 - React: **any prop type** — functions, Dates, class instances all fine.

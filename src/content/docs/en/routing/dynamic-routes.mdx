@@ -3,7 +3,7 @@ title: 'Dynamic Routes'
 description: 'Create dynamic URL segments with [slug].astro and getStaticPaths() — the Astro equivalent of Next.js generateStaticParams.'
 ---
 
-import ReactAstro from '../../../../components/ReactAstro.tsx';
+import ReactAstro from '../../../../components/ReactAstro.astro';
 import Diff from '../../../../components/Diff.astro';
 import Quiz from '../../../../components/Quiz.tsx';
 import ProgressTracker from '../../../../components/ProgressTracker.tsx';
@@ -44,7 +44,7 @@ const { post } = Astro.props;
 ---
 <h1>{post.title}</h1>`;
 
-<ReactAstro client:visible react={dynReact} astro={dynAstro} reactTitle="Next.js" />
+<ReactAstro react={dynReact} astro={dynAstro} reactTitle="Next.js" />
 
 Key differences to note:
 
@@ -94,7 +94,7 @@ const { post } = Astro.props;
   <div set:html={post.body} />
 </article>`;
 
-<ReactAstro client:visible react={dynParamsReact} astro={dynParamsAstro} reactTitle="Next.js Pages Router" />
+<ReactAstro react={dynParamsReact} astro={dynParamsAstro} reactTitle="Next.js Pages Router" />
 
 ## File tree for a blog
 
@@ -128,7 +128,7 @@ const { path } = Astro.params;
 ---
 <div>Docs path: {path}</div>`;
 
-<ReactAstro client:visible react={catchAllReact} astro={catchAllAstro} reactTitle="Next.js" />
+<ReactAstro react={catchAllReact} astro={catchAllAstro} reactTitle="Next.js" />
 
 <Diff title="Next.js dynamic routes vs Astro dynamic routes">
 - Next.js App Router: `[slug]/page.tsx` + `generateStaticParams()` as a named export from the file.

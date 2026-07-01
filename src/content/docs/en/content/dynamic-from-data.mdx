@@ -3,7 +3,7 @@ title: 'Dynamic Pages from Data'
 description: 'Generate static pages from a content collection using getStaticPaths() in src/pages/blog/[slug].astro — versus generateStaticParams in Next.js App Router.'
 ---
 
-import ReactAstro from '../../../../components/ReactAstro.tsx';
+import ReactAstro from '../../../../components/ReactAstro.astro';
 import Diff from '../../../../components/Diff.astro';
 import Quiz from '../../../../components/Quiz.tsx';
 import ProgressTracker from '../../../../components/ProgressTracker.tsx';
@@ -51,7 +51,7 @@ const { Content } = await render(post);
   <Content />
 </article>`;
 
-<ReactAstro client:visible react={appRouterReact} astro={appRouterAstro} />
+<ReactAstro react={appRouterReact} astro={appRouterAstro} />
 
 In Astro, `getStaticPaths` and the page template live in the same file. The `props` key lets you pass the full collection entry directly — no second lookup needed.
 
@@ -102,7 +102,7 @@ const { Content } = await render(post);
   <Content />
 </article>`;
 
-<ReactAstro client:visible react={pagesRouterReact} astro={pagesRouterAstro} />
+<ReactAstro react={pagesRouterReact} astro={pagesRouterAstro} />
 
 Next Pages Router splits path enumeration (`getStaticPaths`) from data fetching (`getStaticProps`). Astro merges them: pass `props` inside `getStaticPaths` and skip the second round-trip.
 

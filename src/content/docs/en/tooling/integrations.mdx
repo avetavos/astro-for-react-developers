@@ -3,7 +3,7 @@ title: Integrations
 description: 'Add React, Tailwind, sitemap, and more with npx astro add. Understand astro.config.mjs and how it compares to next.config.js.'
 ---
 
-import ReactAstro from '../../../../components/ReactAstro.tsx';
+import ReactAstro from '../../../../components/ReactAstro.astro';
 import Diff from '../../../../components/Diff.astro';
 import Quiz from '../../../../components/Quiz.tsx';
 import ProgressTracker from '../../../../components/ProgressTracker.tsx';
@@ -53,7 +53,7 @@ export default defineConfig({
   },
 });`;
 
-<ReactAstro client:visible react={configNext} astro={configAstro} reactTitle="next.config.js" astroTitle="astro.config.mjs" />
+<ReactAstro react={configNext} astro={configAstro} reactTitle="next.config.js" astroTitle="astro.config.mjs" />
 
 The `defineConfig` helper gives you full TypeScript autocomplete in your editor. All integrations are listed in the `integrations` array — there is no wrapping/composing pattern like `withBundleAnalyzer(nextConfig)`.
 

@@ -3,7 +3,7 @@ title: Props
 description: ส่งข้อมูลเข้าสู่ .astro component ด้วย Astro.props และเพิ่ม TypeScript type ด้วย interface Props
 ---
 
-import ReactAstro from '../../../../components/ReactAstro.tsx';
+import ReactAstro from '../../../../components/ReactAstro.astro';
 import AstroPlayground from '../../../../components/AstroPlayground.tsx';
 import Diff from '../../../../components/Diff.astro';
 import Quiz from '../../../../components/Quiz.tsx';
@@ -39,7 +39,7 @@ const { label, variant = "primary" } = Astro.props;
 <Button label="Delete" variant="danger" />
 -->`;
 
-<ReactAstro client:visible react={propsReact} astro={propsAstro} />
+<ReactAstro react={propsReact} astro={propsAstro} />
 
 สองสิ่งที่ควรสังเกต:
 
@@ -81,7 +81,7 @@ const { title, description = "", href } = Astro.props;
   {description && <p>{description}</p>}
 </a>`;
 
-<ReactAstro client:visible react={propsTypedReact} astro={propsTypedAstro} />
+<ReactAstro react={propsTypedReact} astro={propsTypedAstro} />
 
 การประกาศ `interface Props` คือ pattern แบบ idiomatic ของ Astro language server ของ Astro จะอ่าน type นี้เพื่อช่วยให้ editor autocomplete ได้ตอนที่คุณนำ component ไปใช้
 

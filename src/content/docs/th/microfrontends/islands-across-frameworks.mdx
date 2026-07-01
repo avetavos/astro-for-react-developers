@@ -4,7 +4,7 @@ description: 'Astro islands คือขอบเขต micro-frontend ที่
 ---
 
 import AstroPlayground from '../../../../components/AstroPlayground.tsx';
-import ReactAstro from '../../../../components/ReactAstro.tsx';
+import ReactAstro from '../../../../components/ReactAstro.astro';
 import Mermaid from '../../../../components/Mermaid.astro';
 import Diff from '../../../../components/Diff.astro';
 import Quiz from '../../../../components/Quiz.tsx';
@@ -69,7 +69,7 @@ import Reviews from '../islands/Reviews.svelte'; // Svelte
   <Reviews client:idle />
 </main>`;
 
-<ReactAstro client:visible react={treeReact} astro={treeAstro} />
+<ReactAstro react={treeReact} astro={treeAstro} />
 
 ## ลองเลย: React island และ Vue island เคียงข้างกัน
 

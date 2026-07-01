@@ -3,7 +3,7 @@ title: Layouts
 description: 'ครอบหน้าด้วย layout ที่ใช้ซ้ำได้โดยใช้ src/layouts/Layout.astro และ <slot /> เทียบกับ layout.tsx และ _app ของ Next.js'
 ---
 
-import ReactAstro from '../../../../components/ReactAstro.tsx';
+import ReactAstro from '../../../../components/ReactAstro.astro';
 import Diff from '../../../../components/Diff.astro';
 import Quiz from '../../../../components/Quiz.tsx';
 import ProgressTracker from '../../../../components/ProgressTracker.tsx';
@@ -56,7 +56,7 @@ const { title = 'My Site' } = Astro.props;
   </body>
 </html>`;
 
-<ReactAstro client:visible react={layoutDefReact} astro={layoutDefAstro} reactTitle="Next.js" />
+<ReactAstro react={layoutDefReact} astro={layoutDefAstro} reactTitle="Next.js" />
 
 ## การใช้ layout ในหน้า
 
@@ -83,7 +83,7 @@ import Layout from '../layouts/Layout.astro';
   <p>Welcome to the about page.</p>
 </Layout>`;
 
-<ReactAstro client:visible react={layoutUseReact} astro={layoutUseAstro} reactTitle="Next.js" />
+<ReactAstro react={layoutUseReact} astro={layoutUseAstro} reactTitle="Next.js" />
 
 ## Named slots
 
@@ -131,7 +131,7 @@ import TwoColumn from '../layouts/TwoColumn.astro';
   <article>เนื้อหาหลักที่นี่</article>
 </TwoColumn>`;
 
-<ReactAstro client:visible react={namedSlotReact} astro={namedSlotAstro} />
+<ReactAstro react={namedSlotReact} astro={namedSlotAstro} />
 
 ## File tree ของ project
 

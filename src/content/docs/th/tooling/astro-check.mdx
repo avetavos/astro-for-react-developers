@@ -3,7 +3,7 @@ title: astro check
 description: 'ตรวจสอบ type ในไฟล์ .astro และ TypeScript ด้วยคำสั่งเดียว เปรียบเทียบกับ tsc และ ESLint ในโปรเจกต์ Next.js'
 ---
 
-import ReactAstro from '../../../../components/ReactAstro.tsx';
+import ReactAstro from '../../../../components/ReactAstro.astro';
 import Diff from '../../../../components/Diff.astro';
 import Quiz from '../../../../components/Quiz.tsx';
 import ProgressTracker from '../../../../components/ProgressTracker.tsx';
@@ -84,7 +84,7 @@ export const checkAstro = `// tsconfig.json — Astro project
 //   "jsxImportSource": "react"
 //   etc.`;
 
-<ReactAstro client:visible react={checkNext} astro={checkAstro} reactTitle="Next.js (tsconfig + scripts)" astroTitle="Astro (tsconfig + scripts)" />
+<ReactAstro react={checkNext} astro={checkAstro} reactTitle="Next.js (tsconfig + scripts)" astroTitle="Astro (tsconfig + scripts)" />
 
 Astro มาพร้อม base tsconfigs ที่ `astro/tsconfigs/strict`, `astro/tsconfigs/strictest` และ `astro/tsconfigs/base` — extend หนึ่งใน `tsconfig.json` เพื่อหลีกเลี่ยงการดูแล compiler options object ด้วยตนเองทั้งหมด
 

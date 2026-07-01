@@ -3,7 +3,7 @@ title: เมื่อใดควรใช้ Island
 description: 'ค่าเริ่มต้นคือ static; ใช้ island เฉพาะส่วนที่ interactive; islands แยกตัวออกจากกัน — ไม่มีการแชร์ React context ข้าม islands'
 ---
 
-import ReactAstro from '../../../../components/ReactAstro.tsx';
+import ReactAstro from '../../../../components/ReactAstro.astro';
 import Diff from '../../../../components/Diff.astro';
 import Quiz from '../../../../components/Quiz.tsx';
 import ProgressTracker from '../../../../components/ProgressTracker.tsx';
@@ -49,7 +49,7 @@ const { post, related } = Astro.props;
 <ShareMenu client:idle url={post.url} />
 <RelatedPosts posts={related} />`;
 
-<ReactAstro client:visible react={whenToIslandReact} astro={whenToIslandAstro} />
+<ReactAstro react={whenToIslandReact} astro={whenToIslandAstro} />
 
 ในหน้าบล็อกโพสต์ทั่วไป มีเพียงสอง islands (`LikeButton` และ `ShareMenu`) ที่ส่ง JavaScript ทุกอย่างอื่นเป็น HTML ที่ไม่มี JS
 

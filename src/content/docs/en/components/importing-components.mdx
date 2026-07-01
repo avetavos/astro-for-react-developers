@@ -3,7 +3,7 @@ title: Importing Components
 description: Import .astro components in the frontmatter and compose them in the template — just like React imports.
 ---
 
-import ReactAstro from '../../../../components/ReactAstro.tsx';
+import ReactAstro from '../../../../components/ReactAstro.astro';
 import AstroPlayground from '../../../../components/AstroPlayground.tsx';
 import Diff from '../../../../components/Diff.astro';
 import Quiz from '../../../../components/Quiz.tsx';
@@ -40,7 +40,7 @@ import Footer from '../components/Footer.astro';
 </main>
 <Footer />`;
 
-<ReactAstro client:visible react={importReact} astro={importAstro} />
+<ReactAstro react={importReact} astro={importAstro} />
 
 Key differences:
 
@@ -93,7 +93,7 @@ const { posts } = Astro.props;
   </div>
 </div>`;
 
-<ReactAstro client:visible react={compositionReact} astro={compositionAstro} />
+<ReactAstro react={compositionReact} astro={compositionAstro} />
 
 > **Note on the runnable snippet:** The StackBlitz playground runs a single `src/pages/index.astro` file. The example below inlines the "sub-component" markup directly to stay self-contained. In a real project you would split it into separate `.astro` files and import them.
 

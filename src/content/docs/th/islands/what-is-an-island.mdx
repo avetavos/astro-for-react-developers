@@ -3,7 +3,7 @@ title: Island คืออะไร?
 description: 'Partial hydration vs full-app hydration: ทำไมการส่ง React runtime ทั้งหมดถึงแพง และ islands ช่วยลดค่าใช้จ่ายได้อย่างไร'
 ---
 
-import ReactAstro from '../../../../components/ReactAstro.tsx';
+import ReactAstro from '../../../../components/ReactAstro.astro';
 import Diff from '../../../../components/Diff.astro';
 import Quiz from '../../../../components/Quiz.tsx';
 import ProgressTracker from '../../../../components/ProgressTracker.tsx';
@@ -44,7 +44,7 @@ const { post } = Astro.props;
 <Footer />                        <!-- 0 KB JS -->
 {/* Total JS budget: ONE component */}`;
 
-<ReactAstro client:visible react={hydrationReact} astro={hydrationAstro} />
+<ReactAstro react={hydrationReact} astro={hydrationAstro} />
 
 ในหน้าเพจที่มีเนื้อหาเป็นหลัก เช่น บล็อก, landing page, หรือเว็บ docs — ส่วนใหญ่ของ component เป็นแค่การแสดงผล ไม่ตอบสนองต่อการคลิก การ hydrate เหล่านั้นสิ้นเปลือง CPU และทำให้ Time to Interactive ช้าลง
 
@@ -88,7 +88,7 @@ import LikeButton from '../components/LikeButton.jsx';
 <Counter client:load />
 <LikeButton client:visible postId={42} />`;
 
-<ReactAstro client:visible react={islandConceptReact} astro={islandConceptAstro} />
+<ReactAstro react={islandConceptReact} astro={islandConceptAstro} />
 
 <Diff title="Full hydration vs Partial hydration">
 - React/Next.js: **React root เดียว** ที่ `document.getElementById('root')` — ทั้งแอป

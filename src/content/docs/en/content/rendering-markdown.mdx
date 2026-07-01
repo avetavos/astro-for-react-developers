@@ -3,7 +3,7 @@ title: 'Rendering Markdown'
 description: 'Render a content collection entry with render(entry) or entry.render(), and list entries — versus MDX components in Next.js.'
 ---
 
-import ReactAstro from '../../../../components/ReactAstro.tsx';
+import ReactAstro from '../../../../components/ReactAstro.astro';
 import Diff from '../../../../components/Diff.astro';
 import Quiz from '../../../../components/Quiz.tsx';
 import ProgressTracker from '../../../../components/ProgressTracker.tsx';
@@ -47,7 +47,7 @@ const { Content, headings } = await render(post);
   <Content />
 </article>`;
 
-<ReactAstro client:visible react={renderReact} astro={renderAstro} />
+<ReactAstro react={renderReact} astro={renderAstro} />
 
 `render(entry)` returns `{ Content, headings, remarkPluginFrontmatter }`. `Content` is a component you render directly — no hooks, no client-side MDX compilation.
 
@@ -120,7 +120,7 @@ const sorted = posts.sort(
   ))}
 </ul>`;
 
-<ReactAstro client:visible react={listReact} astro={listAstro} />
+<ReactAstro react={listReact} astro={listAstro} />
 
 <Diff title="MDX in Next.js vs render(entry) in Astro">
 - Next + contentlayer: `useMDXComponent(post.body.code)` — compiles MDX in the browser (or at the edge).

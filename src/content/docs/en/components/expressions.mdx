@@ -3,7 +3,7 @@ title: Expressions
 description: Embed values, conditionals, and lists in .astro templates with {expr}. Rendered once at build time — no reactivity.
 ---
 
-import ReactAstro from '../../../../components/ReactAstro.tsx';
+import ReactAstro from '../../../../components/ReactAstro.astro';
 import AstroPlayground from '../../../../components/AstroPlayground.tsx';
 import Diff from '../../../../components/Diff.astro';
 import Quiz from '../../../../components/Quiz.tsx';
@@ -34,7 +34,7 @@ const doubled = count * 2;
   <span>Doubled: {doubled}</span>
 </div>`;
 
-<ReactAstro client:visible react={expressionsReact} astro={expressionsAstro} />
+<ReactAstro react={expressionsReact} astro={expressionsAstro} />
 
 ## Conditionals
 
@@ -67,7 +67,7 @@ const { type, message } = Astro.props;
   )}
 </div>`;
 
-<ReactAstro client:visible react={conditionalsReact} astro={conditionalsAstro} />
+<ReactAstro react={conditionalsReact} astro={conditionalsAstro} />
 
 Ternaries work identically: `{isLoggedIn ? <Dashboard /> : <Login />}`.
 
@@ -94,7 +94,7 @@ const { tags } = Astro.props;
   ))}
 </ul>`;
 
-<ReactAstro client:visible react={listsReact} astro={listsAstro} />
+<ReactAstro react={listsReact} astro={listsAstro} />
 
 Astro does **not** require a `key` prop on list items — there is no virtual DOM diffing. The list is rendered to HTML once and done.
 

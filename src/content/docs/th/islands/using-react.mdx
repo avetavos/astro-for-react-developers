@@ -3,7 +3,7 @@ title: ใช้ React ใน Astro
 description: 'เพิ่ม React integration นำ .jsx components ใส่ .astro files และทำงานได้ทันที'
 ---
 
-import ReactAstro from '../../../../components/ReactAstro.tsx';
+import ReactAstro from '../../../../components/ReactAstro.astro';
 import Diff from '../../../../components/Diff.astro';
 import Quiz from '../../../../components/Quiz.tsx';
 import ProgressTracker from '../../../../components/ProgressTracker.tsx';
@@ -90,7 +90,7 @@ import Counter from '../components/Counter.jsx';
   </body>
 </html>`;
 
-<ReactAstro client:visible react={usingReactApp} astro={usingReactAstro} />
+<ReactAstro react={usingReactApp} astro={usingReactAstro} />
 
 ## Codebase React ทั้งหมดของคุณสามารถย้ายมาได้
 

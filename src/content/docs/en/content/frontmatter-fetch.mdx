@@ -3,7 +3,7 @@ title: 'Frontmatter Fetch'
 description: 'Top-level await fetch() in the --- frontmatter runs at build time (or per-request in SSR), never in the browser — versus getServerSideProps, getStaticProps, and useEffect+fetch.'
 ---
 
-import ReactAstro from '../../../../components/ReactAstro.tsx';
+import ReactAstro from '../../../../components/ReactAstro.astro';
 import AstroPlayground from '../../../../components/AstroPlayground.tsx';
 import Diff from '../../../../components/Diff.astro';
 import Quiz from '../../../../components/Quiz.tsx';
@@ -41,7 +41,7 @@ const posts = await res.json();
   ))}
 </ul>`;
 
-<ReactAstro client:visible react={staticPropsReact} astro={staticPropsAstro} />
+<ReactAstro react={staticPropsReact} astro={staticPropsAstro} />
 
 With Astro's default static output, this `await fetch()` runs **once at build time** — exactly like `getStaticProps`. The result is baked into static HTML, zero fetching at runtime.
 
@@ -70,7 +70,7 @@ const user = await res.json();
 ---
 <h1>Hello, {user.name}</h1>`;
 
-<ReactAstro client:visible react={ssrReact} astro={ssrAstro} />
+<ReactAstro react={ssrReact} astro={ssrAstro} />
 
 `export const prerender = false` opts this single page into SSR — every request re-runs the frontmatter. The rest of your site stays static.
 

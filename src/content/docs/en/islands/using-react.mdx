@@ -3,7 +3,7 @@ title: Using React in Astro
 description: 'Add the React integration, drop your .jsx components into .astro files, and they work as-is.'
 ---
 
-import ReactAstro from '../../../../components/ReactAstro.tsx';
+import ReactAstro from '../../../../components/ReactAstro.astro';
 import Diff from '../../../../components/Diff.astro';
 import Quiz from '../../../../components/Quiz.tsx';
 import ProgressTracker from '../../../../components/ProgressTracker.tsx';
@@ -90,7 +90,7 @@ import Counter from '../components/Counter.jsx';
   </body>
 </html>`;
 
-<ReactAstro client:visible react={usingReactApp} astro={usingReactAstro} />
+<ReactAstro react={usingReactApp} astro={usingReactAstro} />
 
 ## Your whole React codebase can move over
 

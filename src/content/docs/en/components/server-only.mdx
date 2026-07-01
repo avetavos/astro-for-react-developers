@@ -3,7 +3,7 @@ title: Server-Only & Scripts
 description: '.astro components ship zero JS by default. Add browser JS with a plain <script> tag.'
 ---
 
-import ReactAstro from '../../../../components/ReactAstro.tsx';
+import ReactAstro from '../../../../components/ReactAstro.astro';
 import AstroPlayground from '../../../../components/AstroPlayground.tsx';
 import Diff from '../../../../components/Diff.astro';
 import Quiz from '../../../../components/Quiz.tsx';
@@ -33,7 +33,7 @@ const { title } = Astro.props;
 ---
 <h1>{title}</h1>`;
 
-<ReactAstro client:visible react={serverOnlyReact} astro={serverOnlyAstro} />
+<ReactAstro react={serverOnlyReact} astro={serverOnlyAstro} />
 
 The Astro compiler turns `Heading.astro` into a function that returns an HTML string. The browser receives that string. Done. No script tags, no React runtime, nothing.
 
@@ -85,7 +85,7 @@ export const scriptAstro = `---
   });
 </script>`;
 
-<ReactAstro client:visible react={scriptReact} astro={scriptAstro} />
+<ReactAstro react={scriptReact} astro={scriptAstro} />
 
 The `<script>` tag in an Astro component is processed by Vite: it is bundled, tree-shaken, and injected once per page even if the component is used multiple times. For complex interactivity, use an island (a React, Preact, Svelte, or other framework component with a `client:*` directive).
 

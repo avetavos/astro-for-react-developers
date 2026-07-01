@@ -3,7 +3,7 @@ title: 'Static vs SSR'
 description: 'เลือกระหว่าง static output และ SSR ใน Astro เพิ่ม adapters สำหรับ server rendering และเปรียบเทียบกับ static, SSR และ ISR modes ของ Next.js'
 ---
 
-import ReactAstro from '../../../../components/ReactAstro.tsx';
+import ReactAstro from '../../../../components/ReactAstro.astro';
 import Diff from '../../../../components/Diff.astro';
 import Quiz from '../../../../components/Quiz.tsx';
 import ProgressTracker from '../../../../components/ProgressTracker.tsx';
@@ -102,7 +102,7 @@ export const prerender = false;
 // options (เช่น Vercel's isr: { expiration: 60 }) ใน
 // astro.config.mjs หาก adapter รองรับ`;
 
-<ReactAstro client:visible react={renderingNext} astro={renderingAstro} reactTitle="Next.js (App Router)" astroTitle="Astro" />
+<ReactAstro react={renderingNext} astro={renderingAstro} reactTitle="Next.js (App Router)" astroTitle="Astro" />
 
 ## Dynamic routes กับ SSR
 

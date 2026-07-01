@@ -3,7 +3,7 @@ title: Setup
 description: Scaffold a new Astro project with npm create astro and start the dev server — compared to CRA and create-next-app.
 ---
 
-import ReactAstro from '../../../../components/ReactAstro.tsx';
+import ReactAstro from '../../../../components/ReactAstro.astro';
 import Diff from '../../../../components/Diff.astro';
 import Quiz from '../../../../components/Quiz.tsx';
 import ProgressTracker from '../../../../components/ProgressTracker.tsx';
@@ -35,7 +35,7 @@ npm create astro@latest my-app
 #   Initialize a new git repository? Yes
 cd my-app && npm run dev`;
 
-<ReactAstro client:visible react={setupReact} astro={setupAstro} />
+<ReactAstro react={setupReact} astro={setupAstro} />
 
 The `npm create astro@latest` command pulls the latest Astro scaffolding CLI (`create-astro`) from npm — no global install needed. The wizard is conversational and asks only what it needs.
 

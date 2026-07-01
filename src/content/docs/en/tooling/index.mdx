@@ -3,7 +3,7 @@ title: 'Tooling, Testing & Deployment'
 description: 'A module-level overview comparing the Astro toolchain with the Next.js/React toolchain for experienced React developers.'
 ---
 
-import ReactAstro from '../../../../components/ReactAstro.tsx';
+import ReactAstro from '../../../../components/ReactAstro.astro';
 import Diff from '../../../../components/Diff.astro';
 import Quiz from '../../../../components/Quiz.tsx';
 import ProgressTracker from '../../../../components/ProgressTracker.tsx';
@@ -65,7 +65,7 @@ export default defineConfig({
 // "preview": "astro preview"
 // "check":   "astro check"`;
 
-<ReactAstro client:visible react={overviewNext} astro={overviewAstro} reactTitle="Next.js config" astroTitle="Astro config" />
+<ReactAstro react={overviewNext} astro={overviewAstro} reactTitle="Next.js config" astroTitle="Astro config" />
 
 <Diff title="Next.js toolchain vs Astro toolchain">
 - Both use Vite under the hood (Astro v3+) and standard `npm`/`pnpm`/`yarn` scripts.

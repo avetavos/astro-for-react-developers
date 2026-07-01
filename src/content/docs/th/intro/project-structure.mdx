@@ -3,7 +3,7 @@ title: โครงสร้างโปรเจกต์
 description: Astro จัดระเบียบ src/pages, src/components, src/layouts, public/ และ astro.config.mjs อย่างไร — เทียบกับโปรเจกต์ Next.js หรือ CRA
 ---
 
-import ReactAstro from '../../../../components/ReactAstro.tsx';
+import ReactAstro from '../../../../components/ReactAstro.astro';
 import AstroPlayground from '../../../../components/AstroPlayground.tsx';
 import Diff from '../../../../components/Diff.astro';
 import Quiz from '../../../../components/Quiz.tsx';
@@ -37,7 +37,7 @@ export const structureAstro = `my-astro-app/
 ├── astro.config.mjs      # Framework config
 └── package.json`;
 
-<ReactAstro client:visible react={structureReact} astro={structureAstro} />
+<ReactAstro react={structureReact} astro={structureAstro} />
 
 ความแตกต่างสำคัญที่ควรสังเกต:
 

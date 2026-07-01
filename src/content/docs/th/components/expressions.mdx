@@ -3,7 +3,7 @@ title: Expressions
 description: ฝังค่า เงื่อนไข และ list ใน .astro template ด้วย {expr} ซึ่ง render ครั้งเดียวตอน build time ไม่มี reactivity
 ---
 
-import ReactAstro from '../../../../components/ReactAstro.tsx';
+import ReactAstro from '../../../../components/ReactAstro.astro';
 import AstroPlayground from '../../../../components/AstroPlayground.tsx';
 import Diff from '../../../../components/Diff.astro';
 import Quiz from '../../../../components/Quiz.tsx';
@@ -34,7 +34,7 @@ const doubled = count * 2;
   <span>Doubled: {doubled}</span>
 </div>`;
 
-<ReactAstro client:visible react={expressionsReact} astro={expressionsAstro} />
+<ReactAstro react={expressionsReact} astro={expressionsAstro} />
 
 ## เงื่อนไข (Conditionals)
 
@@ -67,7 +67,7 @@ const { type, message } = Astro.props;
   )}
 </div>`;
 
-<ReactAstro client:visible react={conditionalsReact} astro={conditionalsAstro} />
+<ReactAstro react={conditionalsReact} astro={conditionalsAstro} />
 
 ternary ทำงานเหมือนกันทุกประการ: `{isLoggedIn ? <Dashboard /> : <Login />}`
 
@@ -94,7 +94,7 @@ const { tags } = Astro.props;
   ))}
 </ul>`;
 
-<ReactAstro client:visible react={listsReact} astro={listsAstro} />
+<ReactAstro react={listsReact} astro={listsAstro} />
 
 Astro **ไม่** ต้องการ prop `key` บน item ของ list เพราะไม่มีการ diff แบบ virtual DOM list จะถูก render ออกมาเป็น HTML ครั้งเดียวแล้วจบ
 

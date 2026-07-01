@@ -3,7 +3,7 @@ title: Islands Architecture & the MPA Model
 description: How Astro ships server-rendered HTML by default and hydrates only interactive islands, saving JavaScript at scale.
 ---
 
-import ReactAstro from '../../../../components/ReactAstro.tsx';
+import ReactAstro from '../../../../components/ReactAstro.astro';
 import AstroPlayground from '../../../../components/AstroPlayground.tsx';
 import Diff from '../../../../components/Diff.astro';
 import Quiz from '../../../../components/Quiz.tsx';
@@ -59,7 +59,7 @@ import Counter from '../components/Counter.tsx'; // React island
 </html>
 <!-- Bundle: only Counter's JS — not Header or ArticleBody -->`;
 
-<ReactAstro client:visible react={islandsReact} astro={islandsAstro} />
+<ReactAstro react={islandsReact} astro={islandsAstro} />
 
 Notice `client:visible` on the `Counter`. That is a **hydration directive**. Without it, `Counter` would render to HTML at build time (its initial markup) and never become interactive in the browser.
 

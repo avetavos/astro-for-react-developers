@@ -3,7 +3,7 @@ title: 'บทนำ: Astro สำหรับนักพัฒนา React'
 description: ทำไมต้องใช้ Astro, islands architecture หมายความว่าอะไรสำหรับนักพัฒนา React และคอร์สนี้ครอบคลุมอะไรบ้าง
 ---
 
-import ReactAstro from '../../../../components/ReactAstro.tsx';
+import ReactAstro from '../../../../components/ReactAstro.astro';
 import AstroPlayground from '../../../../components/AstroPlayground.tsx';
 import Diff from '../../../../components/Diff.astro';
 import Quiz from '../../../../components/Quiz.tsx';
@@ -85,7 +85,7 @@ const title = "My Site";
   </body>
 </html>`;
 
-<ReactAstro client:visible react={indexReact} astro={indexAstro} />
+<ReactAstro react={indexReact} astro={indexAstro} />
 
 หน้า Astro ด้านบนส่ง **JavaScript ศูนย์ชิ้นไปยังเบราว์เซอร์** — ตัวแปร `title` ถูกประเมินครั้งเดียวขณะ build และฝังลงใน HTML เลย ไม่มี React runtime, ไม่มี hydration, ไม่มี virtual DOM
 

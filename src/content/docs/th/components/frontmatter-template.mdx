@@ -3,7 +3,7 @@ title: Frontmatter & Template
 description: บล็อก frontmatter --- ทำงานตอน build/server time ส่วน HTML template จะ render ออกมาเป็น static markup
 ---
 
-import ReactAstro from '../../../../components/ReactAstro.tsx';
+import ReactAstro from '../../../../components/ReactAstro.astro';
 import AstroPlayground from '../../../../components/AstroPlayground.tsx';
 import Diff from '../../../../components/Diff.astro';
 import Quiz from '../../../../components/Quiz.tsx';
@@ -57,7 +57,7 @@ const formatted = formatDate(date);
   <time>{formatted}</time>
 </div>`;
 
-<ReactAstro client:visible react={frontmatterReact} astro={frontmatterAstro} />
+<ReactAstro react={frontmatterReact} astro={frontmatterAstro} />
 
 ## HTML template
 

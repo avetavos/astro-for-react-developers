@@ -3,7 +3,7 @@ title: When to Use an Island
 description: 'Default to static; island only the interactive parts. Islands are isolated — no shared React context across them.'
 ---
 
-import ReactAstro from '../../../../components/ReactAstro.tsx';
+import ReactAstro from '../../../../components/ReactAstro.astro';
 import Diff from '../../../../components/Diff.astro';
 import Quiz from '../../../../components/Quiz.tsx';
 import ProgressTracker from '../../../../components/ProgressTracker.tsx';
@@ -49,7 +49,7 @@ const { post, related } = Astro.props;
 <ShareMenu client:idle url={post.url} />
 <RelatedPosts posts={related} />`;
 
-<ReactAstro client:visible react={whenToIslandReact} astro={whenToIslandAstro} />
+<ReactAstro react={whenToIslandReact} astro={whenToIslandAstro} />
 
 On a typical blog post page, two islands (`LikeButton` and `ShareMenu`) ship JavaScript. Everything else is zero-JS HTML.
 

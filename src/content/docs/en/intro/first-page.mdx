@@ -3,7 +3,7 @@ title: Your First Page
 description: Build a real .astro page with a frontmatter block and HTML template, and compare it to a React component.
 ---
 
-import ReactAstro from '../../../../components/ReactAstro.tsx';
+import ReactAstro from '../../../../components/ReactAstro.astro';
 import AstroPlayground from '../../../../components/AstroPlayground.tsx';
 import Diff from '../../../../components/Diff.astro';
 import Quiz from '../../../../components/Quiz.tsx';
@@ -68,7 +68,7 @@ const publishedAt = new Date().toLocaleDateString();
   </body>
 </html>`;
 
-<ReactAstro client:visible react={firstPageReact} astro={firstPageAstro} />
+<ReactAstro react={firstPageReact} astro={firstPageAstro} />
 
 Two things stand out immediately:
 

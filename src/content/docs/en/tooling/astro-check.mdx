@@ -3,7 +3,7 @@ title: astro check
 description: 'Type-check .astro files and TypeScript with a single command. Compare with tsc and ESLint in a Next.js project.'
 ---
 
-import ReactAstro from '../../../../components/ReactAstro.tsx';
+import ReactAstro from '../../../../components/ReactAstro.astro';
 import Diff from '../../../../components/Diff.astro';
 import Quiz from '../../../../components/Quiz.tsx';
 import ProgressTracker from '../../../../components/ProgressTracker.tsx';
@@ -84,7 +84,7 @@ export const checkAstro = `// tsconfig.json — Astro project
 //   "jsxImportSource": "react"
 //   etc.`;
 
-<ReactAstro client:visible react={checkNext} astro={checkAstro} reactTitle="Next.js (tsconfig + scripts)" astroTitle="Astro (tsconfig + scripts)" />
+<ReactAstro react={checkNext} astro={checkAstro} reactTitle="Next.js (tsconfig + scripts)" astroTitle="Astro (tsconfig + scripts)" />
 
 Astro ships base tsconfigs at `astro/tsconfigs/strict`, `astro/tsconfigs/strictest`, and `astro/tsconfigs/base` — extend one in your `tsconfig.json` to avoid manually maintaining the full compiler options object.
 

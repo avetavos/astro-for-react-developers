@@ -3,7 +3,7 @@ title: Frontmatter & Template
 description: The --- frontmatter block runs at build/server time. The HTML template renders to static markup.
 ---
 
-import ReactAstro from '../../../../components/ReactAstro.tsx';
+import ReactAstro from '../../../../components/ReactAstro.astro';
 import AstroPlayground from '../../../../components/AstroPlayground.tsx';
 import Diff from '../../../../components/Diff.astro';
 import Quiz from '../../../../components/Quiz.tsx';
@@ -57,7 +57,7 @@ const formatted = formatDate(date);
   <time>{formatted}</time>
 </div>`;
 
-<ReactAstro client:visible react={frontmatterReact} astro={frontmatterAstro} />
+<ReactAstro react={frontmatterReact} astro={frontmatterAstro} />
 
 ## The HTML template
 

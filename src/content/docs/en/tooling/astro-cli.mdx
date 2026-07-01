@@ -3,7 +3,7 @@ title: 'The Astro CLI'
 description: 'Learn astro dev, build, preview, add, and check. Map every command to its Next.js equivalent and wire up package.json scripts.'
 ---
 
-import ReactAstro from '../../../../components/ReactAstro.tsx';
+import ReactAstro from '../../../../components/ReactAstro.astro';
 import Diff from '../../../../components/Diff.astro';
 import Quiz from '../../../../components/Quiz.tsx';
 import ProgressTracker from '../../../../components/ProgressTracker.tsx';
@@ -56,7 +56,7 @@ export const scriptsAstro = `// package.json — Astro project
   }
 }`;
 
-<ReactAstro client:visible react={scriptsNext} astro={scriptsAstro} reactTitle="Next.js scripts" astroTitle="Astro scripts" />
+<ReactAstro react={scriptsNext} astro={scriptsAstro} reactTitle="Next.js scripts" astroTitle="Astro scripts" />
 
 Two things stand out:
 

@@ -3,7 +3,7 @@ title: 'Scoped Styles'
 description: 'A plain <style> block in .astro is auto-scoped to that component by the compiler — no CSS Modules or styled-components setup needed.'
 ---
 
-import ReactAstro from '../../../../components/ReactAstro.tsx';
+import ReactAstro from '../../../../components/ReactAstro.astro';
 import AstroPlayground from '../../../../components/AstroPlayground.tsx';
 import Diff from '../../../../components/Diff.astro';
 import Quiz from '../../../../components/Quiz.tsx';
@@ -35,7 +35,7 @@ const { label } = Astro.props;
   .button:hover { background: #4f46e5; }
 </style>`;
 
-<ReactAstro client:visible react={scopedReact} astro={scopedAstro} />
+<ReactAstro react={scopedReact} astro={scopedAstro} />
 
 What the Astro compiler produces under the hood:
 
@@ -77,7 +77,7 @@ const { title } = Astro.props;
   @media (max-width: 480px) { .card { padding: .75rem; } }
 </style>`;
 
-<ReactAstro client:visible react={scopedFeaturesReact} astro={scopedFeaturesAstro} />
+<ReactAstro react={scopedFeaturesReact} astro={scopedFeaturesAstro} />
 
 ## Runnable example
 

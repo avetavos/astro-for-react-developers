@@ -3,7 +3,7 @@ title: 'CSS Variables และ class:list'
 description: 'ส่งค่าจาก frontmatter เข้า CSS ด้วย define:vars และสลับ conditional class ด้วย class:list — ทางเลือก Astro แทน inline styles และ clsx'
 ---
 
-import ReactAstro from '../../../../components/ReactAstro.tsx';
+import ReactAstro from '../../../../components/ReactAstro.astro';
 import AstroPlayground from '../../../../components/AstroPlayground.tsx';
 import Diff from '../../../../components/Diff.astro';
 import Quiz from '../../../../components/Quiz.tsx';
@@ -55,7 +55,7 @@ const { label, color = "#6366f1", bg = "#eef2ff" } = Astro.props;
   }
 </style>`;
 
-<ReactAstro client:visible react={defineVarsReact} astro={defineVarsAstro} />
+<ReactAstro react={defineVarsReact} astro={defineVarsAstro} />
 
 output ที่ compile แล้วจะตั้งค่า variable เหล่านั้นเป็น inline custom properties บน `style` attribute ของ element — ดังนั้นจึง cascade ตามปกติ — ในขณะที่ style rules จริงยังคงอยู่ใน `<style>` block และได้ประโยชน์จาก scoping
 
@@ -112,7 +112,7 @@ const { label, variant = 'primary', disabled = false } = Astro.props;
   .disabled { opacity: .45; cursor: not-allowed; }
 </style>`;
 
-<ReactAstro client:visible react={classListReact} astro={classListAstro} />
+<ReactAstro react={classListReact} astro={classListAstro} />
 
 `class:list` รับ shape เดียวกับ `clsx`: plain strings, object `{ className: booleanExpr }` และ nested arrays item ที่เป็น falsy จะถูกละเว้น
 

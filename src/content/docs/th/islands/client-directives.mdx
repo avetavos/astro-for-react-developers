@@ -3,7 +3,7 @@ title: Client Directives
 description: 'client:load, client:idle, client:visible, client:media, client:only — แต่ละอันทำอะไรและใช้เมื่อไหร่'
 ---
 
-import ReactAstro from '../../../../components/ReactAstro.tsx';
+import ReactAstro from '../../../../components/ReactAstro.astro';
 import Diff from '../../../../components/Diff.astro';
 import Quiz from '../../../../components/Quiz.tsx';
 import ProgressTracker from '../../../../components/ProgressTracker.tsx';
@@ -108,7 +108,7 @@ import ThreeScene from '../components/ThreeScene.jsx';
 <!-- Browser-only, skip SSR -->
 <ThreeScene client:only="react" />`;
 
-<ReactAstro client:visible react={directivesReact} astro={directivesAstro} />
+<ReactAstro react={directivesReact} astro={directivesAstro} />
 
 ## ไม่มี directive = HTML แบบ static
 

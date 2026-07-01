@@ -3,7 +3,7 @@ title: 'Content & Data'
 description: 'วิธีที่ Astro จัดการข้อมูล: frontmatter ทำงานตอน build/server, content collections สำหรับ MD/MDX เทียบกับ React data-fetching'
 ---
 
-import ReactAstro from '../../../../components/ReactAstro.tsx';
+import ReactAstro from '../../../../components/ReactAstro.astro';
 import AstroPlayground from '../../../../components/AstroPlayground.tsx';
 import Diff from '../../../../components/Diff.astro';
 import Quiz from '../../../../components/Quiz.tsx';
@@ -54,7 +54,7 @@ const posts = await res.json();
   ))}
 </ul>`;
 
-<ReactAstro client:visible react={fetchReact} astro={fetchAstro} />
+<ReactAstro react={fetchReact} astro={fetchAstro} />
 
 สังเกต: ใน Astro `await fetch()` อยู่โดยตรงใน frontmatter มันทำงานตอน build time (static) หรือ per-request (SSR) ไม่มี `useEffect` ไม่มี loading state ไม่มี JavaScript ฝั่ง client ที่ถูกส่งไปสำหรับ fetch
 

@@ -3,7 +3,7 @@ title: 'Styling in Astro'
 description: 'Overview of the styling module — scoped styles, global styles, CSS variables, class:list, and Tailwind compared to React and Next.js patterns.'
 ---
 
-import ReactAstro from '../../../../components/ReactAstro.tsx';
+import ReactAstro from '../../../../components/ReactAstro.astro';
 import AstroPlayground from '../../../../components/AstroPlayground.tsx';
 import Diff from '../../../../components/Diff.astro';
 import Quiz from '../../../../components/Quiz.tsx';
@@ -52,7 +52,7 @@ const { title, featured } = Astro.props;
   .featured { border-color: #6366f1; background: #eef2ff; }
 </style>`;
 
-<ReactAstro client:visible react={indexReact} astro={indexAstro} />
+<ReactAstro react={indexReact} astro={indexAstro} />
 
 Notice what disappears: no CSS Module import, no `clsx` import, no `.module.css` file. The `<style>` block travels with the component and the compiler handles scoping automatically.
 

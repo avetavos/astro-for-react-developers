@@ -3,7 +3,7 @@ title: 'Scoped Styles'
 description: '<style> block ธรรมดาใน .astro จะถูก scoped อัตโนมัติโดย compiler — ไม่ต้องตั้งค่า CSS Modules หรือ styled-components'
 ---
 
-import ReactAstro from '../../../../components/ReactAstro.tsx';
+import ReactAstro from '../../../../components/ReactAstro.astro';
 import AstroPlayground from '../../../../components/AstroPlayground.tsx';
 import Diff from '../../../../components/Diff.astro';
 import Quiz from '../../../../components/Quiz.tsx';
@@ -35,7 +35,7 @@ const { label } = Astro.props;
   .button:hover { background: #4f46e5; }
 </style>`;
 
-<ReactAstro client:visible react={scopedReact} astro={scopedAstro} />
+<ReactAstro react={scopedReact} astro={scopedAstro} />
 
 สิ่งที่ Astro compiler สร้างขึ้นเบื้องหลัง:
 
@@ -77,7 +77,7 @@ const { title } = Astro.props;
   @media (max-width: 480px) { .card { padding: .75rem; } }
 </style>`;
 
-<ReactAstro client:visible react={scopedFeaturesReact} astro={scopedFeaturesAstro} />
+<ReactAstro react={scopedFeaturesReact} astro={scopedFeaturesAstro} />
 
 ## ตัวอย่างที่รันได้
 

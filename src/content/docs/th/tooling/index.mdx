@@ -3,7 +3,7 @@ title: 'Tooling, Testing & Deployment'
 description: 'ภาพรวมของโมดูลที่เปรียบเทียบ toolchain ของ Astro กับ toolchain ของ Next.js/React สำหรับนักพัฒนา React ที่มีประสบการณ์'
 ---
 
-import ReactAstro from '../../../../components/ReactAstro.tsx';
+import ReactAstro from '../../../../components/ReactAstro.astro';
 import Diff from '../../../../components/Diff.astro';
 import Quiz from '../../../../components/Quiz.tsx';
 import ProgressTracker from '../../../../components/ProgressTracker.tsx';
@@ -65,7 +65,7 @@ export default defineConfig({
 // "preview": "astro preview"
 // "check":   "astro check"`;
 
-<ReactAstro client:visible react={overviewNext} astro={overviewAstro} reactTitle="Next.js config" astroTitle="Astro config" />
+<ReactAstro react={overviewNext} astro={overviewAstro} reactTitle="Next.js config" astroTitle="Astro config" />
 
 <Diff title="Next.js toolchain vs Astro toolchain">
 - ทั้งคู่ใช้ Vite ภายใน (Astro v3+) และ scripts `npm`/`pnpm`/`yarn` มาตรฐาน

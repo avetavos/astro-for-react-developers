@@ -3,7 +3,7 @@ title: What is an Island?
 description: 'Partial hydration vs full-app hydration: why shipping a whole React runtime is expensive, and how islands cut the cost.'
 ---
 
-import ReactAstro from '../../../../components/ReactAstro.tsx';
+import ReactAstro from '../../../../components/ReactAstro.astro';
 import Diff from '../../../../components/Diff.astro';
 import Quiz from '../../../../components/Quiz.tsx';
 import ProgressTracker from '../../../../components/ProgressTracker.tsx';
@@ -44,7 +44,7 @@ const { post } = Astro.props;
 <Footer />                        <!-- 0 KB JS -->
 {/* Total JS budget: ONE component */}`;
 
-<ReactAstro client:visible react={hydrationReact} astro={hydrationAstro} />
+<ReactAstro react={hydrationReact} astro={hydrationAstro} />
 
 On a typical content page — a blog post, a landing page, a docs site — the vast majority of components are purely presentational. They display data; they never respond to clicks. Hydrating them wastes CPU and delays Time to Interactive.
 
@@ -88,7 +88,7 @@ import LikeButton from '../components/LikeButton.jsx';
 <Counter client:load />
 <LikeButton client:visible postId={42} />`;
 
-<ReactAstro client:visible react={islandConceptReact} astro={islandConceptAstro} />
+<ReactAstro react={islandConceptReact} astro={islandConceptAstro} />
 
 <Diff title="Full hydration vs Partial hydration">
 - React/Next.js: **one React root** at `document.getElementById('root')` — the whole app.

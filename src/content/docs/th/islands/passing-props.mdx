@@ -3,7 +3,7 @@ title: การส่ง Props ไปยัง Islands
 description: 'ส่ง serializable props ไปยัง React islands; ใช้ slots เพื่อประกอบ children ข้าม Astro/React boundary'
 ---
 
-import ReactAstro from '../../../../components/ReactAstro.tsx';
+import ReactAstro from '../../../../components/ReactAstro.astro';
 import Diff from '../../../../components/Diff.astro';
 import Quiz from '../../../../components/Quiz.tsx';
 import ProgressTracker from '../../../../components/ProgressTracker.tsx';
@@ -45,7 +45,7 @@ const iso = new Date().toISOString(); // Date → string ✓
 />
 {/* onReset={() => ...} would throw a build error */}`;
 
-<ReactAstro client:visible react={propsSerializableReact} astro={propsSerializableAstro} />
+<ReactAstro react={propsSerializableReact} astro={propsSerializableAstro} />
 
 > **Functions เป็น props:** คุณไม่สามารถส่ง callback จาก `.astro` ไปยัง React island ได้ ถ้า island ต้องการ callback (เช่น modal ที่เรียก `onClose`) ให้จัดการ interaction นั้นทั้งหมดภายใน island — fetch ข้อมูล จัดการ state และ navigate โดยใช้ browser APIs ของ React
 
@@ -135,7 +135,7 @@ const user = await fetch('/api/user').then(r => r.json());
   Function props ✗ — handle inside the island
 */}`;
 
-<ReactAstro client:visible react={propsPassing} astro={propsPassingAstro} />
+<ReactAstro react={propsPassing} astro={propsPassingAstro} />
 
 <Diff title="React props vs Astro island props">
 - React: **prop type ใดก็ได้** — functions, Dates, class instances ล้วนใช้ได้

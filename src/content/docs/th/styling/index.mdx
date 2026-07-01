@@ -3,7 +3,7 @@ title: 'การจัดสไตล์ใน Astro'
 description: 'ภาพรวมของโมดูล Styling — scoped styles, global styles, CSS variables, class:list และ Tailwind เทียบกับแนวทาง React และ Next.js'
 ---
 
-import ReactAstro from '../../../../components/ReactAstro.tsx';
+import ReactAstro from '../../../../components/ReactAstro.astro';
 import AstroPlayground from '../../../../components/AstroPlayground.tsx';
 import Diff from '../../../../components/Diff.astro';
 import Quiz from '../../../../components/Quiz.tsx';
@@ -52,7 +52,7 @@ const { title, featured } = Astro.props;
   .featured { border-color: #6366f1; background: #eef2ff; }
 </style>`;
 
-<ReactAstro client:visible react={indexReact} astro={indexAstro} />
+<ReactAstro react={indexReact} astro={indexAstro} />
 
 สังเกตสิ่งที่หายไป: ไม่ต้อง import CSS Module ไม่ต้อง import `clsx` ไม่ต้องมีไฟล์ `.module.css` แยก `<style>` block อยู่คู่กับ component และ compiler จัดการ scoping ให้อัตโนมัติ
 

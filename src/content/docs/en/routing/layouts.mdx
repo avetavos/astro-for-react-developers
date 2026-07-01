@@ -3,7 +3,7 @@ title: Layouts
 description: 'Wrap pages with reusable layouts using src/layouts/Layout.astro and <slot />, compared to Next.js layout.tsx and _app.'
 ---
 
-import ReactAstro from '../../../../components/ReactAstro.tsx';
+import ReactAstro from '../../../../components/ReactAstro.astro';
 import Diff from '../../../../components/Diff.astro';
 import Quiz from '../../../../components/Quiz.tsx';
 import ProgressTracker from '../../../../components/ProgressTracker.tsx';
@@ -56,7 +56,7 @@ const { title = 'My Site' } = Astro.props;
   </body>
 </html>`;
 
-<ReactAstro client:visible react={layoutDefReact} astro={layoutDefAstro} reactTitle="Next.js" />
+<ReactAstro react={layoutDefReact} astro={layoutDefAstro} reactTitle="Next.js" />
 
 ## Using the layout in a page
 
@@ -83,7 +83,7 @@ import Layout from '../layouts/Layout.astro';
   <p>Welcome to the about page.</p>
 </Layout>`;
 
-<ReactAstro client:visible react={layoutUseReact} astro={layoutUseAstro} reactTitle="Next.js" />
+<ReactAstro react={layoutUseReact} astro={layoutUseAstro} reactTitle="Next.js" />
 
 ## Named slots
 
@@ -131,7 +131,7 @@ import TwoColumn from '../layouts/TwoColumn.astro';
   <article>Main content here</article>
 </TwoColumn>`;
 
-<ReactAstro client:visible react={namedSlotReact} astro={namedSlotAstro} />
+<ReactAstro react={namedSlotReact} astro={namedSlotAstro} />
 
 ## Project file tree
 

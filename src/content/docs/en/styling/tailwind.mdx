@@ -3,7 +3,7 @@ title: Tailwind
 description: 'Add Tailwind CSS to an Astro project with npx astro add tailwind and use utility classes exactly as you do in Next.js — with one key difference: use class= not className=.'
 ---
 
-import ReactAstro from '../../../../components/ReactAstro.tsx';
+import ReactAstro from '../../../../components/ReactAstro.astro';
 import Diff from '../../../../components/Diff.astro';
 import Quiz from '../../../../components/Quiz.tsx';
 import ProgressTracker from '../../../../components/ProgressTracker.tsx';
@@ -78,7 +78,7 @@ const { title, description, featured = false } = Astro.props;
   <p class="text-sm text-slate-600">{description}</p>
 </div>`;
 
-<ReactAstro client:visible react={tailwindReact} astro={tailwindAstro} />
+<ReactAstro react={tailwindReact} astro={tailwindAstro} />
 
 The only mandatory change: `className` becomes `class`. Everything else — utility classes, responsive prefixes, dark-mode variants, arbitrary values — works identically.
 

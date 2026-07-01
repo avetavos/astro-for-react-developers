@@ -3,7 +3,7 @@ title: 'CSS Variables and class:list'
 description: 'Pass frontmatter values into CSS with define:vars and toggle conditional classes with class:list — the Astro alternatives to inline styles and clsx.'
 ---
 
-import ReactAstro from '../../../../components/ReactAstro.tsx';
+import ReactAstro from '../../../../components/ReactAstro.astro';
 import AstroPlayground from '../../../../components/AstroPlayground.tsx';
 import Diff from '../../../../components/Diff.astro';
 import Quiz from '../../../../components/Quiz.tsx';
@@ -55,7 +55,7 @@ const { label, color = "#6366f1", bg = "#eef2ff" } = Astro.props;
   }
 </style>`;
 
-<ReactAstro client:visible react={defineVarsReact} astro={defineVarsAstro} />
+<ReactAstro react={defineVarsReact} astro={defineVarsAstro} />
 
 The compiled output sets the variables as inline custom properties on the element's `style` attribute — so they cascade naturally — while the actual style rules stay in the `<style>` block and benefit from scoping.
 
@@ -112,7 +112,7 @@ const { label, variant = 'primary', disabled = false } = Astro.props;
   .disabled { opacity: .45; cursor: not-allowed; }
 </style>`;
 
-<ReactAstro client:visible react={classListReact} astro={classListAstro} />
+<ReactAstro react={classListReact} astro={classListAstro} />
 
 `class:list` accepts the same shapes as `clsx`: plain strings, `{ className: booleanExpr }` objects, and nested arrays. Falsy items are silently ignored.
 

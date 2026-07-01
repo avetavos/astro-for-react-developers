@@ -3,7 +3,7 @@ title: Integrations
 description: 'เพิ่ม React, Tailwind, sitemap และอื่นๆ ด้วย npx astro add ทำความเข้าใจ astro.config.mjs และเปรียบเทียบกับ next.config.js'
 ---
 
-import ReactAstro from '../../../../components/ReactAstro.tsx';
+import ReactAstro from '../../../../components/ReactAstro.astro';
 import Diff from '../../../../components/Diff.astro';
 import Quiz from '../../../../components/Quiz.tsx';
 import ProgressTracker from '../../../../components/ProgressTracker.tsx';
@@ -53,7 +53,7 @@ export default defineConfig({
   },
 });`;
 
-<ReactAstro client:visible react={configNext} astro={configAstro} reactTitle="next.config.js" astroTitle="astro.config.mjs" />
+<ReactAstro react={configNext} astro={configAstro} reactTitle="next.config.js" astroTitle="astro.config.mjs" />
 
 helper `defineConfig` ให้ TypeScript autocomplete เต็มรูปแบบใน editor integration ทั้งหมดอยู่ใน array `integrations: []` — ไม่มี pattern การ wrap/compose แบบ `withBundleAnalyzer(nextConfig)`
 

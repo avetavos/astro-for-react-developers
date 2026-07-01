@@ -3,7 +3,7 @@ title: 'Content Collections'
 description: 'ใช้ src/content/, defineCollection และ zod schemas ใน src/content.config.ts สำหรับ MD/MDX แบบ type-safe เทียบกับ MDX และ contentlayer ใน Next.js'
 ---
 
-import ReactAstro from '../../../../components/ReactAstro.tsx';
+import ReactAstro from '../../../../components/ReactAstro.astro';
 import Diff from '../../../../components/Diff.astro';
 import Quiz from '../../../../components/Quiz.tsx';
 import ProgressTracker from '../../../../components/ProgressTracker.tsx';
@@ -51,7 +51,7 @@ export const collections = { blog };
 // import { getCollection } from 'astro:content';
 // const posts = await getCollection('blog');`;
 
-<ReactAstro client:visible react={collectionReact} astro={collectionAstro} />
+<ReactAstro react={collectionReact} astro={collectionAstro} />
 
 Schema อยู่ใน `src/content.config.ts` — Astro ตรวจสอบทุกไฟล์ใน collection ตอน build time และแสดง type errors ใน editor ของคุณ
 

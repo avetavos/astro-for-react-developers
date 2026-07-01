@@ -3,7 +3,7 @@ title: 'Rendering Markdown'
 description: 'render entry ด้วย render(entry) หรือ entry.render() และแสดงรายการ entries เทียบกับ MDX components ใน Next.js'
 ---
 
-import ReactAstro from '../../../../components/ReactAstro.tsx';
+import ReactAstro from '../../../../components/ReactAstro.astro';
 import Diff from '../../../../components/Diff.astro';
 import Quiz from '../../../../components/Quiz.tsx';
 import ProgressTracker from '../../../../components/ProgressTracker.tsx';
@@ -50,7 +50,7 @@ const { Content } = await render(entry);
   <Content />
 </article>`;
 
-<ReactAstro client:visible react={renderReact} astro={renderAstro} />
+<ReactAstro react={renderReact} astro={renderAstro} />
 
 `render(entry)` คืนค่า object `{ Content, headings, remarkPluginFrontmatter }` ใช้ `<Content />` เพื่อ render Markdown/MDX ที่ compile แล้วใน template
 
@@ -93,7 +93,7 @@ const sorted = posts.sort(
   ))}
 </ul>`;
 
-<ReactAstro client:visible react={listReact} astro={listAstro} />
+<ReactAstro react={listReact} astro={listAstro} />
 
 `getCollection` รองรับ optional filter function ที่ argument ที่สอง — ที่นี่ใช้กรอง draft posts ออก
 

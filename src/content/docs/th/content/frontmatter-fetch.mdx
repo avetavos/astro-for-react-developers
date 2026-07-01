@@ -3,7 +3,7 @@ title: 'Frontmatter Fetch'
 description: 'top-level await fetch() ใน frontmatter ทำงานตอน build (หรือ per-request ใน SSR) ไม่ใช่ใน browser — เทียบกับ getServerSideProps, getStaticProps และ useEffect+fetch'
 ---
 
-import ReactAstro from '../../../../components/ReactAstro.tsx';
+import ReactAstro from '../../../../components/ReactAstro.astro';
 import AstroPlayground from '../../../../components/AstroPlayground.tsx';
 import Diff from '../../../../components/Diff.astro';
 import Quiz from '../../../../components/Quiz.tsx';
@@ -41,7 +41,7 @@ const posts = await res.json();
   ))}
 </ul>`;
 
-<ReactAstro client:visible react={staticPropsReact} astro={staticPropsAstro} />
+<ReactAstro react={staticPropsReact} astro={staticPropsAstro} />
 
 ด้วย static output ของ Astro `await fetch()` นี้จะทำงาน **ครั้งเดียวตอน build time** — เหมือน `getStaticProps` ทุกประการ ผลลัพธ์ถูก bake ลงใน static HTML ไม่มีการ fetch ตอน runtime เลย
 
@@ -70,7 +70,7 @@ const user = await res.json();
 ---
 <h1>Hello, {user.name}</h1>`;
 
-<ReactAstro client:visible react={ssrReact} astro={ssrAstro} />
+<ReactAstro react={ssrReact} astro={ssrAstro} />
 
 `export const prerender = false` ทำให้หน้าเดียวนี้ใช้ SSR — ทุก request จะรัน frontmatter ใหม่ ส่วนที่เหลือของ site ยังคงเป็น static
 

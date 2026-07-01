@@ -3,7 +3,7 @@ title: Props
 description: Pass data into .astro components with Astro.props. Add TypeScript types with an interface Props.
 ---
 
-import ReactAstro from '../../../../components/ReactAstro.tsx';
+import ReactAstro from '../../../../components/ReactAstro.astro';
 import AstroPlayground from '../../../../components/AstroPlayground.tsx';
 import Diff from '../../../../components/Diff.astro';
 import Quiz from '../../../../components/Quiz.tsx';
@@ -39,7 +39,7 @@ const { label, variant = "primary" } = Astro.props;
 <Button label="Delete" variant="danger" />
 -->`;
 
-<ReactAstro client:visible react={propsReact} astro={propsAstro} />
+<ReactAstro react={propsReact} astro={propsAstro} />
 
 Two things to notice:
 
@@ -81,7 +81,7 @@ const { title, description = "", href } = Astro.props;
   {description && <p>{description}</p>}
 </a>`;
 
-<ReactAstro client:visible react={propsTypedReact} astro={propsTypedAstro} />
+<ReactAstro react={propsTypedReact} astro={propsTypedAstro} />
 
 The `interface Props` declaration is the idiomatic Astro pattern. Astro's language server reads it to power editor autocomplete when you use the component.
 

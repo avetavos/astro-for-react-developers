@@ -3,7 +3,7 @@ title: หน้าแรกของคุณ
 description: "สร้าง .astro page จริงที่มี frontmatter block และ HTML template แล้วเปรียบเทียบกับ React component"
 ---
 
-import ReactAstro from '../../../../components/ReactAstro.tsx';
+import ReactAstro from '../../../../components/ReactAstro.astro';
 import AstroPlayground from '../../../../components/AstroPlayground.tsx';
 import Diff from '../../../../components/Diff.astro';
 import Quiz from '../../../../components/Quiz.tsx';
@@ -68,7 +68,7 @@ const publishedAt = new Date().toLocaleDateString();
   </body>
 </html>`;
 
-<ReactAstro client:visible react={firstPageReact} astro={firstPageAstro} />
+<ReactAstro react={firstPageReact} astro={firstPageAstro} />
 
 มีสองสิ่งที่โดดเด่นทันที:
 

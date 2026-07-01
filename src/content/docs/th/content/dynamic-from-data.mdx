@@ -3,7 +3,7 @@ title: 'Dynamic Pages from Data'
 description: 'สร้าง static pages จาก content collection ด้วย getStaticPaths() ใน src/pages/blog/[slug].astro เทียบกับ generateStaticParams ใน Next.js App Router'
 ---
 
-import ReactAstro from '../../../../components/ReactAstro.tsx';
+import ReactAstro from '../../../../components/ReactAstro.astro';
 import Diff from '../../../../components/Diff.astro';
 import Quiz from '../../../../components/Quiz.tsx';
 import ProgressTracker from '../../../../components/ProgressTracker.tsx';
@@ -52,7 +52,7 @@ const { Content } = await render(entry);
   <Content />
 </article>`;
 
-<ReactAstro client:visible react={gspAppReact} astro={gspAppAstro} />
+<ReactAstro react={gspAppReact} astro={gspAppAstro} />
 
 Astro ส่ง `props` พร้อมกับ `params` — ทำให้ page component รับ `entry` ได้โดยตรงจาก `Astro.props` โดยไม่ต้อง look up ซ้ำอีกครั้ง
 
@@ -104,7 +104,7 @@ const { Content } = await render(entry);
   <Content />
 </article>`;
 
-<ReactAstro client:visible react={gspPagesReact} astro={gspPagesAstro} />
+<ReactAstro react={gspPagesReact} astro={gspPagesAstro} />
 
 ใน Next.js Pages Router ต้องใช้ทั้ง `getStaticPaths` และ `getStaticProps` แยกกัน Astro รวมทั้งสองไว้ในไฟล์เดียวกันโดยการส่ง `props` ใน `getStaticPaths` return value
 
