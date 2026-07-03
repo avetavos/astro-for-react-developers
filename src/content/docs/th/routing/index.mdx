@@ -64,7 +64,7 @@ import Layout from '../layouts/Layout.astro';
 - React SPA: routing เกิดขึ้น **ฝั่ง browser** — `BrowserRouter` สกัด click และสลับ component โดยไม่โหลดหน้าใหม่
 - Astro MPA: routing เกิดขึ้น **ฝั่ง server** — แต่ละ URL แมปกับไฟล์ `.astro` ที่ render เป็น HTML; การนำทางคือ HTTP request ปกติ
 - ทั้งคู่: รองรับ nested path, dynamic segment และ layout
-- Astro เพิ่มเติม: เปิดใช้ `ViewTransitions` เพื่อ transition แบบ SPA ในขณะยังคงรูปแบบ MPA (ดูในบทเรียน Navigation)
+- Astro เพิ่มเติม: เปิดใช้ `<ClientRouter />` เพื่อ transition แบบ SPA ในขณะยังคงรูปแบบ MPA (ดูในบทเรียน Navigation)
 </Diff>
 
 export const quizRoutingIndex = [

@@ -64,7 +64,7 @@ import Layout from '../layouts/Layout.astro';
 - React SPA: routing happens **in the browser** — `BrowserRouter` intercepts clicks and swaps components without a page reload.
 - Astro MPA: routing happens **on the server** — each URL maps to a `.astro` file that renders to HTML; navigation is a regular HTTP request.
 - Both: support nested paths, dynamic segments, and layouts.
-- Astro add-on: enable `ViewTransitions` for SPA-like animated transitions while keeping the MPA model (covered in Navigation).
+- Astro add-on: enable the `<ClientRouter />` for SPA-like animated transitions while keeping the MPA model (covered in Navigation).
 </Diff>
 
 export const quizRoutingIndex = [
