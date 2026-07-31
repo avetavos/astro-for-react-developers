@@ -8,9 +8,9 @@ import Diff from '../../../../components/Diff.astro';
 import Quiz from '../../../../components/Quiz.tsx';
 import ProgressTracker from '../../../../components/ProgressTracker.tsx';
 
-**micro-frontend** (MFE) นำปรัชญาของ micro-services มาใช้กับเบราว์เซอร์: แทนที่จะเป็น single-page app ขนาดใหญ่ก้อนเดียวที่ทีมเดียวเป็นเจ้าของ หน้าเพจกลับถูก **ประกอบขึ้นจาก slice หลายชิ้นที่แต่ละชิ้นมีเจ้าของเป็นอิสระต่อกัน** header มาจากทีมหนึ่ง product grid มาจากอีกทีม cart มาจากทีมที่สาม — แต่ละชิ้นมี codebase, build pipeline และจังหวะการ deploy เป็นของตัวเอง
+**micro-frontend** (MFE) นำปรัชญาของ micro-services มาใช้กับ browser: แทนที่จะเป็น single-page app ขนาดใหญ่ก้อนเดียวที่ทีมเดียวเป็นเจ้าของ หน้าเพจกลับถูก **ประกอบขึ้นจาก slice หลายชิ้นที่แต่ละชิ้นมีเจ้าของเป็นอิสระต่อกัน** header มาจากทีมหนึ่ง product grid มาจากอีกทีม cart มาจากทีมที่สาม — แต่ละชิ้นมี codebase, build pipeline และจังหวะการ deploy เป็นของตัวเอง
 
-ส่วนที่ยากของ MFE มาตลอดคือ **shell**: สิ่งที่เย็บ slice ต่างๆ เข้าด้วยกัน ตัดสินใจว่าอะไรจะส่ง JavaScript และทำให้หน้าเพจยังเร็วอยู่แม้จะมีหลาย framework แย่งกันใช้ main thread นี่แหละคือจุดที่ Astro เปล่งประกาย Astro เรนเดอร์เป็น **HTML แบบ static โดยค่าเริ่มต้น** hydrate เฉพาะส่วนที่โต้ตอบได้ (islands) และสามารถ host **React, Vue, Svelte, Solid และอื่นๆ บนหน้าเพจเดียวกัน** ได้ นั่นทำให้มันเป็น composition layer ที่ดีอย่างไม่ธรรมดาสำหรับ micro-frontends
+ส่วนที่ยากของ MFE มาตลอดคือ **shell**: สิ่งที่เย็บ slice ต่างๆ เข้าด้วยกัน ตัดสินใจว่าอะไรจะส่ง JavaScript และทำให้หน้าเพจยังเร็วอยู่แม้จะมีหลาย framework แย่งกันใช้ main thread นี่แหละคือจุดที่ Astro เปล่งประกาย Astro เรนเดอร์เป็น **HTML แบบ static โดยค่าเริ่มต้น** hydrate เฉพาะส่วนที่โต้ตอบได้ (islands) และสามารถ host **React, Vue, Svelte, Solid และอื่นๆ บนหน้าเพจเดียวกัน** ได้ นั่นทำให้ Astro เป็น composition layer ที่ดีอย่างไม่ธรรมดาสำหรับ micro-frontends
 
 ## โมดูลนี้ครอบคลุมอะไรบ้าง
 
@@ -40,7 +40,7 @@ export const overviewDiagram = `flowchart TD
 
 <Mermaid code={overviewDiagram} title="หน้าเพจเดียวที่ประกอบขึ้นจาก micro-frontends ของสี่ทีม" />
 
-แต่ละทีมเป็นเจ้าของ vertical slice ตั้งแต่ต้นจนจบ — UI, logic ที่อยู่เบื้องหลัง และมักจะมี data source ของตัวเอง shell ไม่เคยล้วงเข้าไปข้างใน slice มันรู้แค่ว่าจะวาง slice ไว้ตรงไหนและจะโหลดมันอย่างไรเท่านั้น
+แต่ละทีมเป็นเจ้าของ vertical slice ตั้งแต่ต้นจนจบ — UI, logic ที่อยู่เบื้องหลัง และมักจะมี data source ของตัวเอง shell ไม่เคยล้วงเข้าไปข้างใน slice แต่รู้แค่ว่าจะวาง slice ไว้ตรงไหนและโหลดอย่างไรเท่านั้น
 
 <Diff title="Monolith SPA vs การประกอบแบบ micro-frontend">
 - **Monolith SPA:** หนึ่ง repo, หนึ่ง build, หนึ่ง deploy ทุกทีม merge เข้าสู่ bundle เดียวกัน ดังนั้น component ที่ช้าเพียงตัวเดียวหรือการ release ที่ผิดพลาดเพียงครั้งเดียวก็กระทบทั้งแอป
@@ -49,7 +49,7 @@ export const overviewDiagram = `flowchart TD
 - ข้อแลกเปลี่ยนคือ **ต้นทุนการประสานงาน (coordination cost)**: design tokens ที่แชร์กัน, routing และ contract ต่างๆ ตอนนี้อยู่ระหว่างทีมแทนที่จะอยู่ภายใน codebase เดียว
 </Diff>
 
-ตลอดโมดูลนี้เราจะมอง Astro เป็น **integration layer** คุณจะได้เห็น integration สองตระกูลใหญ่ — การประกอบ slice **ตอน build time** (shared packages ใน workspace) และการประกอบมัน **ตอน run time** (remote fragments, Web Components, Module Federation, iframes) — และเรียนรู้ว่าเมื่อไหร่แต่ละอย่างจึงเป็นเครื่องมือที่เหมาะสม
+ตลอดโมดูลนี้เราจะมอง Astro เป็น **integration layer** คุณจะได้เห็น integration สองตระกูลใหญ่ — การประกอบ slice **ตอน build time** (shared packages ใน workspace) และการประกอบ **ตอน run time** (remote fragments, Web Components, Module Federation, iframes) — และเรียนรู้ว่าเมื่อไหร่แต่ละอย่างจึงเป็นเครื่องมือที่เหมาะสม
 
 export const quizMfeIndex = [
   {
@@ -65,10 +65,10 @@ export const quizMfeIndex = [
   {
     q: "ทำไม Astro จึงเหมาะตามธรรมชาติในฐานะ micro-frontend shell?",
     options: [
-      "มันบังคับให้ทุกทีมต้องใช้ React",
-      "มันส่ง runtime ขนาดใหญ่ไปเพื่อประสานงาน slice ต่างๆ",
-      "มันเป็น HTML แบบ static โดยค่าเริ่มต้น และสามารถ host islands จากหลาย framework บนหน้าเพจเดียวได้",
-      "มันทำงานได้เฉพาะตอน build time เท่านั้น",
+      "บังคับให้ทุกทีมต้องใช้ React",
+      "ส่ง runtime ขนาดใหญ่ไปเพื่อประสานงาน slice ต่างๆ",
+      "เป็น HTML แบบ static โดยค่าเริ่มต้น และสามารถ host islands จากหลาย framework บนหน้าเพจเดียวได้",
+      "ทำงานได้เฉพาะตอน build time เท่านั้น",
     ],
     answer: 2,
   },

@@ -9,7 +9,7 @@ import Diff from '../../../../components/Diff.astro';
 import Quiz from '../../../../components/Quiz.tsx';
 import ProgressTracker from '../../../../components/ProgressTracker.tsx';
 
-React ส่ง children ผ่าน prop ชื่อ `children` ส่วน Astro ใช้ `<slot />` ซึ่งเป็นแนวคิดของ Web Component ที่สร้างไว้ใน template เลย ผลลัพธ์เหมือนกัน: parent เป็นคนตัดสินใจว่าจะใส่อะไรเข้าไปข้างใน ส่วน component เป็นคนตัดสินใจว่าจะวางมันไว้ตรงไหน
+React ส่ง children ผ่าน prop ชื่อ `children` ส่วน Astro ใช้ `<slot />` ที่เป็นแนวคิดของ Web Component ที่สร้างไว้ใน template เลย ผลลัพธ์เหมือนกัน: parent เป็นคนตัดสินใจว่าจะใส่อะไรเข้าไปข้างใน ส่วน component เป็นคนตัดสินใจว่าจะวางเนื้อหานั้นไว้ตรงไหน
 
 ## Default slot (ตัวเทียบเท่าของ children)
 
@@ -52,7 +52,7 @@ React ไม่มี named slot ในตัว pattern ที่ใช้ก�
 
 ใน **นิยามของ component** ให้วาง `<slot name="header" />` ตรงตำแหน่งที่คุณต้องการให้ content ของ header ปรากฏ
 
-ใน **การใช้งาน component** ให้เพิ่ม `slot="header"` ลงใน child element ใด ๆ เพื่อส่งมันไปยัง slot นั้น
+ใน **การใช้งาน component** ให้เพิ่ม `slot="header"` ลงใน child element ใด ๆ เพื่อส่งไปยัง slot นั้น
 
 export const namedSlotsReact = `// Layout.jsx — React named-slot workaround
 export default function Layout({ header, sidebar, children }) {
@@ -140,8 +140,8 @@ export const quizSlots = [
   {
     q: "คุณจะส่ง child element ไปยัง named slot ชื่อ 'header' ใน Astro ได้อย่างไร?",
     options: [
-      "ห่อมันด้วย `<Slot name=\"header\">`",
-      "ส่งมันเป็น prop ชื่อ `header` ให้กับ component",
+      "ห่อด้วย `<Slot name=\"header\">`",
+      "ส่งเป็น prop ชื่อ `header` ให้กับ component",
       "เพิ่ม attribute `slot=\"header\"` ลงใน child element",
       "ใช้ `Astro.slots.header`",
     ],

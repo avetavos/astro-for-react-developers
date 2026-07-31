@@ -12,7 +12,7 @@ import ProgressTracker from '../../../../components/ProgressTracker.tsx';
 
 ## Serializable props
 
-Astro render เพจของคุณบน server เมื่อพบ island ที่ hydrate แล้ว มันจะ serialize props เข้าไปใน HTML เพื่อให้เบราว์เซอร์ rehydrate component ด้วยข้อมูลเดิมทุกประการ
+Astro render เพจของคุณบน server เมื่อพบ island ที่ hydrate แล้ว จะ serialize props เข้าไปใน HTML เพื่อให้ browser rehydrate component ด้วยข้อมูลเดิมทุกประการ
 
 นั่นหมายความว่า props ต้องเป็นค่าที่ JSON สามารถแสดงได้:
 
@@ -51,7 +51,7 @@ const iso = new Date().toISOString(); // Date → string ✓
 
 ## การส่ง children / slots
 
-React ส่ง children ผ่าน prop `children` Astro ใช้ `<slot />` เมื่อใช้ React island เป็น wrapper คุณสามารถส่งเนื้อหา HTML ไปยังมันผ่าน slot mechanism ของ Astro — แต่เนื้อหา child จะเป็น **HTML แบบ static** ไม่ใช่ React component tree
+React ส่ง children ผ่าน prop `children` Astro ใช้ `<slot />` เมื่อใช้ React island เป็น wrapper คุณส่งเนื้อหา HTML เข้าไปผ่าน slot mechanism ของ Astro — แต่เนื้อหา child จะเป็น **HTML แบบ static** ไม่ใช่ React component tree
 
 ```astro
 ---
@@ -149,7 +149,7 @@ export const quizPassingProps = [
     q: "ทำไม props ที่ส่งไปยัง Astro island จึงต้อง JSON-serializable?",
     options: [
       "Astro ไม่รองรับ TypeScript generics",
-      "Astro serialize props เข้า HTML ตอน build/SSR เพื่อให้เบราว์เซอร์ rehydrate ด้วยข้อมูลเดิม",
+      "Astro serialize props เข้า HTML ตอน build/SSR เพื่อให้ browser rehydrate ด้วยข้อมูลเดิม",
       "React ไม่รับ non-serializable props",
       "Vite bundler ลบ non-serializable values",
     ],

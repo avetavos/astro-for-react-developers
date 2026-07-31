@@ -24,7 +24,7 @@ Hydrate ทันทีเมื่อเพจโหลด ใช้กับ c
 
 ### `client:idle`
 
-Hydrate หลังจากเบราว์เซอร์ยิง `requestIdleCallback` — เมื่อ main thread ว่าง ใช้กับ interactive components ที่สำคัญแต่ไม่ต้องการทันที
+Hydrate หลังจาก browser ยิง `requestIdleCallback` — เมื่อ main thread ว่าง ใช้กับ interactive components ที่สำคัญแต่ไม่ต้องการทันที
 
 ```astro
 <NewsletterSignup client:idle />
@@ -56,7 +56,7 @@ Hydrate เมื่อ CSS media query ตรงกัน ใช้กับ is
 
 ### `client:only`
 
-ข้าม server-side rendering ทั้งหมดและ render เฉพาะในเบราว์เซอร์ ต้องส่งชื่อ framework เป็น value ใช้กับ component ที่เรียกใช้ browser-only APIs (`window`, `localStorage`, WebGL) ที่จะ crash ระหว่าง SSR
+ข้าม server-side rendering ทั้งหมดและ render เฉพาะใน browser ต้องส่งชื่อ framework เป็น value ใช้กับ component ที่เรียกใช้ browser-only APIs (`window`, `localStorage`, WebGL) ที่จะ crash ระหว่าง SSR
 
 ```astro
 <ThreeScene client:only="react" />
@@ -112,7 +112,7 @@ import ThreeScene from '../components/ThreeScene.jsx';
 
 ## ไม่มี directive = HTML แบบ static
 
-สิ่งที่สำคัญที่สุดที่ต้องจำ: **React component ที่ไม่มี directive คือ HTML แบบ static** Astro รันมันบน server render output เป็น HTML และไม่ส่งอะไรไปยังเบราว์เซอร์
+สิ่งที่สำคัญที่สุดที่ต้องจำ: **React component ที่ไม่มี directive คือ HTML แบบ static** Astro รัน component นั้นบน server render output เป็น HTML และไม่ส่งอะไรไปยัง browser
 
 ```astro
 ---
@@ -122,7 +122,7 @@ import ProductCard from '../components/ProductCard.jsx';
 <ProductCard title="Widget" price={29} />
 ```
 
-นี่เป็นเจตนา Astro ส่งเสริมให้ถามว่า: "component นี้จำเป็นต้อง interactive จริงหรือไม่?" ถ้า React component แค่แสดงข้อมูล มันสามารถเป็น static ได้
+นี่เป็นเจตนา Astro ส่งเสริมให้ถามว่า: "component นี้จำเป็นต้อง interactive จริงหรือไม่?" ถ้า React component แค่แสดงข้อมูล ก็ปล่อยให้เป็น static ได้
 
 <Diff title="React hydration vs Astro client directives">
 - React: **ทุก component hydrate ตอนโหลด** — ไม่มี idle/visible/media strategy built-in
@@ -149,7 +149,7 @@ export const quizClientDirectives = [
     q: "`client:only=\"react\"` ทำอะไรแตกต่างจาก directives อื่น?",
     options: [
       "Hydrate เร็วกว่า `client:load`",
-      "ข้าม server-side rendering และ render component เฉพาะในเบราว์เซอร์",
+      "ข้าม server-side rendering และ render component เฉพาะใน browser",
       "ส่ง component เฉพาะให้ React Native clients",
       "เลื่อน hydration จนกว่า React จะ idle",
     ],

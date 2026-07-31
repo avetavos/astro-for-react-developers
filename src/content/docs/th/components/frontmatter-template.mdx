@@ -18,7 +18,7 @@ React component มีสองส่วนเชิงตรรกะ คือ
 <!-- template: HTML-first markup rendered to static HTML -->
 ```
 
-คู่ของ `---` เรียกว่า **component script** หรือ **frontmatter** ทุกอย่างที่อยู่ระหว่าง fence คือ TypeScript/JavaScript ล้วน ๆ ส่วนทุกอย่างที่อยู่หลัง `---` ปิดท้ายคือ template ซึ่งเป็น superset ของ HTML ที่คุณฝัง expression ได้ด้วย `{...}`
+คู่ของ `---` เรียกว่า **component script** หรือ **frontmatter** ทุกอย่างที่อยู่ระหว่าง fence คือ TypeScript/JavaScript ล้วน ๆ ส่วนทุกอย่างที่อยู่หลัง `---` ปิดท้ายคือ template ที่เป็น superset ของ HTML ที่คุณฝัง expression ได้ด้วย `{...}`
 
 ## Frontmatter: component script
 
@@ -86,8 +86,8 @@ const hero = { title: "Welcome", subtitle: "Zero JS by default" };
 <AstroPlayground client:visible code={templateCode} />
 
 <Diff title="React function body vs Astro frontmatter">
-- function body ของ React ทำงาน **ในเบราว์เซอร์** ทุกครั้งที่ render hook (`useState`, `useEffect`) อยู่ตรงนี้
-- frontmatter ของ Astro ทำงาน **ตอน build/server time** ไม่ทำงานในเบราว์เซอร์ ไม่มี hook ไม่มี browser API
+- function body ของ React ทำงาน **ใน browser** ทุกครั้งที่ render hook (`useState`, `useEffect`) อยู่ตรงนี้
+- frontmatter ของ Astro ทำงาน **ตอน build/server time** ไม่ทำงานใน browser ไม่มี hook ไม่มี browser API
 - template ของ React คือ JSX: `className`, `htmlFor`, event แบบ camelCase
 - template ของ Astro เป็น HTML-first: `class`, `for`, attribute มาตรฐานของ HTML
 - ทั้งคู่รองรับ `{expr}` สำหรับค่าแบบ dynamic แต่ template expression ของ Astro render **ครั้งเดียว** ไม่มี reactivity
@@ -114,7 +114,7 @@ export const quizFrontmatter = [
     options: [
       "ได้ Astro รองรับ React hook ทั้งหมด",
       "ได้ แต่เฉพาะ useState และ useEffect เท่านั้น",
-      "ไม่ได้ frontmatter ทำงานตอน build time ส่วน hook ต้องการ runtime ของเบราว์เซอร์",
+      "ไม่ได้ frontmatter ทำงานตอน build time ส่วน hook ต้องการ runtime ของ browser",
       "ได้เฉพาะตอนที่ import React มาอย่างชัดเจนเท่านั้น",
     ],
     answer: 2,

@@ -9,9 +9,9 @@ import Diff from '../../../../components/Diff.astro';
 import Quiz from '../../../../components/Quiz.tsx';
 import ProgressTracker from '../../../../components/ProgressTracker.tsx';
 
-ใน React คุณเขียน component เป็นฟังก์ชัน JavaScript ที่ return JSX ออกมา ส่วนใน Astro คุณเขียน component เป็นไฟล์ `.astro` ซึ่งเป็น superset ของ HTML ที่มีบล็อก JavaScript/TypeScript แบบ optional อยู่ด้านบนสุด เรียกว่า **frontmatter**
+ใน React คุณเขียน component เป็นฟังก์ชัน JavaScript ที่ return JSX ออกมา ส่วนใน Astro คุณเขียน component เป็นไฟล์ `.astro` ที่เป็น superset ของ HTML ที่มีบล็อก JavaScript/TypeScript แบบ optional อยู่ด้านบนสุด เรียกว่า **frontmatter**
 
-การปรับ mental model ที่สำคัญ: React function component ทำงานในเบราว์เซอร์ทุกครั้งที่ re-render แต่ Astro component ทำงาน **ครั้งเดียวตอน build time (หรือบนเซิร์ฟเวอร์)** แล้วส่งออกมาเป็น HTML ล้วน ๆ โดย default จะมี JavaScript เป็นศูนย์ ไม่มี virtual DOM ไม่มีการ re-render ไม่มีต้นทุนของ hydration
+การปรับ mental model ที่สำคัญ: React function component ทำงานใน browser ทุกครั้งที่ re-render แต่ Astro component ทำงาน **ครั้งเดียวตอน build time (หรือบนเซิร์ฟเวอร์)** แล้วส่งออกมาเป็น HTML ล้วน ๆ โดย default จะมี JavaScript เป็นศูนย์ ไม่มี virtual DOM ไม่มีการ re-render ไม่มีต้นทุนของ hydration
 
 โมดูลนี้จะพาคุณไล่ดูทุกองค์ประกอบของ `.astro` component โดยยึดโยงกับสิ่งที่คุณรู้อยู่แล้วจาก React
 
@@ -24,7 +24,7 @@ import ProgressTracker from '../../../../components/ProgressTracker.tsx';
 | [Slots](/astro/th/components/slots/) | `<slot />` เทียบกับ `children` |
 | [Expressions](/astro/th/components/expressions/) | template expression เทียบกับ JSX |
 | [Importing Components](/astro/th/components/importing-components/) | การประกอบ component ใน `.astro` |
-| [Server-Only & Scripts](/astro/th/components/server-only/) | JS เป็นศูนย์โดย default และวิธีเพิ่ม JS ฝั่งเบราว์เซอร์ |
+| [Server-Only & Scripts](/astro/th/components/server-only/) | JS เป็นศูนย์โดย default และวิธีเพิ่ม JS ฝั่ง browser |
 
 ## .astro component ตัวแรกของคุณ
 
@@ -60,17 +60,17 @@ const year = new Date().getFullYear();
 <AstroPlayground client:visible code={indexCode} />
 
 <Diff title="React component vs .astro component">
-- React: ฟังก์ชัน JS ที่ **return JSX** ทำงานในเบราว์เซอร์ทุกครั้งที่ render
+- React: ฟังก์ชัน JS ที่ **return JSX** ทำงานใน browser ทุกครั้งที่ render
 - Astro: ไฟล์ `.astro` ที่มีบล็อก `---` frontmatter แบบ optional ทำงาน **ครั้งเดียวตอน build/server time** แล้วส่งออกมาเป็น HTML
 - เหมือนกันทั้งคู่: รับ props ได้ รองรับการประกอบ (composition) และใช้ syntax `{expr}` แบบ JSX ใน template
-- ความแตกต่างหลัก: `.astro` component ส่ง JavaScript ไปยังเบราว์เซอร์ **เป็นศูนย์** โดย default
+- ความแตกต่างหลัก: `.astro` component ส่ง JavaScript ไปยัง browser **เป็นศูนย์** โดย default
 </Diff>
 
 export const quizIndex = [
   {
     q: "โค้ดใน frontmatter (---) ของ Astro component ทำงานเมื่อใด?",
     options: [
-      "ในเบราว์เซอร์ทุกครั้งที่โหลดหน้า",
+      "ใน browser ทุกครั้งที่โหลดหน้า",
       "ครั้งเดียวตอน build time หรือบนเซิร์ฟเวอร์",
       "ภายใน Web Worker",
       "เฉพาะตอนที่ component mount เท่านั้น",
@@ -78,7 +78,7 @@ export const quizIndex = [
     answer: 1,
   },
   {
-    q: ".astro component ธรรมดาส่ง JavaScript ไปยังเบราว์เซอร์เท่าไรโดย default?",
+    q: ".astro component ธรรมดาส่ง JavaScript ไปยัง browser เท่าไรโดย default?",
     options: ["เท่ากับ React", "runtime shim ขนาดเล็ก", "JavaScript เป็นศูนย์", "ขึ้นอยู่กับจำนวน props"],
     answer: 2,
   },

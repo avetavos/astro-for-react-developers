@@ -26,7 +26,7 @@ const title = "My Page";
 </html>
 ```
 
-ทุกอย่างเหนือ `---` ที่สองคือโค้ด **Node.js** ทุกอย่างด้านล่างคือ **HTML template** ที่ฝัง expression ด้วย `{expr}` ได้ — เหมือน JSX แต่ render ครั้งเดียวเป็น string ไม่มีการรันซ้ำในเบราว์เซอร์
+ทุกอย่างเหนือ `---` ที่สองคือโค้ด **Node.js** ทุกอย่างด้านล่างคือ **HTML template** ที่ฝัง expression ด้วย `{expr}` ได้ — เหมือน JSX แต่ render ครั้งเดียวเป็น string ไม่มีการรันซ้ำใน browser
 
 ## React page กับ Astro page
 
@@ -73,11 +73,11 @@ const publishedAt = new Date().toLocaleDateString();
 มีสองสิ่งที่โดดเด่นทันที:
 
 1. **Astro page เป็นเอกสาร HTML ที่สมบูรณ์** — มี `<html>`, `<head>`, และ `<body>` React component คืน fragment; layout wrapper เพิ่ม shell ใน Astro, page รับผิดชอบเอกสารทั้งหมด (หรือมอบหมายให้ Layout component ที่ provide shell)
-2. **`new Date()` ใน frontmatter รันครั้งเดียวขณะ build** — string ที่ได้ถูกฝังลงใน HTML ใน Next.js App Router มันก็รันบน server เช่นกัน แต่ความแตกต่างสำคัญ: ใน Astro ไม่มี React runtime, ไม่มี hydration, และ date ไม่มีทางคำนวณซ้ำในเบราว์เซอร์
+2. **`new Date()` ใน frontmatter รันครั้งเดียวขณะ build** — string ที่ได้ถูกฝังลงใน HTML ใน Next.js App Router โค้ดนี้ก็รันบน server เช่นกัน แต่ความแตกต่างสำคัญ: ใน Astro ไม่มี React runtime, ไม่มี hydration, และ date ไม่มีทางคำนวณซ้ำใน browser
 
 ## การเพิ่ม style
 
-Style ใน Astro page สามารถเป็น tag `<style>` inline ใน template — Astro scope มันให้กับ component โดยอัตโนมัติ เหมือน CSS Modules โดยไม่ต้อง configure:
+Style ใน Astro page สามารถเป็น tag `<style>` inline ใน template — Astro scope style ให้กับ component โดยอัตโนมัติ เหมือน CSS Modules โดยไม่ต้อง configure:
 
 ```astro
 ---
@@ -151,11 +151,11 @@ const tags = ["astro", "web", "frontend"];
 
 <AstroPlayground client:visible code={firstPageCode} />
 
-เปิด tab Network ใน DevTools ของเบราว์เซอร์ — ไม่มี JavaScript bundle เลย `.map()` บน `tags` สร้าง element `<span>` สามอันขณะ build และหายไป
+เปิด tab Network ใน DevTools ของ browser — ไม่มี JavaScript bundle เลย `.map()` บน `tags` สร้าง element `<span>` สามอันขณะ build และหายไป
 
 <Diff title="React component / Next.js page vs .astro page">
-- React/Next: ฟังก์ชันคืน JSX → React runtime render → hydrate ในเบราว์เซอร์
-- Astro: frontmatter คำนวณค่า → template render เป็น HTML → เบราว์เซอร์รับ HTML เท่านั้น
+- React/Next: ฟังก์ชันคืน JSX → React runtime render → hydrate ใน browser
+- Astro: frontmatter คำนวณค่า → template render เป็น HTML → browser รับ HTML เท่านั้น
 - Styling: React → CSS Modules หรือ Tailwind; Astro → `<style>` ภายใน `.astro` ถูก scope โดยอัตโนมัติ
 - `.map()` ใน JSX สร้าง React element ที่ hydrate; `.map()` ใน Astro template สร้าง HTML แบบ static
 - ทั้งคู่: syntax `{expr}`, TypeScript type, component import, `public/` สำหรับ static asset
@@ -173,9 +173,9 @@ export const quizFirstPage = [
     answer: 1,
   },
   {
-    q: "คุณเรียก `new Date()` ใน Astro frontmatter มันรันเมื่อใด?",
+    q: "คุณเรียก `new Date()` ใน Astro frontmatter โค้ดนี้รันเมื่อใด?",
     options: [
-      "ในเบราว์เซอร์ทุกครั้งที่โหลดหน้า",
+      "ใน browser ทุกครั้งที่โหลดหน้า",
       "ทุกครั้งที่ component re-render",
       "ครั้งเดียวขณะ build (หรือต่อ request ในโหมด SSR) บน server",
       "ภายใน useEffect หลัง hydration",
@@ -196,7 +196,7 @@ export const quizFirstPage = [
     q: "`.map()` บน array ภายใน Astro template ผลิตอะไร?",
     options: [
       "list แบบ reactive ที่อัปเดตเมื่อ array เปลี่ยน",
-      "React fragment ที่ hydrate ในเบราว์เซอร์",
+      "React fragment ที่ hydrate ใน browser",
       "HTML element แบบ static ที่ฝังลงในหน้าขณะ build",
       "JSON payload ที่ส่งไปยัง client",
     ],

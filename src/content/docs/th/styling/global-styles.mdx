@@ -11,7 +11,7 @@ import ProgressTracker from '../../../../components/ProgressTracker.tsx';
 
 ใน Next.js คุณวาง CSS reset, typography พื้นฐาน และ CSS custom properties สำหรับ design token ไว้ใน `styles/globals.css` แล้ว import ไฟล์นั้นครั้งเดียวใน `_app.tsx` ทุกหน้าจะ inherit style เหล่านั้นโดยอัตโนมัติ
 
-Astro มีกลไกที่เทียบเท่ากันสองแบบ คุณสามารถวาง `<style is:global>` block ไว้ในไฟล์ `.astro` ใดก็ได้ — directive `is:global` บอก compiler ให้ข้าม scoping หรือจะสร้างไฟล์ `.css` ธรรมดาแล้ว import ที่ระดับ layout ซึ่งเป็น pattern ที่พบบ่อยที่สุดในโปรเจกต์จริง
+Astro มีกลไกที่เทียบเท่ากันสองแบบ คุณสามารถวาง `<style is:global>` block ไว้ในไฟล์ `.astro` ใดก็ได้ — directive `is:global` บอก compiler ให้ข้าม scoping หรือจะสร้างไฟล์ `.css` ธรรมดาแล้ว import ที่ระดับ layout ที่เป็น pattern ที่พบบ่อยที่สุดในโปรเจกต์จริง
 
 ## `is:global` — inline global styles
 

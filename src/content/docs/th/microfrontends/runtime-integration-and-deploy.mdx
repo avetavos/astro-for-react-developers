@@ -8,11 +8,11 @@ import Diff from '../../../../components/Diff.astro';
 import Quiz from '../../../../components/Quiz.tsx';
 import ProgressTracker from '../../../../components/ProgressTracker.tsx';
 
-นี่คือจุดที่ micro-frontends สมกับชื่อของมัน: แต่ละ slice ถูก **deploy อย่างเป็นอิสระ** อยู่ที่ URL ของตัวเองบน pipeline ของตัวเอง และ Astro shell เย็บมันเข้าด้วยกัน **ตอน run time** ไม่ต้อง rebuild shell เมื่อทีม ship — shell เพียงโหลดสิ่งที่กำลัง live อยู่ในขณะนั้น นี่คือสี่เทคนิคหลัก เรียงจากการแยกตัวที่อ่อนที่สุดไปแข็งที่สุด
+นี่คือจุดที่ micro-frontends สมกับชื่อของตัวเอง: แต่ละ slice ถูก **deploy อย่างเป็นอิสระ** อยู่ที่ URL ของตัวเองบน pipeline ของตัวเอง และ Astro shell เย็บ slice เหล่านั้นเข้าด้วยกัน **ตอน run time** ไม่ต้อง rebuild shell เมื่อทีม ship — shell เพียงโหลดสิ่งที่กำลัง live อยู่ในขณะนั้น นี่คือสี่เทคนิคหลัก เรียงจากการแยกตัวที่อ่อนที่สุดไปแข็งที่สุด
 
 ## Web Components — custom elements ที่ไม่ผูกกับ framework
 
-ทีมสามารถ compile slice ของตัวเองให้เป็น **custom element** และเผยแพร่สคริปต์เพียงตัวเดียว shell โหลดสคริปต์นั้นและใช้ element เหมือน HTML tag ใดๆ — ไม่มีการล็อกอินกับ framework เพราะเบราว์เซอร์เป็นเจ้าของ registry ของ element:
+ทีมสามารถ compile slice ของตัวเองให้เป็น **custom element** และเผยแพร่สคริปต์เพียงตัวเดียว shell โหลดสคริปต์นั้นและใช้ element เหมือน HTML tag ใดๆ — ไม่มีการล็อกอินกับ framework เพราะ browser เป็นเจ้าของ registry ของ element:
 
 ```astro
 ---
@@ -22,7 +22,7 @@ import ProgressTracker from '../../../../components/ProgressTracker.tsx';
 <cart-widget user-id="42"></cart-widget>
 ```
 
-Web Components คือขอบเขต run-time ที่เป็นธรรมชาติที่สุดใน Astro: มันเป็นเพียง HTML, มันห่อหุ้มสไตล์ของตัวเองผ่าน shadow DOM และ framework ใดๆ (Lit, Stencil, Svelte, หรือแม้แต่ React ผ่าน wrapper) ก็สามารถสร้างมันออกมาได้
+Web Components คือขอบเขต run-time ที่เป็นธรรมชาติที่สุดใน Astro: เป็นเพียง HTML, ห่อหุ้มสไตล์ของตัวเองผ่าน shadow DOM และ framework ใดๆ (Lit, Stencil, Svelte, หรือแม้แต่ React ผ่าน wrapper) ก็สร้าง Web Component ออกมาได้
 
 ## iframes — การแยกตัวที่แข็งที่สุด
 
@@ -36,7 +36,7 @@ Web Components คือขอบเขต run-time ที่เป็นธร�
 
 ## Remote fragments — fetch และ inline บนเซิร์ฟเวอร์
 
-Astro shell สามารถ fetch HTML ที่ทีมเรนเดอร์ไว้แล้ว **บนเซิร์ฟเวอร์** — ใน server island หรือ endpoint — และ inline มันเข้าไปในหน้าเพจ วิธีนี้ทำให้ฝั่ง client เบา: ผู้ใช้ได้รับเอกสาร HTML หนึ่งชุดที่ประกอบเสร็จแล้ว
+Astro shell สามารถ fetch HTML ที่ทีมเรนเดอร์ไว้แล้ว **บนเซิร์ฟเวอร์** — ใน server island หรือ endpoint — แล้ว inline เข้าไปในหน้าเพจ วิธีนี้ทำให้ฝั่ง client เบา: ผู้ใช้ได้รับเอกสาร HTML หนึ่งชุดที่ประกอบเสร็จแล้ว
 
 ```astro
 ---
@@ -47,17 +47,17 @@ const html = await res.text();
 <section set:html={html}></section>
 ```
 
-คุณยังสามารถเปิดเผยสิ่งนี้จาก **endpoint** ของ Astro (`src/pages/api/reviews.ts`) เพื่อให้ shell อื่นนำกลับมาใช้ซ้ำได้ จับคู่มันกับ `server:defer` (จากบทเรียนก่อนหน้า) เพื่อให้ fragment ที่ช้าไม่เคย block หน้าเพจ
+คุณยังสามารถเปิดเผยสิ่งนี้จาก **endpoint** ของ Astro (`src/pages/api/reviews.ts`) เพื่อให้ shell อื่นนำกลับมาใช้ซ้ำได้ จับคู่กับ `server:defer` (จากบทเรียนก่อนหน้า) เพื่อให้ fragment ที่ช้าไม่เคย block หน้าเพจ
 
 ## Module Federation ผ่าน Vite
 
-**Module Federation** ปล่อยให้แอปหนึ่งบริโภค module จากอีกแอปหนึ่งตอน run time โดย fetch ผ่านเครือข่าย เนื่องจาก Astro สร้างบน Vite คุณจึงสามารถใช้ปลั๊กอิน **`@module-federation/vite`** เพื่อเปิดเผย module จากแอปของทีมต่างๆ และบริโภคมันใน shell ได้:
+**Module Federation** ให้แอปหนึ่งเรียกใช้ module จากอีกแอปหนึ่งตอน run time โดย fetch ผ่านเครือข่าย เนื่องจาก Astro สร้างบน Vite คุณจึงสามารถใช้ปลั๊กอิน **`@module-federation/vite`** เพื่อเปิดเผย module จากแอปของทีมต่างๆ แล้วเรียกใช้ใน shell ได้:
 
 ```bash
 npm install @module-federation/vite
 ```
 
-นี่คือตัวเลือก run-time ที่ "เป็นธรรมชาติแบบ SPA" ที่สุด — ทีมต่างๆ เปิดเผย component ที่ shell import แบบ dynamic เข้ามาโดยไม่ต้อง bundle มันไว้ มันทรงพลังแต่ก็หนักที่สุดในการดำเนินงาน: การทำ versioning ของ shared dependency (เพื่อไม่ให้ React ถูกโหลดสองครั้ง) และการประสานงาน build config กลายเป็นงานจริงจัง
+นี่คือตัวเลือก run-time ที่ "เป็นธรรมชาติแบบ SPA" ที่สุด — ทีมต่างๆ เปิดเผย component ที่ shell import แบบ dynamic เข้ามาโดยไม่ต้อง bundle ไว้ล่วงหน้า วิธีนี้ทรงพลังแต่ก็หนักที่สุดในการดำเนินงาน: การทำ versioning ของ shared dependency (เพื่อไม่ให้ React ถูกโหลดสองครั้ง) และการประสานงาน build config กลายเป็นงานจริงจัง
 
 ## เย็บทุกอย่างเข้าด้วยกัน
 
@@ -88,9 +88,9 @@ slice ที่เป็นอิสระต่อกันบางครั�
 
 ## การ deploy อิสระ, versioning และหลุมพราง
 
-การ deploy อิสระคือทั้งรางวัลและภัยอันตราย กฎไม่กี่ข้อช่วยให้มันยังควบคุมได้:
+การ deploy อิสระคือทั้งรางวัลและภัยอันตราย กฎไม่กี่ข้อช่วยให้ยังควบคุมได้:
 
-- **ทำ version ให้ contract ของคุณ** ไม่ใช่แค่โค้ด props ที่ element รับเข้ามา, ชื่อ event, รูปร่าง HTML ของ fragment — ปฏิบัติกับสิ่งเหล่านี้เหมือน public API และทำ version ให้มัน
+- **ทำ version ให้ contract ของคุณ** ไม่ใช่แค่โค้ด props ที่ element รับเข้ามา, ชื่อ event, รูปร่าง HTML ของ fragment — ปฏิบัติกับสิ่งเหล่านี้เหมือน public API และทำ version ให้ด้วย
 - **ปักหมุดหรือเจรจา shared dependencies** หากไม่ระมัดระวัง สาม slice จะ ship สำเนา React สามชุด การตั้งค่า shared ของ Module Federation หรือเพียงแค่ทำให้เป็นมาตรฐานบน Astro islands จะหลีกเลี่ยงภาษีความซ้ำซ้อนได้
 - **ปกป้องความสอดคล้อง** design tokens, fonts และ accessibility ต้องถูกบังคับใช้ข้าม repo (shared CSS/token package) ไม่งั้นหน้าเพจจะค่อยๆ เพี้ยนไปจนดูเหมือนสี่ผลิตภัณฑ์ที่ต่างกัน
 - **ล้มเหลวอย่างสง่างาม** run-time slice อาจล่มได้ ห่อ remote fetch และ federated import ไว้เพื่อให้ทีมที่ตายไปหนึ่งทีมลดระดับลงเป็น fallback แทนที่จะเป็นหน้าเปล่า
@@ -102,7 +102,7 @@ slice ที่เป็นอิสระต่อกันบางครั�
 - **Module Federation (`@module-federation/vite`):** dynamic import แบบ SPA-native ข้ามแอป ทรงพลังที่สุด หนักที่สุดในการดำเนินงาน ระวังเวอร์ชันของ shared dependency
 </Diff>
 
-run-time integration คือสิ่งที่ทำให้ผังองค์กรปรากฏชัดในสถาปัตยกรรม: ทุกทีมเป็นเจ้าของ URL, ship เมื่อต้องการ และ Astro shell — static, รวดเร็ว, ไม่ผูกกับ framework — ก็ประกอบมันเข้าด้วยกันเป็นหน้าเพจเดียวอย่างเงียบๆ
+run-time integration คือสิ่งที่ทำให้ผังองค์กรปรากฏชัดในสถาปัตยกรรม: ทุกทีมเป็นเจ้าของ URL, ship เมื่อต้องการ และ Astro shell — static, รวดเร็ว, ไม่ผูกกับ framework — ก็ประกอบทุกอย่างเข้าด้วยกันเป็นหน้าเพจเดียวอย่างเงียบๆ
 
 export const quizRuntime = [
   {

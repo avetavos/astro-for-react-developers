@@ -57,7 +57,7 @@ const { label, color = "#6366f1", bg = "#eef2ff" } = Astro.props;
 
 <ReactAstro react={defineVarsReact} astro={defineVarsAstro} />
 
-output ที่ compile แล้วจะตั้งค่า variable เหล่านั้นเป็น inline custom properties บน `style` attribute ของ element — ดังนั้นจึง cascade ตามปกติ — ในขณะที่ style rules จริงยังคงอยู่ใน `<style>` block และได้ประโยชน์จาก scoping
+output ที่ compile แล้วจะตั้งค่า variable เหล่านั้นเป็น inline custom properties บน `style` attribute ของ element — ดังนั้นจึง cascade ตามปกติ — ส่วน style rules จริงยังคงอยู่ใน `<style>` block และได้ประโยชน์จาก scoping
 
 ## `class:list` — conditional class names
 

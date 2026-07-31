@@ -10,7 +10,7 @@ import Diff from '../../../../components/Diff.astro';
 import Quiz from '../../../../components/Quiz.tsx';
 import ProgressTracker from '../../../../components/ProgressTracker.tsx';
 
-ขอบเขต micro-frontend ที่ถูกที่สุดที่คุณจะเคยวาดได้คือ **Astro island** island คือ component แบบโต้ตอบที่เบ็ดเสร็จในตัวเอง ที่ hydrate ด้วยตัวเอง ส่ง JavaScript ของตัวเอง และไม่รู้อะไรเลยเกี่ยวกับ component รอบๆ มัน เปลี่ยน "component" เป็น "team" แล้วคุณก็ได้ micro-frontend: region ที่แยกตัวออกมาซึ่งกลุ่มหนึ่งเป็นเจ้าของ และ shell เพียงแค่วางมันลงบนหน้าเพจ
+ขอบเขต micro-frontend ที่ถูกที่สุดที่คุณจะเคยวาดได้คือ **Astro island** island คือ component แบบโต้ตอบที่เบ็ดเสร็จในตัวเอง ที่ hydrate ด้วยตัวเอง ส่ง JavaScript ของตัวเอง และไม่รู้อะไรเลยเกี่ยวกับ component รอบข้าง เปลี่ยน "component" เป็น "team" แล้วคุณก็ได้ micro-frontend: region ที่แยกตัวออกมาซึ่งกลุ่มหนึ่งเป็นเจ้าของ และ shell เพียงแค่วางลงบนหน้าเพจ
 
 ส่วนที่น่าทึ่งคือ Astro ปล่อยให้ islands มาจาก **framework ต่างกันบนหน้าเพจเดียวกัน** ได้ ทีม Catalog สามารถเขียน Vue ทีม Reviews สามารถเขียน Svelte และทีม Cart สามารถอยู่กับ React ต่อไป — ทั้งหมดถูกเรนเดอร์ลงในเอกสาร HTML แบบ static เดียวกัน
 
@@ -73,7 +73,7 @@ import Reviews from '../islands/Reviews.svelte'; // Svelte
 
 ## ลองเลย: React island และ Vue island เคียงข้างกัน
 
-playground ด้านล่างเป็นหน้า Astro ที่สมบูรณ์และรันได้จริง มันใช้ host **React counter** และ **Vue counter** ในเอกสารเดียวกัน — สอง framework, สอง islands ที่เป็นอิสระต่อกัน, หนึ่ง static shell เปิดมันใน StackBlitz แล้วดูแต่ละ island hydrate และเก็บ state ของตัวเอง
+playground ด้านล่างเป็นหน้า Astro ที่สมบูรณ์และรันได้จริง หน้านี้ host **React counter** และ **Vue counter** ในเอกสารเดียวกัน — สอง framework, สอง islands ที่เป็นอิสระต่อกัน, หนึ่ง static shell เปิดใน StackBlitz แล้วดูแต่ละ island hydrate และเก็บ state ของตัวเอง
 
 export const playgroundCode = `---
 // src/pages/index.astro
@@ -108,8 +108,8 @@ import VueCounter from '../components/VueCounter.vue';
 <Diff title="React SPA tree vs cross-framework islands">
 - **React SPA:** หนึ่ง framework, หนึ่ง bundle, หนึ่งรอบ hydration สำหรับทั้ง tree การผสม Vue หรือ Svelte เข้าไปแทบเป็นไปไม่ได้
 - **Astro islands:** แต่ละ region hydrate อย่างเป็นอิสระและส่งเฉพาะ runtime ของ framework ตัวเอง — และเฉพาะเมื่อมี `client:*` directive เท่านั้น
-- **การจับคู่กับทีม:** หนึ่ง island ≈ หนึ่งทีม contract ระหว่างทีมก็เป็นเพียง props ที่ shell ส่งเข้ามาและ slot ที่มันเรนเดอร์ลงไป
-- **การแยกตัว (Isolation):** error หรือการเรนเดอร์ที่หนักใน island หนึ่งจะอยู่ใน island นั้น static shell และเพื่อนบ้านของมันไม่ได้รับผลกระทบ
+- **การจับคู่กับทีม:** หนึ่ง island ≈ หนึ่งทีม contract ระหว่างทีมก็เป็นเพียง props ที่ shell ส่งเข้ามาและ slot ที่เรนเดอร์ลงไป
+- **การแยกตัว (Isolation):** error หรือการเรนเดอร์ที่หนักใน island หนึ่งจะอยู่ใน island นั้น static shell และเพื่อนบ้านของตัวเองไม่ได้รับผลกระทบ
 </Diff>
 
 islands คือทางเข้าสู่ micro-frontends ที่นุ่มนวลที่สุด: ไม่มี infrastructure เพิ่มเติม, ไม่มี remote loading, ไม่มี Module Federation — เป็นเพียง component จากทีม (และ framework) ต่างๆ ที่ประกอบกันโดย Astro shell ที่รวดเร็ว บทเรียนถัดไปจะขยายเรื่องนี้ขึ้นไปสู่ระดับ package ทั้งก้อนและ server fragment ที่ถูกเลื่อน (deferred)
@@ -128,20 +128,20 @@ export const quizIslands = [
   {
     q: "ทำไม Astro islands จึงเป็นขอบเขต micro-frontend ตามธรรมชาติ?",
     options: [
-      "มันบังคับให้ทุกทีมอยู่บน framework เดียวกัน",
+      "บังคับให้ทุกทีมอยู่บน framework เดียวกัน",
       "แต่ละ island hydrate อย่างเป็นอิสระและสามารถมาจาก framework ที่ต่างกันได้",
-      "มันปิด JavaScript ทั้งหมด",
-      "มันต้องการเซิร์ฟเวอร์แยกต่อหนึ่ง island",
+      "ปิด JavaScript ทั้งหมด",
+      "ต้องการเซิร์ฟเวอร์แยกต่อหนึ่ง island",
     ],
     answer: 1,
   },
   {
     q: "`client:*` directive ควบคุมอะไรสำหรับ island?",
     options: [
-      "ว่ามันโหลดไฟล์ CSS ไหน",
-      "ว่ามันจะ hydrate และส่ง JavaScript หรือไม่และเมื่อไหร่",
-      "ว่าทีมไหนเป็นเจ้าของมัน",
-      "ตำแหน่งของมันใน layout",
+      "ว่าโหลดไฟล์ CSS ไหน",
+      "ว่าจะ hydrate และส่ง JavaScript หรือไม่และเมื่อไหร่",
+      "ว่าทีมไหนเป็นเจ้าของตัวเอง",
+      "ตำแหน่งของตัวเองใน layout",
     ],
     answer: 1,
   },

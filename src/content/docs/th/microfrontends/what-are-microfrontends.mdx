@@ -8,7 +8,7 @@ import Diff from '../../../../components/Diff.astro';
 import Quiz from '../../../../components/Quiz.tsx';
 import ProgressTracker from '../../../../components/ProgressTracker.tsx';
 
-แนวคิด micro-frontend ยืมมาจาก micro-services โดยตรง micro-service แยก backend ออกเพื่อให้ **ทีมหนึ่งเป็นเจ้าของหนึ่ง service ตั้งแต่ต้นจนจบ** — โค้ดของมัน, ฐานข้อมูลของมัน, deploy pipeline ของมัน micro-frontend ทำแบบเดียวกันกับ UI: ทีมหนึ่งเป็นเจ้าของ **vertical slice** ของผลิตภัณฑ์ ตั้งแต่ pixel ที่เรนเดอร์ออกมาลงไปจนถึง API ที่ป้อนข้อมูลให้มัน
+แนวคิด micro-frontend ยืมมาจาก micro-services โดยตรง micro-service แยก backend ออกเพื่อให้ **ทีมหนึ่งเป็นเจ้าของหนึ่ง service ตั้งแต่ต้นจนจบ** — โค้ดของตัวเอง, ฐานข้อมูลของตัวเอง, deploy pipeline ของตัวเอง micro-frontend ทำแบบเดียวกันกับ UI: ทีมหนึ่งเป็นเจ้าของ **vertical slice** ของผลิตภัณฑ์ ตั้งแต่ pixel ที่เรนเดอร์ออกมาลงไปจนถึง API ที่ป้อนข้อมูลให้
 
 คำสำคัญคือ **vertical** การแยกแบบ horizontal (ทีมหนึ่งทำ "CSS ทั้งหมด" อีกทีมทำ "การ fetch ข้อมูลทั้งหมด") ยังคงบังคับให้ทุกคนต้องผ่าน release เดียวกัน ส่วนการแยกแบบ vertical ให้ฟีเจอร์ที่เบ็ดเสร็จในตัวเองแก่ทีม — เช่น *Checkout* — ที่ทีมสามารถ build, test และ ship ได้โดยไม่ต้องรอใคร
 
@@ -29,14 +29,14 @@ export const teamDiagram = `flowchart LR
 
 <Mermaid code={teamDiagram} title="แต่ละทีม build และ deploy slice ของตัวเองตามจังหวะของตัวเอง" />
 
-สังเกตว่า shell ดึง *เวอร์ชันใดก็ตามที่กำลัง live* เข้ามา — Catalog สามารถ ship ห้าครั้งต่อวันในขณะที่ Cart ship สัปดาห์ละครั้ง และไม่มีฝ่ายไหน block อีกฝ่าย
+สังเกตว่า shell ดึง *เวอร์ชันใดก็ตามที่กำลัง live* เข้ามา — Catalog ship ได้ห้าครั้งต่อวัน ส่วน Cart ship สัปดาห์ละครั้ง และไม่มีฝ่ายไหน block อีกฝ่าย
 
 ## Build-time vs run-time integration
 
 มีสองช่วงเวลาที่แตกต่างกันโดยพื้นฐานซึ่ง slice สามารถถูกนำมารวมกันได้:
 
-- **Build-time integration:** slice ถูกเผยแพร่เป็น **versioned packages** (เช่น ไปยัง private npm registry) และ shell import มันเข้ามา การประกอบเกิดขึ้นตอนที่ shell build คุณจะได้ type safety และ bundle เดียวที่ถูก optimize แล้ว แต่การเปลี่ยนแปลงของทีมจะไปถึงผู้ใช้ก็ต่อเมื่อ shell **rebuild และ redeploy** เท่านั้น
-- **Run-time integration:** slice ถูก deploy เป็น **artifact ที่รันแยกกัน** (สคริปต์, remote HTML fragment, federated module, iframe) shell ดึงมันเข้ามาเมื่อหน้าเพจถูกร้องขอหรือเรนเดอร์ในเบราว์เซอร์ ทีมต่างๆ ship อย่างเป็นอิสระอย่างแท้จริง โดยแลกมาด้วยส่วนประกอบที่ขยับเคลื่อนไหวมากขึ้นและการรับประกัน ณ เวลา compile ที่อ่อนแอลง
+- **Build-time integration:** slice ถูกเผยแพร่เป็น **versioned packages** (เช่น ไปยัง private npm registry) และ shell import เข้ามา การประกอบเกิดขึ้นตอนที่ shell build คุณจะได้ type safety และ bundle เดียวที่ถูก optimize แล้ว แต่การเปลี่ยนแปลงของทีมจะไปถึงผู้ใช้ก็ต่อเมื่อ shell **rebuild และ redeploy** เท่านั้น
+- **Run-time integration:** slice ถูก deploy เป็น **artifact ที่รันแยกกัน** (สคริปต์, remote HTML fragment, federated module, iframe) shell ดึง artifact เหล่านั้นเข้ามาเมื่อหน้าเพจถูกร้องขอหรือเรนเดอร์ใน browser ทีมต่างๆ ship อย่างเป็นอิสระอย่างแท้จริง โดยแลกมาด้วยส่วนประกอบที่ขยับเคลื่อนไหวมากขึ้นและการรับประกัน ณ เวลา compile ที่อ่อนแอลง
 
 บทเรียนถัดไปจะลงลึกทั้งสองแบบ สำหรับตอนนี้ ภาพในใจคือ: build-time แลกความเป็นอิสระเพื่อความปลอดภัย ส่วน run-time แลกความปลอดภัยเพื่อความเป็นอิสระ
 
@@ -68,7 +68,7 @@ export const quizWhat = [
     q: "'vertical slice' ที่ทีม MFE เป็นเจ้าของหมายถึง:",
     options: [
       "CSS ทั้งหมดของทั้งแอป",
-      "ฟีเจอร์ที่เบ็ดเสร็จในตัวเองตั้งแต่ UI ลงไปจนถึง data source ของมัน",
+      "ฟีเจอร์ที่เบ็ดเสร็จในตัวเองตั้งแต่ UI ลงไปจนถึง data source ของตัวเอง",
       "shared component library ตัวเดียว",
       "เฉพาะ build pipeline เท่านั้น",
     ],
@@ -78,7 +78,7 @@ export const quizWhat = [
     q: "อะไรที่ทำให้ run-time integration ต่างจาก build-time integration?",
     options: [
       "slice แบบ run-time ถูกนำมารวมกันตอนที่ shell build",
-      "slice แบบ run-time เป็น artifact ที่ deploy แยกกันและถูกดึงมาตอนร้องขอหรือในเบราว์เซอร์",
+      "slice แบบ run-time เป็น artifact ที่ deploy แยกกันและถูกดึงมาตอนร้องขอหรือใน browser",
       "run-time integration ต้องใช้ monorepo",
       "ไม่มีความแตกต่างกันจริง",
     ],

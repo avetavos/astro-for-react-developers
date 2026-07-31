@@ -8,7 +8,7 @@ import Diff from '../../../../components/Diff.astro';
 import Quiz from '../../../../components/Quiz.tsx';
 import ProgressTracker from '../../../../components/ProgressTracker.tsx';
 
-ในแอป React หรือ Next.js เบราว์เซอร์ได้รับ **JavaScript bundle ขนาดใหญ่หนึ่งก้อน** React บูต เดิน component tree ทั้งหมด และแนบ event listeners ทุกที่ — แม้แต่กับ component ที่ไม่มีการโต้ตอบใดๆ นี่คือ full-app hydration
+ในแอป React หรือ Next.js browser ได้รับ **JavaScript bundle ขนาดใหญ่หนึ่งก้อน** React บูต เดิน component tree ทั้งหมด และแนบ event listeners ทุกที่ — แม้แต่กับ component ที่ไม่มีการโต้ตอบใดๆ นี่คือ full-app hydration
 
 Island Architecture ที่คิดค้นโดย Jason Miller และทำให้เป็นที่นิยมโดย Astro พลิกค่าเริ่มต้น: เพจเป็น HTML ที่ไม่ทำงาน มีเฉพาะ component ที่ต้องการ interactivity เท่านั้นที่ถูก hydrate และ hydrate **อย่างอิสระ** — เหมือนเกาะในทะเลของ markup แบบ static
 
@@ -50,7 +50,7 @@ const { post } = Astro.props;
 
 ## ประสิทธิภาพที่ได้รับ
 
-Astro วัดสิ่งนี้อย่างแม่นยำ เพจที่มี island `LikeButton` เดียวจะดาวน์โหลดเฉพาะ JavaScript สำหรับปุ่มนั้นและ React runtime ของมัน — ไม่มีอื่นนอกจากนั้น Next.js เทียบเท่าส่ง React บวก component ทุกตัวบนเพจ
+Astro วัดสิ่งนี้อย่างแม่นยำ เพจที่มี island `LikeButton` เดียวจะดาวน์โหลดเฉพาะ JavaScript สำหรับปุ่มนั้นและ React runtime ของตัวเอง — ไม่มีอื่นนอกจากนั้น Next.js เทียบเท่าส่ง React บวก component ทุกตัวบนเพจ
 
 ผลลัพธ์จริงในเว็บที่มีเนื้อหาหนาแน่น:
 
@@ -63,7 +63,7 @@ Astro วัดสิ่งนี้อย่างแม่นยำ เพจ�
 รูปแบบนี้เรียกว่า **partial hydration** เพราะมีเพียง *บางส่วน* ของเพจที่ถูก hydrate แต่ละ island:
 
 1. Render เป็น HTML บน server/build (เหมือน `.astro` component ทั่วไป)
-2. ส่ง JS bundle ของตัวเองไปยังเบราว์เซอร์
+2. ส่ง JS bundle ของตัวเองไปยัง browser
 3. Hydrate **อย่างอิสระ** — islands ไม่แชร์ React root
 
 จุดสุดท้ายสำคัญมาก: islands ถูกแยกออกจากกัน ไม่มี React tree เดียวที่เชื่อมต่อกัน ซึ่งหมายความว่าไม่มีการแชร์ React context ข้าม islands โดยค่าเริ่มต้น คุณจะได้เรียนรู้วิธีจัดการกับนั้นใน [เมื่อใดควรใช้ Island](/astro/th/islands/when-to-island/)
@@ -104,7 +104,7 @@ export const quizWhatIsIsland = [
       "Hydrate เฉพาะ component ที่ต้องการ JavaScript interactivity",
       "Render เพียงครึ่งหน้าบน server",
       "React feature สำหรับ lazy loading components",
-      "การส่ง JavaScript แบบบีบอัดไปยังเบราว์เซอร์",
+      "การส่ง JavaScript แบบบีบอัดไปยัง browser",
     ],
     answer: 0,
   },
@@ -122,9 +122,9 @@ export const quizWhatIsIsland = [
     q: "ทำไม full-app hydration จึงเพิ่ม Time to Interactive แม้ในเพจที่เป็น static เป็นส่วนใหญ่?",
     options: [
       "Server ใช้เวลาในการ render HTML นานขึ้น",
-      "เบราว์เซอร์ต้องดาวน์โหลดและรัน JS สำหรับทุก component รวมถึง component ที่แสดงผลล้วนๆ",
+      "browser ต้องดาวน์โหลดและรัน JS สำหรับทุก component รวมถึง component ที่แสดงผลล้วนๆ",
       "React ต้องการการเชื่อมต่อฐานข้อมูลเพื่อ hydrate",
-      "เบราว์เซอร์ cache React bundles ทำให้โหลดครั้งแรกช้าลง",
+      "browser cache React bundles ทำให้โหลดครั้งแรกช้าลง",
     ],
     answer: 1,
   },

@@ -59,7 +59,7 @@ import Counter from '../components/Counter.jsx';
 </html>
 ```
 
-หากไม่มี `client:load` component จะ render เป็น **HTML แบบ static** (ไม่มี interactivity) ใส่ directive แล้ว Astro จะส่ง React runtime + component JS ไปยังเบราว์เซอร์และ hydrate มัน
+หากไม่มี `client:load` component จะ render เป็น **HTML แบบ static** (ไม่มี interactivity) ใส่ directive แล้ว Astro จะส่ง React runtime + component JS ไปยัง browser แล้ว hydrate component นั้นให้
 
 ## เคียงข้างกัน: React app vs Astro page ที่มี React island
 
@@ -94,7 +94,7 @@ import Counter from '../components/Counter.jsx';
 
 ## Codebase React ทั้งหมดของคุณสามารถย้ายมาได้
 
-Hooks, context, third-party React libraries, การประกอบ component — ทั้งหมดทำงานภายใน React island เหมือนกับในแอป React คุณไม่ได้เสียอะไรเลย แค่เลือกว่าส่วนไหนของเพจต้องการมัน
+Hooks, context, third-party React libraries, การประกอบ component — ทั้งหมดทำงานภายใน React island เหมือนกับในแอป React คุณไม่ได้เสียอะไรเลย แค่เลือกว่าส่วนไหนของเพจต้องการ React
 
 ```jsx
 // src/components/SearchBar.jsx — a real-world island

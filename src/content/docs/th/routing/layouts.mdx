@@ -9,7 +9,7 @@ import Quiz from '../../../../components/Quiz.tsx';
 import ProgressTracker from '../../../../components/ProgressTracker.tsx';
 import Mermaid from '../../../../components/Mermaid.astro';
 
-ใน Next.js App Router คุณสร้าง `layout.tsx` ไว้ข้างๆ หน้าและ React จะครอบ children ผ่านมันโดยอัตโนมัติ ใน Astro ไม่มีการครอบ layout อัตโนมัติ — คุณสร้าง layout component ใน `src/layouts/` และ **import ใช้อย่างชัดเจน** ภายในแต่ละหน้า layout รับเนื้อหาของหน้าผ่าน `<slot />` ซึ่งเทียบเท่ากับ `children` prop ของ React
+ใน Next.js App Router คุณสร้าง `layout.tsx` ไว้ข้างๆ หน้าและ React จะครอบ children ด้วย layout นั้นโดยอัตโนมัติ ใน Astro ไม่มีการครอบ layout อัตโนมัติ — คุณสร้าง layout component ใน `src/layouts/` และ **import ใช้อย่างชัดเจน** ภายในแต่ละหน้า layout รับเนื้อหาของหน้าผ่าน `<slot />` ซึ่งเทียบเท่ากับ `children` prop ของ React
 
 > Layout ต้องการ project หลายไฟล์เพื่อสังเกตผล — รัน example เหล่านี้ใน Astro project เต็มรูปแบบ (`npm create astro@latest`) ในเครื่องของคุณ
 

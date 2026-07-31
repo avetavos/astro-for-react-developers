@@ -8,13 +8,13 @@ import Diff from '../../../../components/Diff.astro';
 import Quiz from '../../../../components/Quiz.tsx';
 import ProgressTracker from '../../../../components/ProgressTracker.tsx';
 
-ปรัชญาหลักของ Astro นั้นเรียบง่าย: **เริ่มต้นด้วย static แล้ว opt เข้า JS เฉพาะเมื่อต้องการ** นี่คือตรงข้ามกับ React SPA ที่ทุกอย่างเป็น JavaScript จนกว่าคุณจะทำงานเพื่อลบมันออก
+ปรัชญาหลักของ Astro นั้นเรียบง่าย: **เริ่มต้นด้วย static แล้ว opt เข้า JS เฉพาะเมื่อต้องการ** นี่คือตรงข้ามกับ React SPA ที่ทุกอย่างเป็น JavaScript จนกว่าคุณจะลงแรงตัด JavaScript ออก
 
 ## กฎ default-static
 
 ถามคำถามนี้สำหรับทุก component บนเพจ:
 
-> "Component นี้ตอบสนองต่อ user interaction หรือเปลี่ยนแปลงตามเวลาในเบราว์เซอร์หรือไม่?"
+> "Component นี้ตอบสนองต่อ user interaction หรือเปลี่ยนแปลงตามเวลาใน browser หรือไม่?"
 
 ถ้า **ใช่** — ทำให้เป็น island ด้วย `client:*` directive ที่เหมาะสม
 ถ้า **ไม่** — คงไว้เป็น `.astro` component หรือ React component ที่ไม่มี directive (render เป็น HTML แบบ static)

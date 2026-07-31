@@ -9,9 +9,9 @@ import Diff from '../../../../components/Diff.astro';
 import Quiz from '../../../../components/Quiz.tsx';
 import ProgressTracker from '../../../../components/ProgressTracker.tsx';
 
-คุณสร้าง UI ด้วย React ได้อยู่แล้ว เข้าใจ component, hook, state, และ JSX ดีอยู่แล้ว Astro ไม่ได้มาแทนที่ความรู้เหล่านั้น — มันคือวิธีส่งมอบที่แตกต่างออกไป ซึ่งนำ mental model ของ React มาใช้ในจุดที่ควรใช้ และถอยออกไปในจุดที่ไม่จำเป็น
+คุณสร้าง UI ด้วย React ได้อยู่แล้ว เข้าใจ component, hook, state, และ JSX ดีอยู่แล้ว Astro ไม่ได้มาแทนที่ความรู้เหล่านั้น — แต่เป็นวิธีส่งมอบที่แตกต่างออกไป ซึ่งนำ mental model ของ React มาใช้ในจุดที่ควรใช้ และถอยออกไปในจุดที่ไม่จำเป็น
 
-การเปลี่ยนแปลงที่ใหญ่ที่สุด: **React ส่ง JavaScript runtime ไปยังเบราว์เซอร์และ render UI ที่นั่น ส่วน Astro render UI ที่ server (หรือขณะ build) แล้วส่ง HTML ออกมา JavaScript จะถึงเบราว์เซอร์เฉพาะส่วนที่ต้องการ interactivity จริงๆ เท่านั้น**
+การเปลี่ยนแปลงที่ใหญ่ที่สุด: **React ส่ง JavaScript runtime ไปยัง browser และ render UI ที่นั่น ส่วน Astro render UI ที่ server (หรือขณะ build) แล้วส่ง HTML ออกมา JavaScript จะถึง browser เฉพาะส่วนที่ต้องการ interactivity จริงๆ เท่านั้น**
 
 สำหรับเว็บไซต์ที่เน้นเนื้อหา — docs, หน้า marketing, blog, landing page — ความแตกต่างนี้มีนัยสำคัญมาก: Time to First Contentful Paint ที่เร็วขึ้น, bundle ที่เล็กลง, และ Core Web Vitals ที่ดีขึ้นโดยไม่ต้องปรับแต่งเอง
 
@@ -87,7 +87,7 @@ const title = "My Site";
 
 <ReactAstro react={indexReact} astro={indexAstro} />
 
-หน้า Astro ด้านบนส่ง **JavaScript ศูนย์ชิ้นไปยังเบราว์เซอร์** — ตัวแปร `title` ถูกประเมินครั้งเดียวขณะ build และฝังลงใน HTML เลย ไม่มี React runtime, ไม่มี hydration, ไม่มี virtual DOM
+หน้า Astro ด้านบนส่ง **JavaScript ศูนย์ชิ้นไปยัง browser** — ตัวแปร `title` ถูกประเมินครั้งเดียวขณะ build และฝังลงใน HTML เลย ไม่มี React runtime, ไม่มี hydration, ไม่มี virtual DOM
 
 ## ตัวอย่างที่รันได้
 
@@ -120,7 +120,7 @@ const features = ["Zero JS by default", "Islands architecture", "Use React compo
 <AstroPlayground client:visible code={indexCode} />
 
 <Diff title="React / Next.js page vs Astro page">
-- React/Next: ส่ง JS runtime ไปยังเบราว์เซอร์; component re-render เมื่อ state/prop เปลี่ยน
+- React/Next: ส่ง JS runtime ไปยัง browser; component re-render เมื่อ state/prop เปลี่ยน
 - Astro: render เป็น HTML ขณะ build/server; ส่ง JS ศูนย์ชิ้น ยกเว้นคุณเพิ่ม island ด้วย `client:*`
 - ทั้งคู่: ใช้ `{expr}` เพื่อฝังค่า, รองรับ TypeScript, ใช้ tooling `npm` / Vite
 - จุดแข็งสำคัญ: `.map()` ด้านบนสร้าง element `<li>` แบบ static — ไม่มี hydration, ไม่มี bundle
@@ -128,7 +128,7 @@ const features = ["Zero JS by default", "Islands architecture", "Use React compo
 
 export const quizIntroIndex = [
   {
-    q: "หน้า Astro ส่งอะไรไปยังเบราว์เซอร์ตามค่าเริ่มต้น?",
+    q: "หน้า Astro ส่งอะไรไปยัง browser ตามค่าเริ่มต้น?",
     options: [
       "React runtime เต็มรูปแบบพร้อม virtual DOM",
       "Astro runtime ขนาดเล็กสำหรับ routing",
@@ -140,7 +140,7 @@ export const quizIntroIndex = [
   {
     q: "โค้ดภายใน frontmatter ของ Astro (บล็อก ---) รันเมื่อใด?",
     options: [
-      "ในเบราว์เซอร์ทุกครั้งที่โหลดหน้า",
+      "ใน browser ทุกครั้งที่โหลดหน้า",
       "ครั้งเดียวขณะ build หรือต่อ request บน server",
       "ภายใน Web Worker",
       "เฉพาะเมื่อ component mount",

@@ -1,6 +1,6 @@
 ---
 title: Server-Only & Scripts
-description: '.astro component ส่ง JS เป็นศูนย์โดย default เพิ่ม JS ฝั่งเบราว์เซอร์ได้ด้วย tag <script> ธรรมดา'
+description: '.astro component ส่ง JS เป็นศูนย์โดย default เพิ่ม JS ฝั่ง browser ได้ด้วย tag <script> ธรรมดา'
 ---
 
 import ReactAstro from '../../../../components/ReactAstro.astro';
@@ -9,7 +9,7 @@ import Diff from '../../../../components/Diff.astro';
 import Quiz from '../../../../components/Quiz.tsx';
 import ProgressTracker from '../../../../components/ProgressTracker.tsx';
 
-นี่คือแนวคิดที่ทำให้นักพัฒนา React ประหลาดใจมากที่สุด ใน React ทุก component ที่คุณเขียนจะส่ง JavaScript ไปยังเบราว์เซอร์ แม้แต่ component ที่แค่ render หัวข้อก็ตาม Astro กลับด้านของ default นี้: **`.astro` component ธรรมดาผลิต JavaScript ออกมาเป็นศูนย์**
+นี่คือแนวคิดที่ทำให้นักพัฒนา React ประหลาดใจมากที่สุด ใน React ทุก component ที่คุณเขียนจะส่ง JavaScript ไปยัง browser แม้แต่ component ที่แค่ render หัวข้อก็ตาม Astro กลับด้านของ default นี้: **`.astro` component ธรรมดาผลิต JavaScript ออกมาเป็นศูนย์**
 
 ## React ส่ง JS เสมอ — Astro ไม่ส่ง
 
@@ -35,20 +35,20 @@ const { title } = Astro.props;
 
 <ReactAstro react={serverOnlyReact} astro={serverOnlyAstro} />
 
-compiler ของ Astro จะแปลง `Heading.astro` ให้เป็นฟังก์ชันที่ return string ของ HTML ออกมา เบราว์เซอร์ได้รับ string นั้นไป จบ ไม่มี script tag ไม่มี React runtime ไม่มีอะไรเลย
+compiler ของ Astro จะแปลง `Heading.astro` ให้เป็นฟังก์ชันที่ return string ของ HTML ออกมา browser ได้รับ string นั้นไป จบ ไม่มี script tag ไม่มี React runtime ไม่มีอะไรเลย
 
 ## สิ่งที่คุณทำไม่ได้ใน .astro component ธรรมดา
 
 เพราะ frontmatter ทำงาน **ตอน build/server time** และ template ผลิต **static HTML** ออกมา คุณจึงไม่สามารถ:
 
 - เรียก `useState`, `useReducer` หรือ React hook ใด ๆ
-- ผูก event listener ใน frontmatter (ไม่มี `onClick` ที่ทำงานในเบราว์เซอร์)
+- ผูก event listener ใน frontmatter (ไม่มี `onClick` ที่ทำงานใน browser)
 - อ่าน `window`, `document` หรือ `localStorage` ใน frontmatter (สิ่งเหล่านี้ไม่มีอยู่ตอน build time)
 - ทำให้ UI ตอบสนองต่อ input ของผู้ใช้ — สิ่งนั้นต้องใช้ **island** (จะกล่าวถึงในโมดูลถัดไป)
 
 ## การเพิ่ม vanilla browser JS ด้วย script tag
 
-เมื่อคุณต้องการ JavaScript ฝั่งเบราว์เซอร์เพียงเล็กน้อย — เช่น toggle, counter หรือ event สำหรับ analytics — Astro ให้คุณใส่ tag `<script>` เข้าไปใน template ได้โดยตรง Astro จะ bundle และ deduplicate script เหล่านี้ให้อัตโนมัติ
+เมื่อคุณต้องการ JavaScript ฝั่ง browser เพียงเล็กน้อย — เช่น toggle, counter หรือ event สำหรับ analytics — Astro ให้คุณใส่ tag `<script>` เข้าไปใน template ได้โดยตรง Astro จะ bundle และ deduplicate script เหล่านี้ให้อัตโนมัติ
 
 export const scriptReact = `// Counter.jsx — React
 // Ships React + hydration + component JS
@@ -87,7 +87,7 @@ export const scriptAstro = `---
 
 <ReactAstro react={scriptReact} astro={scriptAstro} />
 
-tag `<script>` ใน Astro component จะถูกประมวลผลโดย Vite: มันถูก bundle, tree-shake และ inject เพียงครั้งเดียวต่อหนึ่งหน้า แม้ component นั้นจะถูกใช้หลายครั้งก็ตาม สำหรับความ interactive ที่ซับซ้อน ให้ใช้ island (component ของ React, Preact, Svelte หรือ framework อื่นที่มี directive `client:*`)
+tag `<script>` ใน Astro component จะถูกประมวลผลโดย Vite: Vite จะ bundle, tree-shake แล้ว inject เพียงครั้งเดียวต่อหนึ่งหน้า แม้ component นั้นจะถูกใช้หลายครั้งก็ตาม สำหรับความ interactive ที่ซับซ้อน ให้ใช้ island (component ของ React, Preact, Svelte หรือ framework อื่นที่มี directive `client:*`)
 
 ## ตัวอย่างที่รันได้จริงพร้อม script
 
@@ -118,21 +118,21 @@ const items = ["Astro", "React", "TypeScript", "Vite"];
 <AstroPlayground client:visible code={serverOnlyCode} />
 
 <Diff title="React (always JS) vs Astro (zero JS by default)">
-- React: ทุก component ส่ง JS — ทั้ง React runtime, reconciler และโค้ดของ component ล้วนทำงานในเบราว์เซอร์
+- React: ทุก component ส่ง JS — ทั้ง React runtime, reconciler และโค้ดของ component ล้วนทำงานใน browser
 - Astro `.astro`: ส่ง JavaScript **เป็นศูนย์** — compile ออกมาเป็น string ของ HTML ล้วน ๆ
-- state/hook ของ React: ทำงานในเบราว์เซอร์เท่านั้น และต้องการ hydration
+- state/hook ของ React: ทำงานใน browser เท่านั้น และต้องการ hydration
 - `<script>` ของ Astro: vanilla JS แบบ opt-in ที่ bundle โดย Vite ไม่ต้องการ framework runtime
 - สำหรับความ interactive ที่มี state ใน Astro: ให้ใช้ **island** — component ของ React/Preact/Svelte ที่มี directive `client:*` (โมดูลถัดไป)
 </Diff>
 
 export const quizServerOnly = [
   {
-    q: ".astro component ธรรมดาส่ง JavaScript ไปยังเบราว์เซอร์เท่าไร?",
+    q: ".astro component ธรรมดาส่ง JavaScript ไปยัง browser เท่าไร?",
     options: [
       "Astro runtime (~10 kB)",
       "เท่ากับ React component ที่เทียบเท่ากัน",
       "JavaScript เป็นศูนย์",
-      "ขึ้นอยู่กับว่ามันรับ props กี่ตัว",
+      "ขึ้นอยู่กับว่ารับ props กี่ตัว",
     ],
     answer: 2,
   },
@@ -151,7 +151,7 @@ export const quizServerOnly = [
     options: [
       "script ถูกทำซ้ำหนึ่งครั้งต่อหนึ่ง instance ของ component",
       "Astro โยน build error ออกมา",
-      "Astro deduplicate มัน — script ถูก inject เพียงครั้งเดียว",
+      "Astro deduplicate ให้ — script ถูก inject เพียงครั้งเดียว",
       "script ถูกเพิกเฉยตั้งแต่การใช้ครั้งที่สองเป็นต้นไป",
     ],
     answer: 2,

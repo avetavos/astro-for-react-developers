@@ -1,6 +1,6 @@
 ---
 title: Importing Components
-description: import .astro component ใน frontmatter แล้วประกอบมันใน template เหมือนกับการ import ใน React เลย
+description: import .astro component ใน frontmatter แล้วประกอบใน template เหมือนกับการ import ใน React เลย
 ---
 
 import ReactAstro from '../../../../components/ReactAstro.astro';
@@ -95,7 +95,7 @@ const { posts } = Astro.props;
 
 <ReactAstro react={compositionReact} astro={compositionAstro} />
 
-> **หมายเหตุเกี่ยวกับ snippet ที่รันได้:** playground ของ StackBlitz รันไฟล์ `src/pages/index.astro` เพียงไฟล์เดียว ตัวอย่างด้านล่างจึงเขียน markup ของ "sub-component" แบบ inline ลงไปตรง ๆ เพื่อให้อยู่ในไฟล์เดียวได้ครบ ในโปรเจกต์จริงคุณจะแยกมันออกเป็นไฟล์ `.astro` ต่างหากแล้ว import เข้ามา
+> **หมายเหตุเกี่ยวกับ snippet ที่รันได้:** playground ของ StackBlitz รันไฟล์ `src/pages/index.astro` เพียงไฟล์เดียว ตัวอย่างด้านล่างจึงเขียน markup ของ "sub-component" แบบ inline ลงไปตรง ๆ เพื่อให้อยู่ในไฟล์เดียวได้ครบ ในโปรเจกต์จริงคุณจะแยกออกเป็นไฟล์ `.astro` ต่างหากแล้ว import เข้ามา
 
 export const importCode = `---
 // Self-contained page — no separate component files needed
@@ -155,7 +155,7 @@ export const quizImporting = [
     answer: 2,
   },
   {
-    q: "การ import และใช้ .astro component เพิ่ม JavaScript ลงใน bundle ของเบราว์เซอร์หรือไม่?",
+    q: "การ import และใช้ .astro component เพิ่ม JavaScript ลงใน bundle ของ browser หรือไม่?",
     options: [
       "เพิ่ม โดยมี Astro runtime ขนาดเล็กรวมเข้ามาด้วย",
       "เพิ่ม หนึ่ง script tag ต่อหนึ่ง component",

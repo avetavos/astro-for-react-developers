@@ -8,7 +8,7 @@ import Diff from '../../../../components/Diff.astro';
 import Quiz from '../../../../components/Quiz.tsx';
 import ProgressTracker from '../../../../components/ProgressTracker.tsx';
 
-ในแอป React ทั้ง UI คือ JavaScript bundle ขนาดใหญ่ก้อนเดียว เบราว์เซอร์ดาวน์โหลดมัน hydrate component tree ทั้งหมด แล้วหน้าเพจถึงจะโต้ตอบได้ Astro พลิกโมเดลนั้น: เพจเป็น HTML แบบ static โดยค่าเริ่มต้น และคุณ **เลือก hydrate เฉพาะ component ที่ต้องการ** — นั่นคือ islands ของคุณ
+ในแอป React ทั้ง UI คือ JavaScript bundle ขนาดใหญ่ก้อนเดียว browser ดาวน์โหลด bundle นั้น hydrate component tree ทั้งหมด แล้วหน้าเพจถึงจะโต้ตอบได้ Astro พลิกโมเดลนั้น: เพจเป็น HTML แบบ static โดยค่าเริ่มต้น และคุณ **เลือก hydrate เฉพาะ component ที่ต้องการ** — นั่นคือ islands ของคุณ
 
 ฟีเจอร์เด่นสำหรับนักพัฒนา React: **React component ที่มีอยู่ทำงานใน Astro โดยไม่ต้องแก้ไขใดๆ** นำเข้า `Counter.jsx` เพิ่ม `client:load` แล้วก็เสร็จ ทุกอย่างรอบๆ ยังคงเป็น HTML ล้วนๆ
 
@@ -55,7 +55,7 @@ import Counter from '../components/Counter.jsx';
 <ReactAstro react={indexReact} astro={indexAstro} />
 
 <Diff title="Full-app hydration vs Islands">
-- React/Next.js: **JS bundle เดียว** ทั้ง tree ถูก hydrate ทุก component รันในเบราว์เซอร์
+- React/Next.js: **JS bundle เดียว** ทั้ง tree ถูก hydrate ทุก component รันใน browser
 - Astro: **HTML แบบ static เป็นค่าเริ่มต้น** มีเฉพาะ component ที่มี `client:*` directive เท่านั้นที่ส่ง JavaScript
 - React component ของคุณ **ไม่ต้องแก้ไข** — เพียงเพิ่ม directive แทน props
 - ผลลัพธ์: ลด JS budget อย่างมีนัยสำคัญและ Time to Interactive เร็วขึ้น
@@ -63,7 +63,7 @@ import Counter from '../components/Counter.jsx';
 
 export const quizIslandsIndex = [
   {
-    q: "Astro ส่งอะไรไปยังเบราว์เซอร์โดยค่าเริ่มต้นสำหรับ .astro component ธรรมดา?",
+    q: "Astro ส่งอะไรไปยัง browser โดยค่าเริ่มต้นสำหรับ .astro component ธรรมดา?",
     options: [
       "React virtual DOM tree",
       "Hydration shim ขนาดเล็ก",

@@ -9,7 +9,7 @@ import Diff from '../../../../components/Diff.astro';
 import Quiz from '../../../../components/Quiz.tsx';
 import ProgressTracker from '../../../../components/ProgressTracker.tsx';
 
-template expression ของ Astro หน้าตาแทบจะเหมือน JSX เลย คุณใช้ `{expr}` เพื่อฝัง JavaScript expression ใด ๆ ความแตกต่างที่สำคัญ: Astro ประเมินมัน **ครั้งเดียว** ตอน build/server time แล้วเขียนออกมาเป็น static HTML ไม่มี virtual DOM ไม่มีการ re-render ไม่มีการอัปเดตแบบ reactive
+template expression ของ Astro หน้าตาแทบจะเหมือน JSX เลย คุณใช้ `{expr}` เพื่อฝัง JavaScript expression ใด ๆ ความแตกต่างที่สำคัญ: Astro ประเมิน expression นั้น **ครั้งเดียว** ตอน build/server time แล้วเขียนออกมาเป็น static HTML ไม่มี virtual DOM ไม่มีการ re-render ไม่มีการอัปเดตแบบ reactive
 
 ## การฝังค่า
 
@@ -122,7 +122,7 @@ const isWeekend = [0, 6].includes(new Date().getDay());
 
 <Diff title="JSX expressions vs Astro template expressions">
 - syntax เหมือนกัน: `{expr}`, `{cond && <El />}`, ternary, `.map()`
-- React: expression ทำงาน **ทุกครั้งที่ render** ในเบราว์เซอร์ และเป็นตัวขับเคลื่อน reactivity
+- React: expression ทำงาน **ทุกครั้งที่ render** ใน browser และเป็นตัวขับเคลื่อน reactivity
 - Astro: expression ทำงาน **ครั้งเดียวตอน build/server time** ผลลัพธ์ถูก bake ลงใน HTML
 - item ของ list ใน React ต้องการ prop `key` เพื่อทำ reconciliation ของ virtual DOM
 - item ของ list ใน Astro **ไม่** ต้องการ `key` เพราะไม่มีอะไรให้ reconcile
@@ -133,7 +133,7 @@ export const quizExpressions = [
   {
     q: "คุณเขียน `{items.map((i) => <li>{i}</li>)}` ใน Astro template โค้ดนี้ทำงานเมื่อใด?",
     options: [
-      "ในเบราว์เซอร์ ทุกครั้งที่ component re-render",
+      "ใน browser ทุกครั้งที่ component re-render",
       "ครั้งเดียวตอน build หรือ server time ผลลัพธ์เป็น static HTML",
       "ใน Web Worker ตอนโหลดหน้า",
       "ทุกครั้งที่เกิด event scroll",

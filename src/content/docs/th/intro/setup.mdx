@@ -10,7 +10,7 @@ import ProgressTracker from '../../../../components/ProgressTracker.tsx';
 
 {/* No AstroPlayground: setup is a CLI-only lesson — there is no runnable in-browser snippet that covers project scaffolding. */}
 
-การสร้างโปรเจกต์ Astro ใหม่ใช้ `npm create astro@latest` ซึ่งเทียบเท่ากับ `npx create-next-app` หรือ `npx create-react-app` แบบเก่าของ Astro มันเปิด wizard แบบ interactive และสร้างโครงสร้างโปรเจกต์ให้
+การสร้างโปรเจกต์ Astro ใหม่ใช้ `npm create astro@latest` ซึ่งเป็นตัวเทียบเท่าฝั่ง Astro ของ `npx create-next-app` หรือ `npx create-react-app` แบบเก่า คำสั่งนี้เปิด wizard แบบ interactive และสร้างโครงสร้างโปรเจกต์ให้
 
 ## การสร้างโครงสร้าง: wizard กับ flags
 
@@ -49,7 +49,7 @@ npm run dev
 npx astro dev
 ```
 
-Dev server ของ Astro เริ่มที่ `http://localhost:4321` ตามค่าเริ่มต้น (Next.js ใช้ `:3000`) มันใช้ **Vite** เบื้องหลัง — Vite ตัวเดียวกับที่คุณอาจรู้จักจากโปรเจกต์ Vite + React — ดังนั้น hot module replacement (HMR) และการเริ่มต้นที่รวดเร็วจึงมีติดตั้งมาแล้ว
+Dev server ของ Astro เริ่มที่ `http://localhost:4321` ตามค่าเริ่มต้น (Next.js ใช้ `:3000`) เบื้องหลังใช้ **Vite** — Vite ตัวเดียวกับที่คุณอาจรู้จักจากโปรเจกต์ Vite + React — ดังนั้น hot module replacement (HMR) และการเริ่มต้นที่รวดเร็วจึงมีติดตั้งมาแล้ว
 
 คำสั่ง dev ที่มีประโยชน์:
 
@@ -64,7 +64,7 @@ npx astro add tailwind # add Tailwind CSS
 
 ## การเพิ่ม integration
 
-ใน Next.js การเพิ่ม React เป็นเรื่องโดยปริยาย — มันคือ framework อยู่แล้ว ใน Astro, React เป็น **integration** ที่คุณต้อง opt-in เข้ามา:
+ใน Next.js การเพิ่ม React เป็นเรื่องโดยปริยาย — React คือ framework อยู่แล้ว ใน Astro, React เป็น **integration** ที่คุณต้อง opt-in เข้ามา:
 
 ```bash
 npx astro add react

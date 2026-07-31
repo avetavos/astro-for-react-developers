@@ -42,8 +42,8 @@ export const structureAstro = `my-astro-app/
 ความแตกต่างสำคัญที่ควรสังเกต:
 
 1. **`src/pages/` — ไม่ใช่ `src/app/`** Astro ใช้ mental model แบบ Pages Router: ไฟล์ที่ `src/pages/about.astro` render ที่ `/about` ไม่ต้อง wrapper `page.tsx` พิเศษ
-2. **`src/layouts/` เป็น convention ไม่ใช่กฎของ framework** Astro ไม่บังคับให้มี directory `layouts/` — แต่ทุกโปรเจกต์ Astro ใช้มันตาม convention เพราะ layout component เป็น pattern ที่สำคัญ (ครอบคลุมในโมดูล Layouts)
-3. **`src/content/` ใช้สำหรับ Content Collections** — เนื้อหาที่มีโครงสร้าง เช่น บทความ MDX, ไฟล์ YAML ของสมาชิกทีม หรือข้อมูล JSON Astro มี typed API สำหรับ query มัน คุณจะใช้ `getStaticPaths` + `getEntry` แทน `getStaticProps` + การอ่านไฟล์
+2. **`src/layouts/` เป็น convention ไม่ใช่กฎของ framework** Astro ไม่บังคับให้มี directory `layouts/` — แต่ทุกโปรเจกต์ Astro ก็ใช้ตาม convention เพราะ layout component เป็น pattern ที่สำคัญ (ครอบคลุมในโมดูล Layouts)
+3. **`src/content/` ใช้สำหรับ Content Collections** — เนื้อหาที่มีโครงสร้าง เช่น บทความ MDX, ไฟล์ YAML ของสมาชิกทีม หรือข้อมูล JSON Astro มี typed API สำหรับ query เนื้อหาเหล่านี้ คุณจะใช้ `getStaticPaths` + `getEntry` แทน `getStaticProps` + การอ่านไฟล์
 4. **`astro.config.mjs` แทน `next.config.mjs`** แนวคิดเดียวกัน — framework config, integration, Vite override
 
 ## โฟลเดอร์ `public/`
