@@ -68,7 +68,7 @@ export default defineConfig({
 <ReactAstro react={overviewNext} astro={overviewAstro} reactTitle="Next.js config" astroTitle="Astro config" />
 
 <Diff title="Next.js toolchain vs Astro toolchain">
-- ทั้งคู่ใช้ Vite ภายใน (Astro v3+) และ scripts `npm`/`pnpm`/`yarn` มาตรฐาน
+- ทั้งคู่ใช้ Vite ภายใน (Astro 7 มาพร้อม Vite 8 และ bundler Rolldown ที่เขียนด้วย Rust) และ scripts `npm`/`pnpm`/`yarn` มาตรฐาน
 - `astro check` แทนที่การใช้ `tsc --noEmit` + ESLint rule สำหรับ syntax `.astro`
 - `astro build` เขียน output ไปที่ `dist/` เสมอ — ไม่มี `.next/` cache directory ให้ลบ
 - Adapters (Vercel, Netlify, Node) แทนที่แนวคิด deployment targets ของ Next.js

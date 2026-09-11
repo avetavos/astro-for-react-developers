@@ -1,6 +1,6 @@
 ---
 title: 'Rendering Markdown'
-description: 'render entry ด้วย render(entry) หรือ entry.render() และแสดงรายการ entries เทียบกับ MDX components ใน Next.js'
+description: 'render entry ด้วย render(entry) แสดงรายการ entries และรู้จัก Sätteri ซึ่งเป็น Markdown pipeline ของ Astro 7 เทียบกับ MDX components ใน Next.js'
 ---
 
 import ReactAstro from '../../../../components/ReactAstro.astro';
@@ -8,7 +8,7 @@ import Diff from '../../../../components/Diff.astro';
 import Quiz from '../../../../components/Quiz.tsx';
 import ProgressTracker from '../../../../components/ProgressTracker.tsx';
 
-ใน Next.js พร้อม contentlayer คุณ import MDX component โดยตรง ใน Astro คุณเรียก `render(entry)` (Astro 5+) หรือ `await entry.render()` เพื่อรับ `Content` component แล้วใช้ `<Content />` ใน template
+ใน Next.js พร้อม contentlayer คุณ import MDX component โดยตรง ใน Astro คุณเรียก `render(entry)` (API เดียวตั้งแต่ Astro 6 — method `entry.render()` แบบเก่าถูกถอดออกแล้ว) หรือ `await entry.render()` เพื่อรับ `Content` component แล้วใช้ `<Content />` ใน template
 
 > ต้องใช้โปรเจกต์ Astro เต็มรูปแบบ ใช้ `npm create astro@latest` เพื่อสร้างโปรเจกต์
 
@@ -31,7 +31,7 @@ export default function PostPage({ params }: { params: { slug: string } }) {
 }`;
 
 export const renderAstro = `---
-// src/pages/blog/[slug].astro (Astro 5+)
+// src/pages/blog/[slug].astro
 import { getCollection, render } from 'astro:content';
 
 export async function getStaticPaths() {
@@ -88,7 +88,7 @@ const sorted = posts.sort(
 <ul>
   {sorted.map((post) => (
     <li>
-      <a href={\`/blog/\${post.slug}/\`}>{post.data.title}</a>
+      <a href={\`/blog/\${post.id}/\`}>{post.data.title}</a>
     </li>
   ))}
 </ul>`;
@@ -97,9 +97,31 @@ const sorted = posts.sort(
 
 `getCollection` รองรับ optional filter function ที่ argument ที่สอง — ที่นี่ใช้กรอง draft posts ออก
 
+## Markdown pipeline: Sätteri (Astro 7)
+
+Astro 7 render ไฟล์ `.md` และ `.mdx` ด้วย **Sätteri** ซึ่งเป็น Markdown pipeline แบบ native ที่เขียนด้วย Rust แทน pipeline remark/rehype (unified) แบบเดิม Content Collections, `render(entry)`, `headings` และ frontmatter ทำงานเหมือนเดิมทุกอย่าง แค่ build เร็วขึ้น (Astro รายงานว่า build เร็วขึ้น 15–61%) สองเรื่องที่ควรรู้ตอนย้ายโปรเจกต์ Next.js/contentlayer:
+
+- Markdown ธรรมดา, ตาราง GFM, code fence กับ Shiki และ heading ID ไม่ต้องตั้งค่าอะไรเพิ่ม
+- ถ้าพึ่งพา **remark/rehype plugin** แบบ custom (เช่น `rehype-autolink-headings`) ให้ opt-in กลับไปใช้ unified pipeline อย่างชัดเจน:
+
+```js
+// astro.config.mjs
+import { defineConfig } from 'astro/config';
+import { unified } from '@astrojs/markdown-remark';
+
+export default defineConfig({
+  markdown: {
+    processor: unified(),          // remark/rehype pipeline
+    rehypePlugins: [/* ... */],
+  },
+});
+```
+
+MDX ยังผ่าน `@astrojs/mdx` เหมือนเดิม สิ่งที่เปลี่ยนคือ processor ค่าเริ่มต้นของเนื้อหา Markdown เท่านั้น
+
 <Diff title="contentlayer MDX rendering vs Astro render()">
 - contentlayer: `useMDXComponent(post.body.code)` ส่งคืน React component ที่ใช้ใน JSX โดยตรง
-- Astro: `render(entry)` (Astro 5+) หรือ `entry.render()` ส่งคืน `{ Content }` — เป็น plain Astro component
+- Astro: `render(entry)` ส่งคืน `{ Content }` — เป็น plain Astro component
 - ทั้งคู่ compile MDX ตอน build time ไม่มีการ parse runtime
 - Astro `Content` component ทำงานใน `.astro` files โดยตรง ไม่ต้องมี React runtime
 - `render()` ยัง expose `headings` array สำหรับสร้าง table of contents
@@ -111,7 +133,7 @@ export const quizRenderingMarkdown = [
     options: [
       "`entry.toJSX()`",
       "`import { MDXContent } from entry`",
-      "`render(entry)` (Astro 5+) — คืนค่า `{ Content }`",
+      "`render(entry)` — คืนค่า `{ Content }`",
       "`Astro.render(entry)`",
     ],
     answer: 2,

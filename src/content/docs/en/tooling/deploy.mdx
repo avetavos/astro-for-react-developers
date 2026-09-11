@@ -154,7 +154,7 @@ const nextConfig = { output: 'export' };
 //    Or: node .next/standalone/server.js
 
 // 4. Docker
-// FROM node:20-alpine
+// FROM node:24-alpine
 // COPY .next/standalone ./
 // CMD ["node", "server.js"]`;
 
@@ -174,7 +174,7 @@ export const deployAstro = `// Astro deployment options
 //    astro build → node dist/server/entry.mjs
 
 // 4. Docker (Node standalone)
-// FROM node:20-alpine
+// FROM node:24-alpine
 // COPY dist ./dist
 // CMD ["node", "./dist/server/entry.mjs"]`;
 

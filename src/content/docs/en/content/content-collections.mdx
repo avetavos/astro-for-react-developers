@@ -34,10 +34,12 @@ export default makeSource({ contentDirPath: 'content', documentTypes: [Post] });
 // import { allPosts } from 'contentlayer/generated';`;
 
 export const collectionAstro = `// src/content.config.ts (Astro)
-import { defineCollection, z } from 'astro:content';
+import { defineCollection } from 'astro:content';
+import { glob } from 'astro/loaders';
+import { z } from 'astro/zod';
 
 const blog = defineCollection({
-  type: 'content',
+  loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/blog' }),
   schema: z.object({
     title: z.string(),
     date:  z.coerce.date(),
@@ -55,14 +57,19 @@ export const collections = { blog };
 
 The schema lives in `src/content.config.ts` — Astro validates every file in the collection at build time and surfaces type errors in your editor.
 
+Two details changed in Astro 6/7 that older tutorials get wrong: every collection now declares a **loader** (`glob()` for a folder of files, `file()` for one JSON/YAML file — both from `astro/loaders`), replacing the old `type: 'content' | 'data'` flag; and `z` is imported from `astro/zod` (Zod 4) rather than `astro:content`. Entries are identified by `entry.id` (derived from the filename); the old `entry.slug` is gone.
+
 ## content.config.ts
 
 ```ts
 // src/content.config.ts
-import { defineCollection, z } from 'astro:content';
+import { defineCollection } from 'astro:content';
+import { glob } from 'astro/loaders';
+import { z } from 'astro/zod';
 
 const blog = defineCollection({
-  type: 'content', // 'content' for MD/MDX, 'data' for JSON/YAML
+  // glob() loads a folder of MD/MDX; file() loads one JSON/YAML file
+  loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/blog' }),
   schema: z.object({
     title:       z.string(),
     description: z.string().optional(),
@@ -92,7 +99,7 @@ const sorted = posts.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf(
     <ul>
       {sorted.map((post) => (
         <li>
-          <a href={`/blog/${post.slug}/`}>{post.data.title}</a>
+          <a href={`/blog/${post.id}/`}>{post.data.title}</a>
           <time>{post.data.date.toLocaleDateString()}</time>
         </li>
       ))}

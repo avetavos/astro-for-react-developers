@@ -99,6 +99,18 @@ astro build --verbose
 astro check --watch
 ```
 
+## อัปเกรด: Astro 5 → 7
+
+`npx @astrojs/upgrade` จะ bump `astro` และ integration `@astrojs/*` ทุกตัวไป major ล่าสุด จากนั้นไล่ตาม checklist นี้ (ครอบคลุม breaking change ทั้งของ v6 และ v7):
+
+1. ต้องใช้ **Node 22.12+** (Astro 7 มาพร้อม Vite 8 และ bundler Rolldown)
+2. **Content collections:** ทุก collection ต้องมี `loader` (`glob()`/`file()` จาก `astro/loaders`); `entry.slug` → `entry.id`; `entry.render()` → `render(entry)`; import `z` จาก `astro/zod`
+3. **API ที่ถูกถอด:** `Astro.glob()` → `import.meta.glob()`; `<ViewTransitions />` → `<ClientRouter />`; `prefetch(url, { with })` → `prefetch(url)`; session driver ใช้ object `sessionDrivers.redis({...})` ไม่ใช่ string
+4. **Config flag:** ลบ `experimental.cache`, `experimental.routeRules`, `experimental.rustCompiler`, `experimental.queuedRendering`, `experimental.advancedRouting`, `experimental.logger` ออก — ตอนนี้เป็น top-level หรือเป็นค่าเริ่มต้นแล้ว
+5. **Template:** แก้ tag ที่ไม่ปิดหรือซ้อนผิด (compiler ที่เขียนด้วย Rust จะ error แทนการแก้ให้อัตโนมัติ) และเติม `{" "}` ในจุดที่เคยพึ่ง whitespace จากการขึ้นบรรทัดใหม่ (`compressHTML: 'jsx'` เป็นค่าเริ่มต้น)
+6. **Markdown:** Sätteri เป็น processor ค่าเริ่มต้น ถ้าจะใช้ remark/rehype plugin ต่อให้ตั้ง `markdown.processor: unified()` จาก `@astrojs/markdown-remark`
+7. **หายไปถาวร:** `@astrojs/db` (ใช้ `node:sqlite`, Drizzle หรือ DB แบบ hosted แทน) และ event constant ของ `astro:transitions` (ใช้ชื่อ event แบบ string)
+
 <Diff title="Next CLI vs Astro CLI">
 - `next dev` → `astro dev` (port default 3000 vs 4321)
 - `next build` → `astro build` (output: `.next/` vs `dist/`)

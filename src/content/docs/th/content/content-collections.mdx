@@ -34,10 +34,12 @@ export default makeSource({ contentDirPath: 'content', documentTypes: [Post] });
 // import { allPosts } from 'contentlayer/generated';`;
 
 export const collectionAstro = `// src/content.config.ts (Astro)
-import { defineCollection, z } from 'astro:content';
+import { defineCollection } from 'astro:content';
+import { glob } from 'astro/loaders';
+import { z } from 'astro/zod';
 
 const blog = defineCollection({
-  type: 'content',
+  loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/blog' }),
   schema: z.object({
     title: z.string(),
     date:  z.coerce.date(),
@@ -55,14 +57,19 @@ export const collections = { blog };
 
 Schema อยู่ใน `src/content.config.ts` — Astro ตรวจสอบทุกไฟล์ใน collection ตอน build time และแสดง type errors ใน editor ของคุณ
 
+สองรายละเอียดที่เปลี่ยนใน Astro 6/7 และ tutorial เก่า ๆ มักเขียนผิด: ทุก collection ต้องประกาศ **loader** (`glob()` สำหรับโฟลเดอร์ไฟล์, `file()` สำหรับไฟล์ JSON/YAML ไฟล์เดียว — ทั้งคู่มาจาก `astro/loaders`) แทน flag `type: 'content' | 'data'` แบบเดิม และ `z` ให้ import จาก `astro/zod` (Zod 4) แทน `astro:content` ส่วน entry ระบุด้วย `entry.id` (มาจากชื่อไฟล์) ส่วน `entry.slug` แบบเก่าถูกถอดออกแล้ว
+
 ## content.config.ts
 
 ```ts
 // src/content.config.ts
-import { defineCollection, z } from 'astro:content';
+import { defineCollection } from 'astro:content';
+import { glob } from 'astro/loaders';
+import { z } from 'astro/zod';
 
 const blog = defineCollection({
-  type: 'content', // 'content' for MD/MDX, 'data' for JSON/YAML
+  // glob() loads a folder of MD/MDX; file() loads one JSON/YAML file
+  loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/blog' }),
   schema: z.object({
     title:       z.string(),
     description: z.string().optional(),
@@ -92,7 +99,7 @@ const sorted = posts.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf(
     <ul>
       {sorted.map((post) => (
         <li>
-          <a href={`/blog/${post.slug}/`}>{post.data.title}</a>
+          <a href={`/blog/${post.id}/`}>{post.data.title}</a>
           <time>{post.data.date.toLocaleDateString()}</time>
         </li>
       ))}

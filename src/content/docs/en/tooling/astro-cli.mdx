@@ -99,6 +99,18 @@ astro build --verbose
 astro check --watch
 ```
 
+## Upgrading: Astro 5 → 7
+
+`npx @astrojs/upgrade` bumps `astro` and every `@astrojs/*` integration to their latest majors. Then walk this checklist (it covers both the v6 and v7 breaking changes):
+
+1. **Node 22.12+** is required (Astro 7 ships Vite 8 with the Rolldown bundler).
+2. **Content collections:** every collection needs a `loader` (`glob()`/`file()` from `astro/loaders`); `entry.slug` → `entry.id`; `entry.render()` → `render(entry)`; import `z` from `astro/zod`.
+3. **Removed APIs:** `Astro.glob()` → `import.meta.glob()`; `<ViewTransitions />` → `<ClientRouter />`; `prefetch(url, { with })` → `prefetch(url)`; session drivers use `sessionDrivers.redis({...})` objects, not strings.
+4. **Config flags:** delete `experimental.cache`, `experimental.routeRules`, `experimental.rustCompiler`, `experimental.queuedRendering`, `experimental.advancedRouting`, `experimental.logger` — they are top-level or default now.
+5. **Templates:** fix unclosed/mis-nested tags (the Rust compiler errors instead of auto-correcting) and add `{" "}` where you relied on newline whitespace (`compressHTML: 'jsx'` is the default).
+6. **Markdown:** Sätteri is the default processor; keep remark/rehype plugins by setting `markdown.processor: unified()` from `@astrojs/markdown-remark`.
+7. **Gone for good:** `@astrojs/db` (use `node:sqlite`, Drizzle, or a hosted DB) and the `astro:transitions` event constants (use the string event names).
+
 <Diff title="Next CLI vs Astro CLI">
 - `next dev` → `astro dev` (default port 3000 vs 4321)
 - `next build` → `astro build` (output: `.next/` vs `dist/`)

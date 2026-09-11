@@ -1,6 +1,6 @@
 ---
 title: 'Rendering Markdown'
-description: 'Render a content collection entry with render(entry) or entry.render(), and list entries — versus MDX components in Next.js.'
+description: 'Render a content collection entry with render(entry), list entries, and meet Sätteri, the Astro 7 Markdown pipeline — versus MDX components in Next.js.'
 ---
 
 import ReactAstro from '../../../../components/ReactAstro.astro';
@@ -8,7 +8,7 @@ import Diff from '../../../../components/Diff.astro';
 import Quiz from '../../../../components/Quiz.tsx';
 import ProgressTracker from '../../../../components/ProgressTracker.tsx';
 
-In Next.js with contentlayer you import the MDX component directly. In Astro you call `render(entry)` (Astro 5+) to get a `Content` component, then drop `<Content />` into your template. The frontmatter fields live on `entry.data`, the rendered body comes from `Content`.
+In Next.js with contentlayer you import the MDX component directly. In Astro you call `render(entry)` (the only API since Astro 6 — the old `entry.render()` method is gone) to get a `Content` component, then drop `<Content />` into your template. The frontmatter fields live on `entry.data`, the rendered body comes from `Content`.
 
 > Needs a full Astro project to run. Use `npm create astro@latest` to scaffold one.
 
@@ -31,12 +31,12 @@ export default function PostPage({ params }) {
 }`;
 
 export const renderAstro = `---
-// src/pages/blog/[slug].astro (Astro 5+)
+// src/pages/blog/[slug].astro
 import { getCollection, render } from 'astro:content';
 
 export async function getStaticPaths() {
   const posts = await getCollection('blog');
-  return posts.map(post => ({ params: { slug: post.slug }, props: { post } }));
+  return posts.map(post => ({ params: { slug: post.id }, props: { post } }));
 }
 
 const { post } = Astro.props;
@@ -62,7 +62,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 export async function getStaticPaths() {
   const posts = await getCollection('blog', ({ data }) => !data.draft);
   return posts.map((post) => ({
-    params: { slug: post.slug },
+    params: { slug: post.id },
     props:  { post },
   }));
 }
@@ -115,12 +115,34 @@ const sorted = posts.sort(
 <ul>
   {sorted.map((post) => (
     <li>
-      <a href={\`/blog/\${post.slug}/\`}>{post.data.title}</a>
+      <a href={\`/blog/\${post.id}/\`}>{post.data.title}</a>
     </li>
   ))}
 </ul>`;
 
 <ReactAstro react={listReact} astro={listAstro} />
+
+## Markdown pipeline: Sätteri (Astro 7)
+
+Astro 7 renders `.md` and `.mdx` with **Sätteri**, a native Markdown pipeline written in Rust, instead of the remark/rehype (unified) pipeline. Content Collections, `render(entry)`, `headings`, and frontmatter all work the same — builds are just faster (Astro reports 15–61% faster builds overall). Two things to know when you migrate a Next.js/contentlayer project:
+
+- Plain Markdown, GFM tables, code fences with Shiki, and headings IDs need nothing.
+- If you rely on custom **remark/rehype plugins** (e.g. `rehype-autolink-headings`), opt back into the unified pipeline explicitly:
+
+```js
+// astro.config.mjs
+import { defineConfig } from 'astro/config';
+import { unified } from '@astrojs/markdown-remark';
+
+export default defineConfig({
+  markdown: {
+    processor: unified(),          // remark/rehype pipeline
+    rehypePlugins: [/* ... */],
+  },
+});
+```
+
+MDX still goes through `@astrojs/mdx`; only the default processor for the Markdown body changed.
 
 <Diff title="MDX in Next.js vs render(entry) in Astro">
 - Next + contentlayer: `useMDXComponent(post.body.code)` — compiles MDX in the browser (or at the edge).
@@ -136,7 +158,7 @@ export const quizRenderingMarkdown = [
     options: [
       "`entry.toJSX()`",
       "`import { MDXContent } from entry`",
-      "`render(entry)` (Astro 5+) — returns `{ Content }`",
+      "`render(entry)` — returns `{ Content }`",
       "`Astro.render(entry)`",
     ],
     answer: 2,

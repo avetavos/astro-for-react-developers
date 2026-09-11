@@ -105,6 +105,25 @@ export const projectTreeDiagram = `flowchart TD
 
 <Mermaid code={projectTreeDiagram} title="Astro project file tree mapped to URLs" />
 
+## Route caching and `src/fetch.ts` (Astro 7)
+
+Two routing features graduated from experimental in Astro 7 and map neatly onto things you know from Next.js:
+
+- **Route caching** (`cache` + `routeRules` in `astro.config.mjs`) is Astro's answer to ISR / `revalidate`: server-rendered routes can be cached for a duration, with platform providers for Netlify, Vercel, and Cloudflare, plus an in-memory provider for Node.
+
+```js
+// astro.config.mjs
+import { defineConfig } from 'astro/config';
+import { memoryCache } from 'astro/cache';
+
+export default defineConfig({
+  cache: { provider: memoryCache() },
+  routeRules: { '/blog/*': { cache: { maxAge: 3600 } } }, // like revalidate: 3600
+});
+```
+
+- **`src/fetch.ts`** is a reserved entrypoint that receives every request before Astro's router — the place for a standard `fetch` handler or Hono middleware (auth, redirects, A/B routing), the role `middleware.ts` plays in Next.js. If you already have a file with that name, rename it or set `fetchFile: null` in the config.
+
 <Diff title="Next.js pages vs Astro pages">
 - Next.js App Router: every directory needs a `page.tsx` file to become a route.
 - Next.js Pages Router: `pages/index.tsx` → `/`; mirrors Astro most closely.

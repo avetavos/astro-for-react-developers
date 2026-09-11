@@ -12,7 +12,7 @@ export function buildAstroProject(code: string): StackBlitzProject {
     template: 'node',
     files: {
       'package.json': JSON.stringify(
-        { name: 'astro-example', type: 'module', scripts: { dev: 'astro dev', start: 'astro dev', build: 'astro build' }, dependencies: { astro: '^5.0.0' } },
+        { name: 'astro-example', type: 'module', scripts: { dev: 'astro dev', start: 'astro dev', build: 'astro build' }, dependencies: { astro: '^7.0.0' } },
         null, 2,
       ),
       'astro.config.mjs': "import { defineConfig } from 'astro/config';\nexport default defineConfig({});\n",

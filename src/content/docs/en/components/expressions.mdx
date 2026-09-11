@@ -120,6 +120,17 @@ const isWeekend = [0, 6].includes(new Date().getDay());
 
 <AstroPlayground client:visible code={expressionsCode} />
 
+## Whitespace and strict HTML (Astro 7)
+
+Astro 7's template compiler behaves more like JSX than like a lenient HTML parser — good news if you come from React:
+
+- **Whitespace follows JSX rules.** The default `compressHTML: 'jsx'` strips whitespace between elements the way React does, so `<span>hello</span>\n<em>world</em>` renders as "helloworld". Write `{" "}` for an explicit space, exactly as in JSX (or set `compressHTML: true` in `astro.config.mjs` to get the Astro 6 behaviour back).
+- **Invalid HTML is an error, not auto-corrected.** An unclosed `<p>` or a `<div>` nested inside a `<p>` used to be silently "fixed"; the Rust compiler now fails the build with a pointer to the line. Close your tags like you would in JSX.
+
+```astro
+<p>Hello</p>{" "}<em>world</em>   <!-- explicit space, JSX style -->
+```
+
 <Diff title="JSX expressions vs Astro template expressions">
 - Syntax is the same: `{expr}`, `{cond && <El />}`, ternary, `.map()`.
 - React: expressions run **every render** in the browser — they drive reactivity.
