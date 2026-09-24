@@ -19,29 +19,33 @@ In Next.js you add Tailwind by installing three packages, creating `tailwind.con
 npx astro add tailwind
 ```
 
-The CLI installs `@astrojs/tailwind` and `tailwindcss`, creates `tailwind.config.mjs`, and adds the integration to `astro.config.mjs`. Accept all prompts.
+The CLI installs `tailwindcss` and the official **`@tailwindcss/vite`** Vite plugin, wires it into `astro.config.mjs` under `vite.plugins` (Tailwind 4 is a Vite plugin, not an Astro integration — the old `@astrojs/tailwind` package is deprecated and only relevant to Tailwind 3 projects), and creates `src/styles/global.css` with the Tailwind import. Accept all prompts.
 
 ```js
 // astro.config.mjs  — after running the command
 import { defineConfig } from 'astro/config';
-import tailwind from '@astrojs/tailwind';
+import tailwindcss from '@tailwindcss/vite';
 
 export default defineConfig({
-  integrations: [tailwind()],
+  vite: {
+    plugins: [tailwindcss()],
+  },
 });
 ```
 
-```js
-// tailwind.config.mjs  — auto-generated
-/** @type {import('tailwindcss').Config} */
-export default {
-  content: ['./src/**/*.{astro,html,js,jsx,ts,tsx,svelte,vue}'],
-  theme: { extend: {} },
-  plugins: [],
-};
+```css
+/* src/styles/global.css  — auto-generated */
+@import "tailwindcss";
 ```
 
-No `globals.css` import needed — the integration handles that automatically.
+There is no `tailwind.config.mjs` and no `content` glob to maintain — Tailwind 4 scans your project automatically and is configured CSS-first (`@theme { ... }` in the CSS file for design-token overrides). Import the stylesheet once in a shared layout:
+
+```astro
+---
+// src/layouts/Layout.astro
+import '../styles/global.css';
+---
+```
 
 ## Using utility classes in .astro vs React
 
@@ -146,12 +150,12 @@ export const quizTailwind = [
     answer: 2,
   },
   {
-    q: "After running `npx astro add tailwind`, do you need to manually import Tailwind's CSS in a layout file?",
+    q: "After running `npx astro add tailwind`, do you need to manually import the generated stylesheet in a layout file?",
     options: [
-      "Yes — add `import 'tailwindcss/tailwind.css'` to every layout",
-      "No — the integration injects the styles automatically",
-      "Yes — create `globals.css` with `@tailwind` directives and import it in `_app.astro`",
-      "No — but only if you use `output: 'static'`",
+      "No — the Vite plugin auto-injects styles into every page",
+      "Yes — import the CLI-generated `src/styles/global.css` (it already contains `@import \"tailwindcss\"`) into your layout",
+      "Yes — create `tailwind.config.mjs` and reference it manually",
+      "No — but only if you use `output: 'server'`",
     ],
     answer: 1,
   },

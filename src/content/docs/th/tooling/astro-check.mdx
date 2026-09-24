@@ -13,13 +13,13 @@ import ProgressTracker from '../../../../components/ProgressTracker.tsx';
 ## รัน `astro check`
 
 ```bash
-# One-shot check — exit code 1 หากมี errors
+# One-shot check — exits with code 1 if there are errors
 npx astro check
 
-# Watch mode — รันใหม่ทุกครั้งที่บันทึกไฟล์ (เหมาะสำหรับ development)
+# Watch mode — re-runs on every file save (great during development)
 npx astro check --watch
 
-# ตรวจสอบ directory เฉพาะ
+# Check a specific directory
 npx astro check --root src/content
 ```
 
@@ -28,11 +28,11 @@ Output จะเหมือน TypeScript compiler output: file path, line numb
 ## `astro check` ครอบคลุมอะไรบ้าง
 
 ```bash
-# astro check จับทั้งหมดนี้:
-# 1. Type errors ใน .astro frontmatter
-# 2. Missing หรือ wrong-typed Astro.props (หากประกาศ interface Props)
-# 3. Type errors ใน template expressions: {someVar}
-# 4. Type errors ในไฟล์ .ts / .tsx ที่ import
+# astro check catches all of these:
+# 1. Type errors in .astro frontmatter
+# 2. Missing or wrong-typed Astro.props (if interface Props is declared)
+# 3. Type errors in template expressions: {someVar}
+# 4. Type errors in imported .ts / .tsx files
 # 5. Missing imports
 ```
 
@@ -93,8 +93,8 @@ Astro มาพร้อม base tsconfigs ที่ `astro/tsconfigs/strict`, `
 ติดตั้ง VS Code extension อย่างเป็นทางการเพื่อดู errors แบบ inline ในไฟล์ `.astro` โดยไม่ต้องรัน CLI:
 
 ```bash
-# ใน VS Code — ค้นหา:
-# "Astro" โดย "Astro" (astro.build)
+# In VS Code — search for:
+# "Astro" by "Astro" (astro.build)
 # Extension ID: astro-build.astro-vscode
 ```
 

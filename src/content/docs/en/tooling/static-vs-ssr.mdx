@@ -40,7 +40,7 @@ npx astro add cloudflare   # Cloudflare Workers / Pages
 ```js
 // astro.config.mjs — SSR with Vercel adapter
 import { defineConfig } from 'astro/config';
-import vercel from '@astrojs/vercel/serverless';
+import vercel from '@astrojs/vercel';
 
 export default defineConfig({
   output: 'server',
@@ -129,7 +129,7 @@ Astro does not have a built-in ISR equivalent like Next.js `revalidate`. Adapter
 ```js
 // astro.config.mjs — Vercel ISR via adapter config
 import { defineConfig } from 'astro/config';
-import vercel from '@astrojs/vercel/serverless';
+import vercel from '@astrojs/vercel';
 
 export default defineConfig({
   output: 'server',

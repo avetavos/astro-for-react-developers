@@ -58,16 +58,16 @@ The difference: in Next.js you reference images with the `<Image>` component for
 // astro.config.mjs
 import { defineConfig } from 'astro/config';
 import react from '@astrojs/react';
-import tailwind from '@astrojs/tailwind';
+import tailwindcss from '@tailwindcss/vite';
 
 export default defineConfig({
   site: 'https://my-site.com',
-  integrations: [react(), tailwind()],
-  // Vite config lives inside vite: {}
+  integrations: [react()],
+  vite: { plugins: [tailwindcss()] },
 });
 ```
 
-Compare to `next.config.mjs` — the shape is similar (a default export returning a config object) but the keys differ. Astro does not have `experimental`, `rewrites`, or `redirects` as top-level keys; those go through Vite or Astro middleware.
+Compare to `next.config.mjs` — the shape is similar (a default export returning a config object) but the keys differ. Astro does have `redirects` and `experimental` as top-level keys, but there is no static `rewrites` map like Next.js's — call `Astro.rewrite()` at request time (in a page or middleware) instead.
 
 ## Runnable page demonstrating structure
 

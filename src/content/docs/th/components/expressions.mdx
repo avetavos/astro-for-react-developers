@@ -128,7 +128,7 @@ compiler ของ Astro 7 ทำตัวเหมือน JSX มากกว
 - **HTML ที่ผิดคือ error ไม่ใช่การแก้ให้อัตโนมัติ** `<p>` ที่ไม่ปิด หรือ `<div>` ซ้อนใน `<p>` เมื่อก่อนถูก "ซ่อม" ให้เงียบ ๆ ตอนนี้ compiler ที่เขียนด้วย Rust จะ build ไม่ผ่านพร้อมชี้บรรทัดให้ ปิด tag ให้ครบเหมือนที่ทำใน JSX
 
 ```astro
-<p>Hello</p>{" "}<em>world</em>   <!-- ช่องว่างแบบชัดเจน สไตล์ JSX -->
+<p>Hello</p>{" "}<em>world</em>   <!-- explicit space, JSX style -->
 ```
 
 <Diff title="JSX expressions vs Astro template expressions">

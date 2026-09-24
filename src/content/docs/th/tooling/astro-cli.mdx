@@ -13,21 +13,21 @@ import ProgressTracker from '../../../../components/ProgressTracker.tsx';
 ## คำสั่งหลัก
 
 ```bash
-# เริ่ม dev server (hot module reloading, port 4321 โดย default)
+# Start the dev server (hot module reloading, port 4321 by default)
 npx astro dev
 
 # Production build → dist/
 npx astro build
 
-# Serve โฟลเดอร์ dist/ ใน local (จำลอง production build ได้แม่นยำ)
+# Serve the dist/ folder locally (mirrors the production build exactly)
 npx astro preview
 
-# เพิ่ม official integration และอัปเดต astro.config.mjs อัตโนมัติ
+# Add an official integration and update astro.config.mjs automatically
 npx astro add react
 npx astro add tailwind
 npx astro add sitemap
 
-# ตรวจสอบ type ของไฟล์ .astro และ .ts ทั้งหมด
+# Type-check all .astro and .ts files
 npx astro check
 ```
 
@@ -68,16 +68,16 @@ export const scriptsAstro = `// package.json — Astro project
 `npx astro add` scaffold official integrations ในขั้นตอนเดียว: ติดตั้ง npm package, อัปเดต `astro.config.mjs` และพิมพ์สิ่งที่เปลี่ยนแปลง
 
 ```bash
-# เพิ่ม React integration (เปิดใช้งาน .tsx islands)
+# Add the React integration (enables .tsx islands)
 npx astro add react
 
-# เพิ่ม Tailwind CSS
+# Add Tailwind CSS
 npx astro add tailwind
 
-# เพิ่ม Vercel SSR adapter
+# Add the Vercel SSR adapter
 npx astro add vercel
 
-# เพิ่มหลายอย่างพร้อมกัน
+# Add multiple at once
 npx astro add react tailwind sitemap
 ```
 
@@ -86,16 +86,16 @@ npx astro add react tailwind sitemap
 ## CLI flags
 
 ```bash
-# กำหนด port เอง
+# Custom port
 astro dev --port 3000
 
-# Bind กับทุก interface (มีประโยชน์ใน Docker / WSL)
+# Bind to all interfaces (useful in Docker / WSL)
 astro dev --host
 
-# แสดง output แบบละเอียดระหว่าง build
+# Verbose output during build
 astro build --verbose
 
-# Watch mode สำหรับ astro check (รันใหม่เมื่อบันทึกไฟล์)
+# Watch mode for astro check (re-runs on file save)
 astro check --watch
 ```
 

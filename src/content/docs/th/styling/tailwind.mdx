@@ -19,29 +19,33 @@ import ProgressTracker from '../../../../components/ProgressTracker.tsx';
 npx astro add tailwind
 ```
 
-CLI จะติดตั้ง `@astrojs/tailwind` และ `tailwindcss` สร้าง `tailwind.config.mjs` และเพิ่ม integration ใน `astro.config.mjs` ยืนยัน prompt ทั้งหมด
+CLI จะติดตั้ง `tailwindcss` และ Vite plugin ทางการ **`@tailwindcss/vite`** เชื่อมเข้ากับ `astro.config.mjs` ใต้ `vite.plugins` (Tailwind 4 เป็น Vite plugin ไม่ใช่ Astro integration — package เก่า `@astrojs/tailwind` เลิกใช้แล้ว เกี่ยวข้องกับโปรเจกต์ Tailwind 3 เท่านั้น) และสร้าง `src/styles/global.css` พร้อม Tailwind import ให้ ยืนยัน prompt ทั้งหมด
 
 ```js
 // astro.config.mjs  — after running the command
 import { defineConfig } from 'astro/config';
-import tailwind from '@astrojs/tailwind';
+import tailwindcss from '@tailwindcss/vite';
 
 export default defineConfig({
-  integrations: [tailwind()],
+  vite: {
+    plugins: [tailwindcss()],
+  },
 });
 ```
 
-```js
-// tailwind.config.mjs  — auto-generated
-/** @type {import('tailwindcss').Config} */
-export default {
-  content: ['./src/**/*.{astro,html,js,jsx,ts,tsx,svelte,vue}'],
-  theme: { extend: {} },
-  plugins: [],
-};
+```css
+/* src/styles/global.css  — auto-generated */
+@import "tailwindcss";
 ```
 
-ไม่ต้อง import `globals.css` — integration จัดการให้อัตโนมัติ
+ไม่มี `tailwind.config.mjs` และไม่มี `content` glob ต้องดูแล — Tailwind 4 สแกนโปรเจกต์ให้อัตโนมัติ และตั้งค่าแบบ CSS-first (`@theme { ... }` ในไฟล์ CSS สำหรับ override design token) import stylesheet ครั้งเดียวใน layout ที่ใช้ร่วมกัน:
+
+```astro
+---
+// src/layouts/Layout.astro
+import '../styles/global.css';
+---
+```
 
 ## การใช้ utility classes ใน .astro เทียบกับ React
 
@@ -146,12 +150,12 @@ export const quizTailwind = [
     answer: 2,
   },
   {
-    q: "หลังรัน `npx astro add tailwind` แล้ว ต้อง import Tailwind CSS ใน layout file ด้วยตัวเองไหม?",
+    q: "หลังรัน `npx astro add tailwind` แล้ว ต้อง import stylesheet ที่ generate มาใน layout file ด้วยตัวเองไหม?",
     options: [
-      "ใช่ — เพิ่ม `import 'tailwindcss/tailwind.css'` ในทุก layout",
-      "ไม่ — integration inject styles อัตโนมัติ",
-      "ใช่ — สร้าง `globals.css` พร้อม `@tailwind` directives แล้ว import ใน `_app.astro`",
-      "ไม่ — แต่เฉพาะเมื่อใช้ `output: 'static'`",
+      "ไม่ — Vite plugin inject styles เข้าทุกหน้าอัตโนมัติ",
+      "ใช่ — import `src/styles/global.css` ที่ CLI สร้างให้ (มี `@import \"tailwindcss\"` อยู่แล้ว) เข้า layout",
+      "ใช่ — สร้าง `tailwind.config.mjs` แล้วอ้างอิงเอง",
+      "ไม่ — แต่เฉพาะเมื่อใช้ `output: 'server'`",
     ],
     answer: 1,
   },

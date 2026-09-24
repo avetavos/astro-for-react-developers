@@ -36,18 +36,20 @@ module.exports = withBundleAnalyzer(nextConfig);`;
 export const configAstro = `// astro.config.mjs
 import { defineConfig } from 'astro/config';
 import react from '@astrojs/react';
-import tailwind from '@astrojs/tailwind';
 import sitemap from '@astrojs/sitemap';
-import vercel from '@astrojs/vercel/serverless';
+import vercel from '@astrojs/vercel';
+import tailwindcss from '@tailwindcss/vite';
 
 export default defineConfig({
   site: 'https://example.com',
   integrations: [
     react(),
-    tailwind(),
     sitemap(),
   ],
   adapter: vercel(),
+  vite: {
+    plugins: [tailwindcss()],
+  },
   redirects: {
     '/old': '/new',
   },
@@ -61,19 +63,19 @@ helper `defineConfig` ให้ TypeScript autocomplete เต็มรูปแ
 
 ```bash
 # UI framework integrations
-npx astro add react          # @astrojs/react — เปิดใช้งาน .tsx islands
-npx astro add preact         # @astrojs/preact — ทางเลือก React-compatible ที่เบากว่า
+npx astro add react          # @astrojs/react — enables .tsx islands
+npx astro add preact         # @astrojs/preact — lighter React-compatible alternative
 npx astro add svelte         # @astrojs/svelte
 npx astro add vue            # @astrojs/vue
 
 # Styling
-npx astro add tailwind       # @astrojs/tailwind — inject Tailwind เข้าทุกหน้าอัตโนมัติ
+npx astro add tailwind       # installs the @tailwindcss/vite plugin (Tailwind 4)
 
 # Site utilities
-npx astro add sitemap        # @astrojs/sitemap — สร้าง sitemap.xml ตอน build
-npx astro add mdx            # @astrojs/mdx    — รองรับ MDX สำหรับ content pages
+npx astro add sitemap        # @astrojs/sitemap — generates sitemap.xml at build
+npx astro add mdx            # @astrojs/mdx    — MDX support for content pages
 
-# SSR adapters (เลือกหนึ่งอัน)
+# SSR adapters (pick one)
 npx astro add vercel         # @astrojs/vercel
 npx astro add netlify        # @astrojs/netlify
 npx astro add node           # @astrojs/node (self-hosted Node.js)
@@ -114,19 +116,21 @@ export default defineConfig({
 // astro.config.mjs
 import { defineConfig } from 'astro/config';
 import react from '@astrojs/react';
-import tailwind from '@astrojs/tailwind';
+import sitemap from '@astrojs/sitemap';
 
 export default defineConfig({
   integrations: [
     react({
-      include: ['**/interactive/**'],  // hydrate เฉพาะ components ใน dir นี้
+      include: ['**/interactive/**'],  // only hydrate components in this dir
     }),
-    tailwind({
-      applyBaseStyles: false,          // ข้าม Tailwind's base reset
+    sitemap({
+      filter: (page) => !page.includes('/admin/'),  // exclude private pages
     }),
   ],
 });
 ```
+
+> Tailwind 4 **ไม่ใช่** Astro integration — `npx astro add tailwind` จะติดตั้ง Vite plugin `@tailwindcss/vite` แทน ตั้งค่าไว้ใต้ `vite: { plugins: [...] }` ไม่ใช่ `integrations: [...]` ส่วน package เก่า `@astrojs/tailwind` (ที่มี option `applyBaseStyles`) เลิกใช้แล้ว เกี่ยวข้องกับโปรเจกต์ Tailwind 3 เท่านั้น
 
 <Diff title="next.config.js vs astro.config.mjs">
 - Next.js ใช้ CommonJS `module.exports`; Astro ใช้ ESM `export default defineConfig()`

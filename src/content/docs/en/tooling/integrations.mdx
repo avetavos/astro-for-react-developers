@@ -36,18 +36,20 @@ module.exports = withBundleAnalyzer(nextConfig);`;
 export const configAstro = `// astro.config.mjs
 import { defineConfig } from 'astro/config';
 import react from '@astrojs/react';
-import tailwind from '@astrojs/tailwind';
 import sitemap from '@astrojs/sitemap';
-import vercel from '@astrojs/vercel/serverless';
+import vercel from '@astrojs/vercel';
+import tailwindcss from '@tailwindcss/vite';
 
 export default defineConfig({
   site: 'https://example.com',
   integrations: [
     react(),
-    tailwind(),
     sitemap(),
   ],
   adapter: vercel(),
+  vite: {
+    plugins: [tailwindcss()],
+  },
   redirects: {
     '/old': '/new',
   },
@@ -67,7 +69,7 @@ npx astro add svelte         # @astrojs/svelte
 npx astro add vue            # @astrojs/vue
 
 # Styling
-npx astro add tailwind       # @astrojs/tailwind — auto-injects Tailwind into every page
+npx astro add tailwind       # installs the @tailwindcss/vite plugin (Tailwind 4)
 
 # Site utilities
 npx astro add sitemap        # @astrojs/sitemap — generates sitemap.xml at build
@@ -114,19 +116,21 @@ You will rarely write custom integrations — the official `@astrojs/*` packages
 // astro.config.mjs
 import { defineConfig } from 'astro/config';
 import react from '@astrojs/react';
-import tailwind from '@astrojs/tailwind';
+import sitemap from '@astrojs/sitemap';
 
 export default defineConfig({
   integrations: [
     react({
       include: ['**/interactive/**'],  // only hydrate components in this dir
     }),
-    tailwind({
-      applyBaseStyles: false,          // skip Tailwind's base reset
+    sitemap({
+      filter: (page) => !page.includes('/admin/'),  // exclude private pages
     }),
   ],
 });
 ```
+
+> Tailwind 4 is **not** an Astro integration — `npx astro add tailwind` wires up the `@tailwindcss/vite` Vite plugin instead, configured under `vite: { plugins: [...] }`, not `integrations: [...]`. The old `@astrojs/tailwind` package (with an `applyBaseStyles` option) is deprecated and only relevant to Tailwind 3 projects.
 
 <Diff title="next.config.js vs astro.config.mjs">
 - Next.js uses CommonJS `module.exports`; Astro uses ESM `export default defineConfig()`.

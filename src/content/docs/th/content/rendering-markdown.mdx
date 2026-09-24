@@ -8,18 +8,18 @@ import Diff from '../../../../components/Diff.astro';
 import Quiz from '../../../../components/Quiz.tsx';
 import ProgressTracker from '../../../../components/ProgressTracker.tsx';
 
-ใน Next.js พร้อม contentlayer คุณ import MDX component โดยตรง ใน Astro คุณเรียก `render(entry)` (API เดียวตั้งแต่ Astro 6 — method `entry.render()` แบบเก่าถูกถอดออกแล้ว) หรือ `await entry.render()` เพื่อรับ `Content` component แล้วใช้ `<Content />` ใน template
+ใน Next.js พร้อม contentlayer คุณ import MDX component โดยตรง ใน Astro คุณเรียก `render(entry)` (API เดียวตั้งแต่ Astro 5 — method `entry.render()` แบบเก่าถูกถอดออกไปตอน entry กลายเป็น plain serializable object) เพื่อรับ `Content` component แล้วใช้ `<Content />` ใน template ฟิลด์ frontmatter อยู่ที่ `entry.data` ส่วนเนื้อหาที่ render แล้วมาจาก `Content`
 
 > ต้องใช้โปรเจกต์ Astro เต็มรูปแบบ ใช้ `npm create astro@latest` เพื่อสร้างโปรเจกต์
 
-## Rendering a single post: Next.js vs Astro
+## Rendering an entry: contentlayer vs Astro
 
 export const renderReact = `// app/blog/[slug]/page.tsx (Next.js App Router + contentlayer)
-import { allPosts, Post } from 'contentlayer/generated';
+import { allPosts } from 'contentlayer/generated';
 import { useMDXComponent } from 'next-contentlayer/hooks';
 
-export default function PostPage({ params }: { params: { slug: string } }) {
-  const post = allPosts.find((p) => p.slugAsParams === params.slug)!;
+export default function PostPage({ params }) {
+  const post = allPosts.find(p => p.slug === params.slug);
   const MDXContent = useMDXComponent(post.body.code);
 
   return (
@@ -36,40 +36,67 @@ import { getCollection, render } from 'astro:content';
 
 export async function getStaticPaths() {
   const posts = await getCollection('blog');
-  return posts.map((entry) => ({
-    params: { slug: entry.slug },
-    props: { entry },
-  }));
+  return posts.map(post => ({ params: { slug: post.id }, props: { post } }));
 }
 
-const { entry } = Astro.props;
-const { Content } = await render(entry);
+const { post } = Astro.props;
+const { Content, headings } = await render(post);
 ---
 <article>
-  <h1>{entry.data.title}</h1>
+  <h1>{post.data.title}</h1>
   <Content />
 </article>`;
 
 <ReactAstro react={renderReact} astro={renderAstro} />
 
-`render(entry)` คืนค่า object `{ Content, headings, remarkPluginFrontmatter }` ใช้ `<Content />` เพื่อ render Markdown/MDX ที่ compile แล้วใน template
+`render(entry)` คืนค่า `{ Content, headings, remarkPluginFrontmatter }` — `Content` เป็น component ที่ render ได้โดยตรง ไม่มี hook ไม่มีการ compile MDX ฝั่ง client
 
-## Listing entries: Next.js vs Astro
+## Full blog post page
+
+```astro
+---
+// src/pages/blog/[slug].astro
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog', ({ data }) => !data.draft);
+  return posts.map((post) => ({
+    params: { slug: post.id },
+    props:  { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content, headings } = await render(post);
+---
+<BaseLayout title={post.data.title}>
+  <article>
+    <header>
+      <h1>{post.data.title}</h1>
+      <time datetime={post.data.date.toISOString()}>
+        {post.data.date.toLocaleDateString('en-US', { dateStyle: 'long' })}
+      </time>
+    </header>
+    <Content />
+  </article>
+</BaseLayout>
+```
+
+## Listing entries
 
 export const listReact = `// app/blog/page.tsx (Next.js App Router + contentlayer)
 import { allPosts } from 'contentlayer/generated';
-import Link from 'next/link';
 
 export default function BlogIndex() {
-  const posts = allPosts.sort(
-    (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+  const sorted = allPosts.sort(
+    (a, b) => new Date(b.date) - new Date(a.date)
   );
-
   return (
     <ul>
-      {posts.map((post) => (
-        <li key={post._id}>
-          <Link href={post.url}>{post.title}</Link>
+      {sorted.map(post => (
+        <li key={post.slug}>
+          <a href={post.url}>{post.title}</a>
         </li>
       ))}
     </ul>
@@ -77,7 +104,7 @@ export default function BlogIndex() {
 }`;
 
 export const listAstro = `---
-// src/pages/blog/index.astro (Astro)
+// src/pages/blog/index.astro
 import { getCollection } from 'astro:content';
 
 const posts = await getCollection('blog', ({ data }) => !data.draft);
@@ -95,11 +122,9 @@ const sorted = posts.sort(
 
 <ReactAstro react={listReact} astro={listAstro} />
 
-`getCollection` รองรับ optional filter function ที่ argument ที่สอง — ที่นี่ใช้กรอง draft posts ออก
-
 ## Markdown pipeline: Sätteri (Astro 7)
 
-Astro 7 render ไฟล์ `.md` และ `.mdx` ด้วย **Sätteri** ซึ่งเป็น Markdown pipeline แบบ native ที่เขียนด้วย Rust แทน pipeline remark/rehype (unified) แบบเดิม Content Collections, `render(entry)`, `headings` และ frontmatter ทำงานเหมือนเดิมทุกอย่าง แค่ build เร็วขึ้น (Astro รายงานว่า build เร็วขึ้น 15–61%) สองเรื่องที่ควรรู้ตอนย้ายโปรเจกต์ Next.js/contentlayer:
+Astro 7 render ไฟล์ `.md` และ `.mdx` ด้วย **Sätteri** ซึ่งเป็น Markdown pipeline แบบ native ที่เขียนด้วย Rust แทน pipeline remark/rehype (unified) แบบเดิม Content Collections, `render(entry)`, `headings` และ frontmatter ทำงานเหมือนเดิมทุกอย่าง แค่ build เร็วขึ้น ([Astro รายงานว่า build เร็วขึ้นโดยรวม 15–61%](https://astro.build/blog/astro-7/) จาก benchmark เว็บไซต์จริงของทีม Astro) สองเรื่องที่ควรรู้ตอนย้ายโปรเจกต์ Next.js/contentlayer:
 
 - Markdown ธรรมดา, ตาราง GFM, code fence กับ Shiki และ heading ID ไม่ต้องตั้งค่าอะไรเพิ่ม
 - ถ้าพึ่งพา **remark/rehype plugin** แบบ custom (เช่น `rehype-autolink-headings`) ให้ opt-in กลับไปใช้ unified pipeline อย่างชัดเจน:
@@ -119,12 +144,12 @@ export default defineConfig({
 
 MDX ยังผ่าน `@astrojs/mdx` เหมือนเดิม สิ่งที่เปลี่ยนคือ processor ค่าเริ่มต้นของเนื้อหา Markdown เท่านั้น
 
-<Diff title="contentlayer MDX rendering vs Astro render()">
-- contentlayer: `useMDXComponent(post.body.code)` ส่งคืน React component ที่ใช้ใน JSX โดยตรง
-- Astro: `render(entry)` ส่งคืน `{ Content }` — เป็น plain Astro component
-- ทั้งคู่ compile MDX ตอน build time ไม่มีการ parse runtime
-- Astro `Content` component ทำงานใน `.astro` files โดยตรง ไม่ต้องมี React runtime
-- `render()` ยัง expose `headings` array สำหรับสร้าง table of contents
+<Diff title="MDX in Next.js vs render(entry) in Astro">
+- Next + contentlayer: `useMDXComponent(post.body.code)` — compile MDX ใน browser (หรือที่ edge)
+- Astro: `render(entry)` — compile MDX ตอน **build time** ส่งเป็น static HTML ไม่มี MDX runtime ใน browser เลย
+- Next: ฟิลด์ frontmatter เข้าถึงเป็น flat property บน post object โดยตรง
+- Astro: ฟิลด์ frontmatter เข้าถึงผ่าน `entry.data` — type มาจาก zod schema
+- `render()` ยัง return `headings` (array สำหรับทำ table of contents) — ไม่ต้องใช้ remark plugin เพิ่ม
 </Diff>
 
 export const quizRenderingMarkdown = [

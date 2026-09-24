@@ -8,7 +8,7 @@ import Diff from '../../../../components/Diff.astro';
 import Quiz from '../../../../components/Quiz.tsx';
 import ProgressTracker from '../../../../components/ProgressTracker.tsx';
 
-In Next.js with contentlayer you import the MDX component directly. In Astro you call `render(entry)` (the only API since Astro 6 — the old `entry.render()` method is gone) to get a `Content` component, then drop `<Content />` into your template. The frontmatter fields live on `entry.data`, the rendered body comes from `Content`.
+In Next.js with contentlayer you import the MDX component directly. In Astro you call `render(entry)` (the only API since Astro 5 — the old `entry.render()` method was removed when entries became plain serializable objects) to get a `Content` component, then drop `<Content />` into your template. The frontmatter fields live on `entry.data`, the rendered body comes from `Content`.
 
 > Needs a full Astro project to run. Use `npm create astro@latest` to scaffold one.
 
@@ -124,7 +124,7 @@ const sorted = posts.sort(
 
 ## Markdown pipeline: Sätteri (Astro 7)
 
-Astro 7 renders `.md` and `.mdx` with **Sätteri**, a native Markdown pipeline written in Rust, instead of the remark/rehype (unified) pipeline. Content Collections, `render(entry)`, `headings`, and frontmatter all work the same — builds are just faster (Astro reports 15–61% faster builds overall). Two things to know when you migrate a Next.js/contentlayer project:
+Astro 7 renders `.md` and `.mdx` with **Sätteri**, a native Markdown pipeline written in Rust, instead of the remark/rehype (unified) pipeline. Content Collections, `render(entry)`, `headings`, and frontmatter all work the same — builds are just faster ([Astro reports 15–61% faster builds overall](https://astro.build/blog/astro-7/) across its real-world benchmark sites). Two things to know when you migrate a Next.js/contentlayer project:
 
 - Plain Markdown, GFM tables, code fences with Shiki, and headings IDs need nothing.
 - If you rely on custom **remark/rehype plugins** (e.g. `rehype-autolink-headings`), opt back into the unified pipeline explicitly:

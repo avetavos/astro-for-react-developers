@@ -58,16 +58,16 @@ export const structureAstro = `my-astro-app/
 // astro.config.mjs
 import { defineConfig } from 'astro/config';
 import react from '@astrojs/react';
-import tailwind from '@astrojs/tailwind';
+import tailwindcss from '@tailwindcss/vite';
 
 export default defineConfig({
   site: 'https://my-site.com',
-  integrations: [react(), tailwind()],
-  // Vite config lives inside vite: {}
+  integrations: [react()],
+  vite: { plugins: [tailwindcss()] },
 });
 ```
 
-เทียบกับ `next.config.mjs` — รูปแบบคล้ายกัน (default export ที่คืน config object) แต่ key ต่างกัน Astro ไม่มี `experimental`, `rewrites`, หรือ `redirects` เป็น top-level key สิ่งเหล่านั้นผ่าน Vite หรือ Astro middleware
+เทียบกับ `next.config.mjs` — รูปแบบคล้ายกัน (default export ที่คืน config object) แต่ key ต่างกัน Astro มี `redirects` และ `experimental` เป็น top-level key จริง แต่ไม่มี static `rewrites` map แบบ Next.js — ให้เรียก `Astro.rewrite()` ตอน request แทน (ในหน้า page หรือใน middleware)
 
 ## หน้าที่รันได้แสดงโครงสร้าง
 

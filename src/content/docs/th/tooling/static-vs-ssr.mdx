@@ -17,8 +17,8 @@ Next.js ให้ rendering modes สามแบบต่อหน้า: stati
 import { defineConfig } from 'astro/config';
 
 export default defineConfig({
-  // 'static'  — default; HTML build-time สำหรับทุกหน้า
-  // 'server'  — ทุกหน้า server-rendered ยกเว้น prerender=true
+  // 'static'  — default; build-time HTML for every page
+  // 'server'  — every page is server-rendered unless prerender=true
   output: 'static',
 });
 ```
@@ -30,7 +30,7 @@ export default defineConfig({
 หากต้องการใช้ `output: 'server'` คุณต้องติดตั้ง adapter ที่บอก Astro วิธีรัน server-side code ใน target environment
 
 ```bash
-# เลือกหนึ่ง:
+# Choose one:
 npx astro add vercel       # Vercel serverless functions
 npx astro add netlify      # Netlify Edge Functions
 npx astro add node         # Self-hosted Node.js (express/standalone)
@@ -38,9 +38,9 @@ npx astro add cloudflare   # Cloudflare Workers / Pages
 ```
 
 ```js
-// astro.config.mjs — SSR กับ Vercel adapter
+// astro.config.mjs — SSR with Vercel adapter
 import { defineConfig } from 'astro/config';
-import vercel from '@astrojs/vercel/serverless';
+import vercel from '@astrojs/vercel';
 
 export default defineConfig({
   output: 'server',
@@ -55,7 +55,7 @@ export default defineConfig({
 ```astro
 ---
 // src/pages/about.astro
-// หน้านี้ยัง pre-rendered แม้จะตั้ง output: 'server'
+// This page is still pre-rendered even though output: 'server'
 export const prerender = true;
 
 const title = "About us";
@@ -110,7 +110,7 @@ export const prerender = false;
 ```astro
 ---
 // src/pages/dashboard.astro
-export const prerender = false;    // server-render หน้านี้
+export const prerender = false;    // server-render this page
 
 const session = Astro.cookies.get('session')?.value;
 if (!session) return Astro.redirect('/login');
@@ -127,15 +127,15 @@ const user = await fetchUser(session);
 Astro ไม่มี ISR เทียบเท่าในตัวแบบ Next.js `revalidate` แต่มี adapter-specific options:
 
 ```js
-// astro.config.mjs — Vercel ISR ผ่าน adapter config
+// astro.config.mjs — Vercel ISR via adapter config
 import { defineConfig } from 'astro/config';
-import vercel from '@astrojs/vercel/serverless';
+import vercel from '@astrojs/vercel';
 
 export default defineConfig({
   output: 'server',
   adapter: vercel({
     isr: {
-      expiration: 60,   // สร้างใหม่หลัง 60 วินาที
+      expiration: 60,   // re-generate after 60 seconds
     },
   }),
 });

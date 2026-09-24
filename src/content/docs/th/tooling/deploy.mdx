@@ -13,12 +13,12 @@ import ProgressTracker from '../../../../components/ProgressTracker.tsx';
 ## Build สำหรับ production
 
 ```bash
-# Build โปรเจกต์
+# Build the project
 npx astro build
 
-# Output อยู่ใน dist/ เสมอ
-# Static build:  dist/ มี .html, .css, .js, images
-# SSR build:     dist/ มี server entry point + static assets
+# The output is always in dist/
+# Static build:  dist/ contains .html, .css, .js, images
+# SSR build:     dist/ contains a server entry point + static assets
 ```
 
 โฟลเดอร์ `dist/` คือ deployment artefact สำหรับ static sites อัปโหลดตรงๆ; สำหรับ SSR รัน server entry point ผ่าน adapter
@@ -47,7 +47,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
           cache: npm
       - run: npm ci
       - run: npm run build
@@ -103,7 +103,7 @@ npx astro add vercel
 ```js
 // astro.config.mjs
 import { defineConfig } from 'astro/config';
-import vercel from '@astrojs/vercel/serverless';
+import vercel from '@astrojs/vercel';
 
 export default defineConfig({
   output: 'server',
@@ -131,7 +131,7 @@ export default defineConfig({
 ```
 
 ```bash
-# หลัง build:
+# After building:
 node dist/server/entry.mjs
 ```
 
@@ -198,11 +198,11 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
           cache: npm
       - run: npm ci
-      - run: npm run check      # astro check — type errors ทำให้ build ล้มเหลว
-      - run: npm run build      # astro build — compilation errors ทำให้ build ล้มเหลว
+      - run: npm run check      # astro check — type errors fail the build
+      - run: npm run build      # astro build — compilation errors fail the build
 ```
 
 นี่สะท้อน CI pipeline ทั่วไปของ Next.js (`tsc --noEmit` + `next build`) — เพียงแต่ชื่อ script ต่างกัน

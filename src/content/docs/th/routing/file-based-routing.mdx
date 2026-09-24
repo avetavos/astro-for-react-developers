@@ -113,12 +113,11 @@ export const projectTreeDiagram = `flowchart TD
 
 ```js
 // astro.config.mjs
-import { defineConfig } from 'astro/config';
-import { memoryCache } from 'astro/cache';
+import { defineConfig, memoryCache } from 'astro/config';
 
 export default defineConfig({
   cache: { provider: memoryCache() },
-  routeRules: { '/blog/*': { cache: { maxAge: 3600 } } }, // เหมือน revalidate: 3600
+  routeRules: { '/blog/[...slug]': { maxAge: 3600 } }, // like revalidate: 3600
 });
 ```
 
